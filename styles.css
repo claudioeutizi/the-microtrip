@@ -3,19 +3,20 @@
     padding: 0;
 }
 
+
 #piano {
     clip-path: inset(15px 0px 0px 0px);
     margin-top: -15px;
 }
 
 .white-key {
-    stroke: #555555;
-    fill: #FFFFF7;
+    stroke: #282828;
+    ;
 }
 .black-key {
-    stroke: #979797;
-    fill: #4b4b4b;
-}
+    stroke: #1f1f1f;
+} 
+
 .white-key-text {
     font-size: 1.3em;
     pointer-events: none;
@@ -28,10 +29,22 @@
     pointer-events: none;
     user-select: none;
 }
-.show {
-    fill: #f5f541;
+/*
+.playing {
+    fill: url(#playing-white-key-gradient);
+    filter: url(#playing-white-key-filter);
+}
+*/
+.playing.white-key {
+    fill: url(#playing-white-key-gradient);
+    filter: url(#playing-white-key-filter);
 }
 
-.show.black-key ~ text {
-    fill: #000;
+.playing.black-key {
+    fill: url(#playing-black-key-gradient);
+    filter: url(#playing-black-key-filter);
+}
+
+.playing.black-key ~ text {
+    fill: rgb(255, 255, 255);
 }
