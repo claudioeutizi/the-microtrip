@@ -1,3 +1,62 @@
+/* ===================================== MIDI ================================================================ */
+
+/* MIDI */
+
+if(navigator.requestMIDIAccess){
+    navigator.requestMIDIAccess().then(midiSuccess, midiFailure); //do we have access to midi from browser?
+}
+
+function midiFailure(){
+    console.log("Could not connect MIDI!");
+}
+
+//what i need from midi when i've a connection success
+function midiSuccess(midiAccess){
+    console.log(midiAccess);
+    midiAccess.addEventListener('statechange', updateMidiDevices);
+    const inputs = midiAccess.inputs;
+    
+    //we wanna catch the midi information when a midi source sends to the browser a midi message
+    inputs.forEach((input) => {
+        input.addEventListener('midimessage', handleMidiInput);
+    })
+}
+
+function handleMidiInput(input){
+    const command = input.data[0];    
+    const note = input.data[1];    
+    const velocity = input.data[2];
+    switch(command){
+        case 144:
+        if(velocity > 0){
+            midiNoteOn(note, velocity);
+        } else {
+            midiNoteOff(note);
+        }
+        break;
+        case 128: //it can send a 128 message instead of a 144 with 0 velocity
+        midiNoteOff(note);
+        break;
+    }
+}
+
+function midiNoteOn(note, velocity){
+}
+
+function midiNoteOff(note){
+}
+
+function updateMidiDevices(event){
+}
+
+function midiToFrequency(number){
+    const a = 440;
+    return (a /32) * (2 ** ((number - 9) / 12));
+}
+
+
+/* ================================= PIANO =============================================================== */
+
 const whiteKeyWidth = 80;
 const pianoHeight = 400;
 
@@ -5,7 +64,7 @@ const naturalNotes = ["C", "D", "E", "F", "G", "A", "B"];
 const naturalNotesSharps = ["C", "D", "F", "G", "A"];
 const naturalNotesFlats = ["D", "E", "G", "A", "B"];
 
-const range = ["A5", "C7"];
+const range = ["A0", "C5"];
 
 const keyboardApp = {
     setupPiano() {
@@ -37,9 +96,8 @@ const keyboardApp = {
                 "x": whiteKeyPositionX,
                 "data-note-name": noteName,
                 "fill": "url(#white-key-gradient)",
-                "filter": "url(#white-key-filter)",
-                "rx": "6",
-                "ry": "6"
+                "rx": "8",
+                "ry": "8"
             });
 
             text.classList.add("white-key-text");
@@ -78,9 +136,8 @@ const keyboardApp = {
                         "data-sharp-name": `${ naturalSharpNoteName }#${ naturalNote[1]}`,
                         "data-flat-name": `${ naturalFlatNoteName }b${ naturalNote[1]}`,
                         "fill": "url(#black-key-gradient)",
-                        "filter": "url(#black-key-filter)",
-                        "rx": "2",
-                        "ry": "2"
+                        "rx": "3",
+                        "ry": "3"
                     });
 
                     utils.setAttributes(sharpNameText, {
@@ -181,78 +238,7 @@ const keyboardApp = {
             "xmlns:svgjs": "http://svgjs.dev/svgjs",
             "viewBox": `0 0 ${pianoWidth} ${pianoHeight}`
         });
-        let defs = document.createElementNS("http://www.w3.org/2000/svg","defs");
-        defs.innerHTML = 
-                `<radialGradient id="black-key-gradient">
-                    <stop offset="0%" stop-color="hsl(315, 0%, 0%)"></stop>
-                    <stop offset="100%" stop-color="hsl(227, 0%, 0%)"></stop>
-                </radialGradient>
-                <filter id="black-key-filter" x="-0%" y="-0%" width="100%" height="100%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                    <feTurbulence type="fractalNoise" baseFrequency="0.004 0.001" numOctaves="2" seed="158" stitchTiles="stitch" x="0%" y="0%" width="100%" height="100%" result="turbulence"></feTurbulence>
-                    <feGaussianBlur stdDeviation="19 0" x="0%" y="0%" width="100%" height="100%" in="turbulence" edgeMode="duplicate" result="blur"></feGaussianBlur>
-                    <feBlend mode="color" x="0%" y="0%" width="100%" height="100%" in="SourceGraphic" in2="blur" result="blend"></feBlend>
-                    <feColorMatrix type="saturate" values="3" x="0%" y="0%" width="100%" height="100%" in="blend" result="colormatrix"></feColorMatrix>
-                </filter>
-            
-                <linearGradient gradientTransform="rotate(248, 0.5, 0.5)" x1="50%" y1="0%" x2="50%" y2="100%" id="white-key-gradient">
-                    <stop stop-color="hsl(315, 0%, 100%)" stop-opacity="1" offset="0%"></stop>
-                    <stop stop-color="#d0d0d0" stop-opacity="1" offset="100%"></stop>
-                </linearGradient>
-                <filter id="white-key-filter" x="0%" y="0%" width="100%" height="100%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                    <feTurbulence type="fractalNoise" baseFrequency="0.002 0.006" numOctaves="2" seed="2" stitchTiles="stitch" x="0%" y="0%" width="100%" height="100%" result="turbulence"></feTurbulence>
-                    <feGaussianBlur stdDeviation="100 100" x="0%" y="0%" width="100%" height="100%" in="turbulence" edgeMode="duplicate" result="blur"></feGaussianBlur>
-                    <feBlend mode="color-dodge" x="0%" y="0%" width="100%" height="100%" in="SourceGraphic" in2="blur" result="blend"></feBlend>
-                </filter>
-                
-                <linearGradient gradientTransform="rotate(185, 0.5, 0.5)" x1="50%" y1="0%" x2="50%" y2="100%" id="playing-white-key-gradient">
-                <stop stop-color="rgb(189, 189, 189)" stop-opacity="1" offset="0%"></stop>
-                <stop stop-color="hsl(227, 0%, 42%)" stop-opacity="1" offset="100%"></stop></linearGradient>
-                <filter id="playing-white-key-filter" x="0%" y="0%" width="100%" height="100%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-            <feTurbulence type="fractalNoise" baseFrequency="0.001 0.001" numOctaves="1" seed="2" stitchTiles="stitch" x="0%" y="0%" width="100%" height="100%" result="turbulence"></feTurbulence>
-            <feGaussianBlur stdDeviation="100 100" x="0%" y="0%" width="100%" height="100%" in="turbulence" edgeMode="duplicate" result="blur"></feGaussianBlur>
-            <feBlend mode="color-dodge" x="0%" y="0%" width="100%" height="100%" in="SourceGraphic" in2="blur" result="blend"></feBlend>
-            <feColorMatrix type="saturate" values="3" x="0%" y="0%" width="100%" height="100%" in="blend" result="colormatrix"></feColorMatrix>
-          </filter>
-          <radialGradient id="playing-black-key-gradient">
-          <stop offset="0%" stop-color="rgb(51, 51, 51)"></stop>
-          <stop offset="100%" stop-color="hsl(227, 0%, 22%)"></stop>
-        </radialGradient>
-        <filter id="playing-black-key-filter" x="0%" y="0%" width="100%" height="100%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-        <feTurbulence type="fractalNoise" baseFrequency="0.004 0.002" numOctaves="1" seed="2" stitchTiles="stitch" x="0%" y="0%" width="100%" height="100%" result="turbulence"></feTurbulence>
-        <feGaussianBlur stdDeviation="0 0" x="0%" y="0%" width="100%" height="100%" in="turbulence" edgeMode="duplicate" result="blur"></feGaussianBlur>
-        <feBlend mode="color" x="0%" y="0%" width="100%" height="100%" in="SourceGraphic" in2="blur" result="blend"></feBlend>
-        <feColorMatrix type="saturate" values="3" x="0%" y="0%" width="100%" height="100%" in="blend" result="colormatrix"></feColorMatrix>
-            </filter>`;
-      svg.appendChild(defs);
         return svg;
-    },
-
-    displayPlayingNotes(e) {
-        const mouseNote = e.target.getAttribute("data-note-name")
-        const pianoKeys = document.querySelectorAll(".key");
-        utils.removeClassFromNodeCollection(pianoKeys, "playing");
-            pianoKeys.forEach(key => {
-                const naturalName = key.dataset.noteName;
-                const sharpName = key.dataset.sharpName;
-                const flatName = key.dataset.flatName;
-                if(mouseNote == naturalName || mouseNote == sharpName || mouseNote == flatName){
-                    key.classList.add("playing");
-                }
-        });
-    },
-    displayNoteOnMousePassage(note){
-        object.addEventListener("mouseover", myScript);
-        const pianoKeys = document.querySelectorAll(".key");
-        utils.removeClassFromNodeCollection(pianoKeys, "mouse-highlighted");            
-        pianoKeys.forEach(key => {
-            const naturalName = key.dataset.noteName;
-            const sharpName = key.dataset.sharpName;
-            const flatName = key.dataset.flatName;
-
-            if (naturalName === noteName || sharpName === noteName || flatName === noteName) {
-                key.classList.add("mouse-highlighted");
-            }
-        });
     }
 }
 
@@ -282,5 +268,26 @@ keyboardApp.setupPiano();
 
 const pianoKeys = document.querySelectorAll(".key");
 pianoKeys.forEach(key => {
-    key.addEventListener("click", (e) => {keyboardApp.displayPlayingNotes(e)});
+    //mouse down: playing the clicked note
+    key.addEventListener("mousedown", (e) => {
+        const mouseNote = e.target.getAttribute("data-note-name")
+        utils.removeClassFromNodeCollection(pianoKeys, "active");
+            const naturalName = key.dataset.noteName;
+            const sharpName = key.dataset.sharpName;
+            const flatName = key.dataset.flatName;
+            if(mouseNote == naturalName || mouseNote == sharpName || mouseNote == flatName){
+                key.classList.add("active");
+            }
+        });
+
+    //mouse up: release the note
+    key.addEventListener("mouseup", (e) => {
+        utils.removeClassFromNodeCollection(pianoKeys, "active");
+    });
 });
+
+
+/* ========================================================================================================== */
+
+
+

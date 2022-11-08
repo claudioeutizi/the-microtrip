@@ -3,24 +3,47 @@
     padding: 0;
 }
 
+.piano {
+    cursor: pointer;
+}
 
-#piano {
-    clip-path: inset(15px 0px 0px 0px);
-    margin-top: -15px;
+.white-key:hover {
+    fill: url(#white-key-hover);
+    -webkit-transition: .2s;
+    -o-transition: .2s;
+    transition: .2s;
+}
+
+.black-key:hover {
+    fill: url(#black-key-hover);
+    -webkit-transition: .2s;
+    -o-transition: .2s;
+    transition: .2s;
 }
 
 .white-key {
     stroke: #282828;
-    ;
 }
+
 .black-key {
     stroke: #1f1f1f;
 } 
 
+.white-key:active, .black-key:active {
+    fill: transparent;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    -webkit-transition: .2s;
+    -o-transition: .2s;
+    transition: .2s;
+}
+
 .white-key-text {
     font-size: 1.3em;
+    fill: #000;
     pointer-events: none;
     user-select: none;
+    opacity:100%
 }
 .black-key-text {
     font-size: 1em;
@@ -28,21 +51,15 @@
     font-weight: 200;
     pointer-events: none;
     user-select: none;
-}
-/*
-.playing {
-    fill: url(#playing-white-key-gradient);
-    filter: url(#playing-white-key-filter);
-}
-*/
-.playing.white-key {
-    fill: url(#playing-white-key-gradient);
-    filter: url(#playing-white-key-filter);
+    opacity:100%
 }
 
-.playing.black-key {
-    fill: url(#playing-black-key-gradient);
-    filter: url(#playing-black-key-filter);
+ .white-key:active {
+    fill: url(#white-key-gradient-active)!important;
+}
+
+.black-key:active {
+    fill: url(#black-key-gradient-active)!important;
 }
 
 .playing.black-key ~ text {
