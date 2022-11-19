@@ -1,59 +1,59 @@
-/* ===================================== MIDI ================================================================ */
+/* ===================================== NOTES Frequencies =================================================== */
 
-/* MIDI */
-
-if(navigator.requestMIDIAccess){
-    navigator.requestMIDIAccess().then(midiSuccess, midiFailure); //do we have access to midi from browser?
-}
-
-function midiFailure(){
-    console.log("Could not connect MIDI!");
-}
-
-//what i need from midi when i've a connection success
-function midiSuccess(midiAccess){
-    console.log(midiAccess);
-    midiAccess.addEventListener('statechange', updateMidiDevices);
-    const inputs = midiAccess.inputs;
-    
-    //we wanna catch the midi information when a midi source sends to the browser a midi message
-    inputs.forEach((input) => {
-        input.addEventListener('midimessage', handleMidiInput);
-    })
-}
-
-function handleMidiInput(input){
-    const command = input.data[0];    
-    const note = input.data[1];    
-    const velocity = input.data[2];
-    switch(command){
-        case 144:
-        if(velocity > 0){
-            midiNoteOn(note, velocity);
-        } else {
-            midiNoteOff(note);
-        }
-        break;
-        case 128: //it can send a 128 message instead of a 144 with 0 velocity
-        midiNoteOff(note);
-        break;
+function createNoteTable() {
+    const noteFreq = [];
+    for (let i=0; i<9; i++) {
+      noteFreq[i] = [];
     }
+  
+    noteFreq[0]["A"] = 27.50000000000000;
+    noteFreq[0]["A#"] = 29.13523509488061;
+    noteFreq[0]["Bb"] = 29.13523509488061;
+    noteFreq[0]["B"] = 30.86770632850775;
+  
+    noteFreq[1]["C"] = 32.70319566257482;
+    noteFreq[1]["C#"] = 34.64782887210901;
+    noteFreq[1]["Db"] = 34.64782887210901;
+    noteFreq[1]["D"] = 36.70809598967594;
+    noteFreq[1]["D#"] = 38.89087296526011;
+    noteFreq[1]["Eb"] = 38.89087296526011;
+    noteFreq[1]["E"] = 41.20344461410874;
+    noteFreq[1]["F"] = 43.65352892912548;
+    noteFreq[1]["F#"] = 46.24930283895429;
+    noteFreq[1]["Gb"] = 46.24930283895429;
+    noteFreq[1]["G"] = 48.99942949771866;
+    noteFreq[1]["G#"] = 51.91308719749314;
+    noteFreq[1]["Ab"] = 51.91308719749314;
+    noteFreq[1]["A"] = 55.00000000000000;
+    noteFreq[1]["A#"] = 58.27047018976123;
+    noteFreq[1]["Bb"] = 58.27047018976123;
+    noteFreq[1]["B"] = 61.73541265701551;
+
+    for(let i=2; i<8; i++){
+        noteFreq[i]["C"] = 2*noteFreq[i-1]["C"];
+        noteFreq[i]["C#"] = 2*noteFreq[i-1]["C#"];
+        noteFreq[i]["Db"] = 2*noteFreq[i-1]["Db"];
+        noteFreq[i]["D"] = 2*noteFreq[i-1]["D"];
+        noteFreq[i]["D#"] = 2*noteFreq[i-1]["D#"];
+        noteFreq[i]["Eb"] = 2*noteFreq[i-1]["Eb"];
+        noteFreq[i]["E"] = 2*noteFreq[i-1]["E"];
+        noteFreq[i]["F"] = 2*noteFreq[i-1]["F"];
+        noteFreq[i]["F#"] = 2*noteFreq[i-1]["F#"];
+        noteFreq[i]["Gb"] = 2*noteFreq[i-1]["Gb"];
+        noteFreq[i]["G"] = 2*noteFreq[i-1]["G"];
+        noteFreq[i]["G#"] = 2*noteFreq[i-1]["G#"];
+        noteFreq[i]["Ab"] = 2*noteFreq[i-1]["Ab"];
+        noteFreq[i]["A"] = 2*noteFreq[i-1]["A"];
+        noteFreq[i]["A#"] = 2*noteFreq[i-1]["A#"];
+        noteFreq[i]["Bb"] = 2*noteFreq[i-1]["Bb"];
+        noteFreq[i]["B"] = 2*noteFreq[i-1]["B"];
+    }
+
+    noteFreq[8]["C"] = 4186.009044809578154;
+    return noteFreq;
 }
 
-function midiNoteOn(note, velocity){
-}
-
-function midiNoteOff(note){
-}
-
-function updateMidiDevices(event){
-}
-
-function midiToFrequency(number){
-    const a = 440;
-    return (a /32) * (2 ** ((number - 9) / 12));
-}
-
+const noteFrequenciesTable = createNoteTable();
 
 /* ================================= PIANO =============================================================== */
 
@@ -63,8 +63,7 @@ const pianoHeight = 400;
 const naturalNotes = ["C", "D", "E", "F", "G", "A", "B"];
 const naturalNotesSharps = ["C", "D", "F", "G", "A"];
 const naturalNotesFlats = ["D", "E", "G", "A", "B"];
-
-const range = ["A0", "C5"];
+const range = ["C0", "B4"];
 
 const keyboardApp = {
     setupPiano() {
@@ -177,12 +176,13 @@ const keyboardApp = {
 
          piano.appendChild(SVG);
     },
-    createOctave(octaveNumber) {
-        const octave = utils.createSVGElement("g");
-        octave.classList.add("octave");
-        octave.setAttribute("transform", `translate(${octaveNumber * octaveWidth}, 0)`);
-        return octave;
-    },
+    // createOctave(octaveNumber) {
+    //     const octave = utils.createSVGElement("g");
+    //     octave.classList.add("octave");
+    //     octave.setAttribute("transform", `translate(${octaveNumber}, 0)`);
+    //     return octave;
+    // },
+
     createKey({ className, width, height }) {
         const key = utils.createSVGElement("rect");
         key.classList.add(className, "key");
@@ -265,29 +265,117 @@ const utils = {
 }
 
 keyboardApp.setupPiano();
+/* ===================================== KEYS ================================================================= */
 
 const pianoKeys = document.querySelectorAll(".key");
+
 pianoKeys.forEach(key => {
     //mouse down: playing the clicked note
     key.addEventListener("mousedown", (e) => {
-        const mouseNote = e.target.getAttribute("data-note-name")
+        let mouseNote = e.target.getAttribute("data-note-name");
+        if(mouseNote == null){
+            mouseNote = e.target.getAttribute("data-sharp-name");
+        }  
         utils.removeClassFromNodeCollection(pianoKeys, "active");
             const naturalName = key.dataset.noteName;
             const sharpName = key.dataset.sharpName;
             const flatName = key.dataset.flatName;
             if(mouseNote == naturalName || mouseNote == sharpName || mouseNote == flatName){
-                key.classList.add("active");
+                key.classList.toggle("active");
             }
         });
 
     //mouse up: release the note
     key.addEventListener("mouseup", (e) => {
-        utils.removeClassFromNodeCollection(pianoKeys, "active");
+        if(e.target.classList.contains("active")){
+            e.target.classList.remove("active");
+        }
     });
 });
 
+/* ============================== CONNECTING FREQUENCIES TO NOTE NAMES ======================================= */
+pianoKeys.forEach(key => {
+    nName = key.dataset.noteName;
+    if(nName != null){
+        key.setAttribute("frequency", noteFrequenciesTable[parseInt(nName[1])][nName[0]]);
+    }
+    else {
+        nName = key.dataset.sharpName;
+        key.setAttribute("frequency", noteFrequenciesTable[parseInt(nName[2])][(nName[0]+nName[1])]);
+    }
+});
 
-/* ========================================================================================================== */
+/* ===================================== MIDI ================================================================ */
 
+/* MIDI */
 
+if(navigator.requestMIDIAccess){
+    navigator.requestMIDIAccess().then(midiSuccess, midiFailure); //do we have access to midi from browser?
+}
 
+function midiFailure(){
+    console.log("Could not connect MIDI!");
+}
+
+//what i need from midi when i've a connection success
+function midiSuccess(midiAccess){
+    console.log(midiAccess);
+    midiAccess.addEventListener('statechange', updateMidiDevices);
+    const inputs = midiAccess.inputs;
+    
+    //we wanna catch the midi information when a midi source sends to the browser a midi message
+    inputs.forEach((input) => {
+        input.addEventListener('midimessage', handleMidiInput);
+    })
+}
+
+function handleMidiInput(input){
+    const command = input.data[0];    
+    const note = input.data[1];    
+    const velocity = input.data[2];
+    switch(command){
+        case 144:
+        if(velocity > 0){
+            midiNoteOn(note, velocity);
+        } else {
+            midiNoteOff(note);
+        }
+        break;
+        case 128: //it can send a 128 message instead of a 144 with 0 velocity
+        midiNoteOff(note);
+        break;
+    }
+}
+
+function midiNoteOn(note, velocity){
+    const midiFreq = midi2Frequency(note).toFixed(4);
+    pianoKeys.forEach(key => {
+        const keyFreq = parseFloat(key.getAttribute("frequency")).toFixed(4);
+        if(keyFreq == midiFreq){
+            key.classList.add("active");
+            console.log(key.getAttribute("data-note-name"));
+        }
+    });
+}
+
+function midiNoteOff(note){
+    const midiFreq = midi2Frequency(note).toFixed(4);
+    pianoKeys.forEach(key => {
+        const keyFreq = parseFloat(key.getAttribute("frequency")).toFixed(4);
+        if(keyFreq == midiFreq){
+           if(key.classList.contains("active")){
+                key.classList.remove("active");
+            }
+        }
+    });
+}
+
+function updateMidiDevices(event){
+}
+
+function midi2Frequency(number){
+    const a = 440.0;
+    return (a/32) * (2 ** ((number - 9) / 12));
+}
+
+/* =============================================TEST====================================================== */

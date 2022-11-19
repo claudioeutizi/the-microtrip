@@ -55,11 +55,11 @@
 }
 
  .white-key:active {
-    fill: url(#white-key-gradient-active)!important;
+    fill: url(#white-key-gradient-active);
 }
 
 .black-key:active {
-    fill: url(#black-key-gradient-active)!important;
+    fill: url(#black-key-gradient-active);
 }
 
 .playing.black-key ~ text {
