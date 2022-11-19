@@ -351,7 +351,7 @@ function midiNoteOn(note, velocity){
     const midiFreq = midi2Frequency(note).toFixed(4);
     pianoKeys.forEach(key => {
         const keyFreq = parseFloat(key.getAttribute("frequency")).toFixed(4);
-        if(keyFreq == midiFreq){
+        if(keyFreq === midiFreq){
             key.classList.add("active");
             console.log(key.getAttribute("data-note-name"));
         }
