@@ -7,14 +7,14 @@
     cursor: pointer;
 }
 
-.white-key:hover {
+.white-key.hover {
     fill: url(#white-key-hover);
     -webkit-transition: .2s;
     -o-transition: .2s;
     transition: .2s;
 }
 
-.black-key:hover {
+.black-key.hover {
     fill: url(#black-key-hover);
     -webkit-transition: .2s;
     -o-transition: .2s;
@@ -29,7 +29,7 @@
     stroke: #1f1f1f;
 } 
 
-.white-key:active, .black-key:active {
+.white-key.active, .black-key.active {
     fill: transparent;
     -webkit-box-shadow: none;
     box-shadow: none;
@@ -54,11 +54,11 @@
     opacity:100%
 }
 
- .white-key:active {
+ .white-key.active {
     fill: url(#white-key-gradient-active);
 }
 
-.black-key:active {
+.black-key.active {
     fill: url(#black-key-gradient-active);
 }
 
