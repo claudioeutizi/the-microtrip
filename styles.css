@@ -7,14 +7,14 @@
     cursor: pointer;
 }
 
-.white-key.hover {
+.white-key:hover {
     fill: url(#white-key-hover);
     -webkit-transition: .2s;
     -o-transition: .2s;
     transition: .2s;
 }
 
-.black-key.hover {
+.black-key:hover {
     fill: url(#black-key-hover);
     -webkit-transition: .2s;
     -o-transition: .2s;

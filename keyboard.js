@@ -63,7 +63,7 @@ const pianoHeight = 400;
 const naturalNotes = ["C", "D", "E", "F", "G", "A", "B"];
 const naturalNotesSharps = ["C", "D", "F", "G", "A"];
 const naturalNotesFlats = ["D", "E", "G", "A", "B"];
-const range = ["C0", "B4"];
+const range = ["C2", "B6"];
 
 const keyboardApp = {
     setupPiano() {
@@ -266,7 +266,6 @@ const utils = {
 
 keyboardApp.setupPiano();
 /* ===================================== KEYS ================================================================= */
-
 const pianoKeys = document.querySelectorAll(".key");
 
 pianoKeys.forEach(key => {
@@ -308,10 +307,13 @@ pianoKeys.forEach(key => {
 /* ===================================== MIDI ================================================================ */
 
 /* MIDI */
-
-if(navigator.requestMIDIAccess){
-    navigator.requestMIDIAccess().then(midiSuccess, midiFailure); //do we have access to midi from browser?
+function midiRequest() {
+    if(navigator.requestMIDIAccess){
+        navigator.requestMIDIAccess().then(midiSuccess, midiFailure); //do we have access to midi from browser?
+    }
 }
+
+midiRequest();
 
 function midiFailure(){
     console.log("Could not connect MIDI!");
@@ -377,5 +379,5 @@ function midi2Frequency(number){
     const a = 440.0;
     return (a/32) * (2 ** ((number - 9) / 12));
 }
-
+/* =============================================NODE====================================================== */
 /* =============================================TEST====================================================== */
