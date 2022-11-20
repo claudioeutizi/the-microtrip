@@ -1,4 +1,4 @@
-import { getDeviceList } from 'usb';
+/* STARTING LOCALHOST WEB SERVER */
 
 var http = require('http');
 var server = http.createServer(function (req, res) {
@@ -9,8 +9,7 @@ server.listen(1337, '127.0.0.1');
 
 console.log('Server running at http://127.0.0.1:1337/');
 
-const devices = getDeviceList();
+/* WEB USB API */
 
-for (const device of devices) {
-    console.log(device); // Legacy device
-}
+import { usb, getDeviceList } from 'usb';
+const devices: usb.Device[] = getDeviceList();
