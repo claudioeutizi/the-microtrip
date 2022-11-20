@@ -1,15 +1,22 @@
 /* STARTING LOCALHOST WEB SERVER */
+let https;
+try {
+  https = await import('node:https');
+} catch (err) {
+  console.log('https support is disabled!');
+}
 
-var http = require('http');
-var server = http.createServer(function (req, res) {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end('Hello World!');
-})
-server.listen(1337, '127.0.0.1');
+// const MICROBIT_VENDOR_ID = 0x0d28
+// const MICROBIT_PRODUCT_ID = 0x0204
+// const MICROBIT_DAP_INTERFACE = 4
 
-console.log('Server running at http://127.0.0.1:1337/');
+// navigator.usb.requestDevice({ filters: [{ vendorId: 0x0d28 }] })
+// .then(device => {
+//   console.log(device.productName);      
+//   console.log(device.manufacturerName); 
+// })
+// .catch(error => { console.error(error); });
 
-/* WEB USB API */
 
-import { usb, getDeviceList } from 'usb';
-const devices: usb.Device[] = getDeviceList();
+
+
