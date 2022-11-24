@@ -37,7 +37,7 @@ class Piano extends HTMLElement{
 
        
             
-        this.root.addEventListener("mousemove",event=>{
+        this.root.addEventListener("mouseover",event=>{
             this.handleClick(event,true);
             event.preventDefault()
         });
@@ -47,8 +47,7 @@ class Piano extends HTMLElement{
             this.handleClick(event,true);
             event.preventDefault()
         });
-     
-        
+           
         this.root.addEventListener("mouseup",event=>{
             this.handleClick(event,false);
             click=false;
@@ -81,7 +80,6 @@ attributeChangedCallback(){
 
 
 handleClick(event,downOrMove){
-
     if(this.config.readOnly){return}const target=event.target;
     if(target.tagName==="rect"){
         const note=event.target.getAttribute("data-note");
@@ -91,7 +89,7 @@ handleClick(event,downOrMove){
             this.setNoteDown(note,octave);
             this.dispatchEvent(new CustomEvent("note-down",{
                 detail:{
-                    note:note,octave:octave
+                    note:note+octave.toString()
                 }
             }))
         }
