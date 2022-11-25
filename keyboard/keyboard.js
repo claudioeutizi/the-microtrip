@@ -8,7 +8,7 @@ function*noteGenerator(startNote){
 
     const pivot=Notes.indexOf(startNote);
     const layout=[...Notes.slice(pivot,Notes.length),...Notes.slice(0,pivot)];
-    let octave=0;
+    let octave=3;           //INITIAL OCTAVE
     let first=true;
 
     while(true){
@@ -98,7 +98,7 @@ handleClick(event,downOrMove){
                 this.setNoteUp(note,octave);
                 this.dispatchEvent(new CustomEvent("note-up",{
                     detail:{
-                        note:note,octave:octave
+                        note:note+octave.toString()
                     }
                 }))
             }

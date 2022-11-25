@@ -9,9 +9,18 @@
 </head>
 <body>
 
+    <div class="drop down">
+        <label for="Instrument">Instrument</label>
+        <select type="Instrument" id="Instrument_data">
+            <option value="Violin">Violin</option>
+            <option value="Flute">Flute</option>
+            <option value="Bass">Bass</option>
+        </select>
+    </div>
+
     <script src="keyboard.js"></script>  
     <piano-keys id="interactive-piano" key-count=61 keyboard-layout="C"></piano-keys>
-    
+    <script src="http://unpkg.com/tone"></script>
     <script type="module" src="script.js"></script>
 </body>
 </html>
