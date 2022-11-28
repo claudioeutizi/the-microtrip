@@ -6,17 +6,16 @@ import {ReadlineParser} from '@serialport/parser-readline';
 import moment from 'moment';
 import * as path from 'path';
 
-const express = require('express'); //Line 1
-const server = express(); //Line 2
-const port = process.env.PORT || 5000; //Line 3
+const server = express();
+const port = process.env.PORT || 5000; 
 
 // This displays message that the server running and listening to specified port
-server.listen(port, () => console.log(`Listening on port ${port}`)); //Line 6
+server.listen(port, () => console.log(`Listening on port ${port}`));
 
 // create a GET route
 server.get('/express_backend', (req, res) => { //Line 9
-  res.send({ express: 'YOUR EXPRESS BACKEND IS CONNECTED TO REACT' }); //Line 10
-}); //Line 11
+  res.send({ express: 'YOUR EXPRESS BACKEND IS CONNECTED TO REACT' });
+}); 
 
 //import serialport & declare vars
 

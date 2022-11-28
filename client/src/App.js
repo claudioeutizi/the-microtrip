@@ -1,24 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
+
+// fetching the GET route from the Express server which matches the GET route from server.js
+
 function App () {
-    // fetching the GET route from the Express server which matches the GET route from server.js
-  const callBackendAPI = async () => {
-    const response = await fetch('/express_backend');
-    const body = await response.json();
+  const [apiResponse, setApiResponse] = useState("");
 
-    if (response.status !== 200) {
-      throw Error(body.message) 
-    }
-    return body;
-  };
+  React.useEffect(() => {
+    fetch("http://localhost:9000/testAPI")
+      .then(res => res.text())
+      .then(res => setApiResponse(res))
+  });
 
-  const componentDidMount = () => {
-    callBackendAPI()
-      .then(res => this.setState({ data: res.express }))
-      .catch(err => console.log(err));
-  }
   return (
     <div className = "App">
-      <h2> Hello World </h2>
+      <h2> {apiResponse} </h2>
     </div>
   )
 }
