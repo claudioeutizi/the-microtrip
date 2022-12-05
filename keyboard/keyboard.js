@@ -58,7 +58,7 @@ class Piano extends HTMLElement{
             this.handleClick(event,false);
             event.preventDefault()
         });
-        this.root.innerHTML=`<link href="style.css" rel = "stylesheet"><div>${this.getNoteSvg()}`
+        // this.root.innerHTML=`<link href="style.css" rel = "stylesheet"><div>${this.getNoteSvg()}`
 
     }
 

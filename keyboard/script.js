@@ -1,38 +1,58 @@
 // import * as Tone from 'tone'
 
+// Tone=require('tone');
+
+
 const piano = document.getElementById("interactive-piano");
 
-const noteMap = { q: 'C5', 2: 'C#5', w: 'D5', 3:'D#5', e: 'E5', r:'F5', 5:'F#5', t:'G5', 6:'G#5', y: 'A5', 7: 'A#5', u: 'B5', i: 'C6', o:'D6', p:'E6'};
+// const noteMap = { q: 'C5', 2: 'C#5', w: 'D5', 3:'D#5', e: 'E5', r:'F5', 5:'F#5', t:'G5', 6:'G#5', y: 'A5', 7: 'A#5', u: 'B5', i: 'C6', o:'D6', p:'E6'};
 
+const keys="zsxdcvgbhnjmq2w3er5t6y7ui9o0p";
+const notes=['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#','B']; 
 
+const button = document.createElement('button');
+button.innerText = 'Start';
+document.body.appendChild(button);
+
+//variabili daripulire
+let dBVolume;
+let octaveShift=0;
+let octave;
+let noteNumber;
+let currentTime;
 let noteS;
 let noteP;
 let noteToPlay;
 let noteToStop;
-let samplerIndex = document.getElementById("Instrument_data").selectedIndex;
+let samplerIndex=0;
+// let octaveShift= document.getElementById("octave").selectedIndex;
 
 
 //====================================SAMPLERS===================================//
 let violin = new Tone.Sampler({
 	"C5" : "Violin_C5.mp3"
-}).toMaster();
+}).toDestination();
 
 let flute = new Tone.Sampler({
 	"C6" : "Flute_C6.mp3"
-}).toMaster();
+}).toDestination();
 
 let bass = new Tone.Sampler({
 	"C5" : "Bass_C5.wav"
-}).toMaster();
+}).toDestination();
+
 
 let arrayTemp = [violin, flute, bass];
 
+// var vol = new Tone.Volume(dBVolume);
+// instrument.chain(vol, Tone.Master)
+
 //-------------------------------------loops------------------------------------//
 
-const loop=new Tone.Loop(()=>{
-    arrayTemp[samplerIndex].triggerAttack(noteToPlay)
-}, 1);
-Tone.Transport.start();
+// const loop=new Tone.Loop(()=>{
+//     arrayTemp[samplerIndex].triggerAttack(noteToPlay)
+// }, 1);
+// Tone.Transport.start();
 
 
 
@@ -41,7 +61,8 @@ Tone.Transport.start();
 //----------------------------------click events---------------------------------//
 piano.addEventListener("note-down", (event) => {
     noteToPlay = event.detail.note;
-    playSound(noteToPlay);
+    currentTime = Tone.now();
+    playSound(noteToPlay,currentTime);
 });
 
 piano.addEventListener("note-up", (event) => {
@@ -53,43 +74,57 @@ document.getElementById("Instrument_data").addEventListener("change", ()=>{
     samplerIndex=document.getElementById("Instrument_data").selectedIndex
 });
 
+// 
+
+button.onclick=function(){
+    Tone.start();
+    console.log("Tone started");
+}
 //---------------------------------keyboard events--------------------------------//
 document.body.onkeydown = function(event) {
     if (event.repeat) return;
-    noteToPlay = noteMap[event.key];
+
+    currentTime = Tone.now();
+    // noteToPlay = noteMap[event.key];
+    // noteToPlay=notes[noteNumber];
+    // console.log(noteToPlay);
+    noteNumber=keys.indexOf(event.key);
+    octave=Math.floor(noteNumber/12)+4+octaveShift;
+    noteToPlay=notes[noteNumber % 12]+octave.toString();
     
-    playSound(noteToPlay);
+    playSound(noteToPlay,currentTime);
     
-    noteP=noteToPlay.charAt(0);
-    if(noteToPlay.length-2){
-        noteP=noteToPlay.slice(0,2);
-    }
-    piano.setNoteDown(noteP, noteToPlay.slice(-1));
+    // noteP=noteToPlay.charAt(0);
+    // if(noteToPlay.includes("#")){
+    //     noteP+="#";
+    // }
+    // piano.setNoteDown(noteP, noteToPlay.slice(-1));
+    piano.setNoteDown(notes[noteNumber % 12], octave);
 }
 
-//TO ADD: se il loop sta andando allora utilizzare un altro loop per avere polifonia
-//LATENCY
-//BROWSERIFY e vedere se la latenza si risolve con l'import
-//ottave
-//MIDI
-
 document.body.onkeyup = function(event) {
-    noteToStop = noteMap[event.key];
+    // noteToStop = noteMap[event.key];
+    noteNumber=keys.indexOf(event.key);
+    octave=Math.floor(noteNumber/12)+4+octaveShift;
+    noteToStop=notes[noteNumber % 12]+octave.toString();
     
     stopSound(noteToStop);
 
-    noteS=noteToStop.charAt(0);
-    if(noteToStop.length-2){
-        noteS=noteToStop.slice(0,2);
-    }
-    piano.setNoteUp(noteS, noteToStop.slice(-1));
+    // noteS=noteToStop.charAt(0);
+    // if(noteToStop.includes("#")){
+    //     noteS+="#";
+    // }
+    // piano.setNoteUp(noteS, noteToStop.slice(-1));
+
+    piano.setNoteUp(notes[noteNumber % 12], octave);
 }
 
 //===================================PLAY/STOP===================================//
 
-function playSound(n){
+function playSound(n,t){
     // loop.start();
-    arrayTemp[samplerIndex].triggerAttack(n)
+    t=t-1;
+    arrayTemp[samplerIndex].triggerAttack(n,t);
 }
 
 function stopSound(n){
@@ -97,34 +132,86 @@ function stopSound(n){
     arrayTemp[samplerIndex].triggerRelease(n);
 }
 
+//======================================MIDI=====================================//
+
+function midiRequest() {
+    if(navigator.requestMIDIAccess){
+        navigator.requestMIDIAccess().then(midiSuccess, midiFailure); //do we have access to midi from browser?
+    }
+}
+
+midiRequest();
+
+function midiFailure(){
+    console.log("Could not connect MIDI!");
+}
+
+//what i need from midi when i've a connection success
+function midiSuccess(midiAccess){
+    console.log(midiAccess);
+    midiAccess.addEventListener('statechange', updateMidiDevices);
+    const inputs = midiAccess.inputs;
+    
+    //we wanna catch the midi information when a midi source sends to the browser a midi message
+    inputs.forEach((input) => {
+        input.addEventListener('midimessage', handleMidiInput);
+    })
+}
+
+
+function handleMidiInput(input){
+    const command = input.data[0];    
+    const noteNumber = input.data[1];    
+    const velocity = input.data[2];
+    switch(command){
+        case 144:
+        if(velocity > 0){
+            midiNoteOn(noteNumber, velocity);
+
+        } else {
+            midiNoteOff(noteNumber);
+        }
+        break;
+        case 128: //it can send a 128 message instead of a 144 with 0 velocity
+        midiNoteOff(noteNumber);
+        break;
+    }
+}
+
+function midiNoteOn(noteNumber, velocity){
+    //vedere la latenza e valutare se mettere questi passaggi all'interno di una funzione
+    octave=Math.floor(noteNumber/12)+2+octaveShift;
+    noteToPlay=notes[noteNumber % 12]+octave.toString();
+    console.log(noteToPlay);
+
+    playSound(noteToPlay,Tone.now());  //valutare la latenza di tone now all'interno o come variabile
+
+    piano.setNoteDown(notes[noteNumber % 12], octave);
+}
+
+function midiNoteOff(noteNumber){
+    octave=Math.floor(noteNumber/12)+2;
+    noteToStop=notes[noteNumber % 12]+octave.toString();
+
+    stopSound(noteToStop);
+
+    piano.setNoteUp(notes[noteNumber % 12], octave);
+}
+
+function updateMidiDevices(event){
+}
+
+// function midi2Frequency(number){
+//     const a = 440.0;
+//     return (a/32) * (2 ** ((number - 9) / 12));
+// }
 
 
 
-// var keyState = {};    
-// window.addEventListener('keydown',function(e){
-//     keyState[e.keyCode || e.which] = true;
-// },true);    
-// window.addEventListener('keyup',function(e){
-//     keyState[e.keyCode || e.which] = false;
-// },true);
-
-// let x = 100;
-
-// function gameLoop() {
-//     if (keyState[37] || keyState[65]){
-//         x -= 1;
-//         console.log(x);
-//     }    
-//     if (keyState[39] || keyState[68]){
-//         x += 1;
-//         console.log(x);
-//     }
-
-//     // redraw/reposition your object here
-//     // also redraw/animate any objects not controlled by the user
-
-//     setTimeout(gameLoop, 10);
-// }    
-// gameLoop();
-
+//TO ADD: se il loop sta andando allora utilizzare un altro loop per avere polifonia
+//BROWSERIFY e vedere se la latenza si risolve con l'import
+//ottave->tonal?
+//Master volume vedi esempi jesus
+//add the frequency attribute to the keys?
+//add text to the keys
 

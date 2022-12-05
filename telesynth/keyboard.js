@@ -338,6 +338,7 @@ function handleMidiInput(input){
     switch(command){
         case 144:
         if(velocity > 0){
+            
             midiNoteOn(note, velocity);
         } else {
             midiNoteOff(note);
