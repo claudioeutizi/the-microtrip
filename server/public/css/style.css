@@ -1,0 +1,67 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.piano {
+    cursor: pointer;
+}
+
+.white-key:hover {
+    fill: url(#white-key-hover);
+    -webkit-transition: .2s;
+    -o-transition: .2s;
+    transition: .2s;
+}
+
+.black-key:hover {
+    fill: url(#black-key-hover);
+    -webkit-transition: .2s;
+    -o-transition: .2s;
+    transition: .2s;
+}
+
+.white-key {
+    stroke: #282828;
+}
+
+.black-key {
+    stroke: #1f1f1f;
+} 
+
+.white-key.active, .black-key.active {
+    fill: transparent;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    -webkit-transition: .2s;
+    -o-transition: .2s;
+    transition: .2s;
+}
+
+.white-key-text {
+    font-size: 1.3em;
+    fill: #000;
+    pointer-events: none;
+    user-select: none;
+    opacity:100%
+}
+.black-key-text {
+    font-size: 1em;
+    fill: #fff;
+    font-weight: 200;
+    pointer-events: none;
+    user-select: none;
+    opacity:100%
+}
+
+ .white-key.active {
+    fill: url(#white-key-gradient-active);
+}
+
+.black-key.active {
+    fill: url(#black-key-gradient-active);
+}
+
+.playing.black-key ~ text {
+    fill: rgb(255, 255, 255);
+}

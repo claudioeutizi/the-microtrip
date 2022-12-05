@@ -1,0 +1,3 @@
+GET http://localhost:5000/api/humidity
+
+GET http://localhost:5000/api/temperature
