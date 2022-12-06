@@ -25,7 +25,7 @@ let noteP;
 let noteToPlay;
 let noteToStop;
 let samplerIndex=0;
-// let octaveShift= document.getElementById("octave").selectedIndex;
+let octaveSelector = document.getElementById("octaveSelector");
 
 
 //====================================SAMPLERS===================================//
@@ -74,7 +74,11 @@ document.getElementById("Instrument_data").addEventListener("change", ()=>{
     samplerIndex=document.getElementById("Instrument_data").selectedIndex
 });
 
-// 
+document.getElementById("octave").addEventListener("change", ()=>{
+    octaveShift=parseInt(octaveSelector.elements[0].value,10);
+});
+
+
 
 button.onclick=function(){
     Tone.start();
@@ -209,8 +213,6 @@ function updateMidiDevices(event){
 
 
 //TO ADD: se il loop sta andando allora utilizzare un altro loop per avere polifonia
-//BROWSERIFY e vedere se la latenza si risolve con l'import
-//ottave->tonal?
 //Master volume vedi esempi jesus
 //add the frequency attribute to the keys?
 //add text to the keys
