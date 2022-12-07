@@ -1,26 +1,30 @@
 (function(factory){typeof define==="function"&&define.amd?define(factory):factory()})((function(){
     "use strict";
 
-const Notes=["A","A#","B","C","C#","D","D#","E","F","F#","G","G#"];
-let click=false;
+const Notes = ["A","A#","B","C","C#","D","D#","E","F","F#","G","G#"];
+let click = false;
 
 function*noteGenerator(startNote){
 
-    const pivot=Notes.indexOf(startNote);
-    const layout=[...Notes.slice(pivot,Notes.length),...Notes.slice(0,pivot)];
-    let octave=3;           //INITIAL OCTAVE
-    let first=true;
+    const pivot = Notes.indexOf(startNote);
+    const layout = [...Notes.slice(pivot,Notes.length), ...Notes.slice(0,pivot)];
+    let octave = 3;           //INITIAL OCTAVE
+    let first = true;
 
     while(true){
-        for(let i=0;i<layout.length;i++){
-            const note=layout[i];
-            if(note==="C"&&!first){octave=octave+1}yield{name:note,octave:octave};
-            first=false
+        for(let i = 0; i < layout.length; i++){
+            const note = layout[i];
+            if(note === "C" && !first){
+                octave = octave + 1;
+            }
+            yield {name:note, octave:octave};
+            first = false;
         }
     }
 }
 
-const NaturalWidth=10;const SharpWidth=6;
+const NaturalWidth = 10;
+const SharpWidth = 6;
 
 function sharpKey(note,octave,offset){
     return`<rect class="sharp-note note" data-note="${note}" data-octave="${octave}" x=${offset} y=1></rect>`
@@ -33,28 +37,26 @@ function naturalKey(note,octave,offset){
 class Piano extends HTMLElement{
     constructor(){
         super();
-        this.root=this.attachShadow({mode:"open"});
+        this.root = this.attachShadow({mode:"open"});
 
-       
-            
-        this.root.addEventListener("mouseover",event=>{
+        this.root.addEventListener("mouseover", event => {
             this.handleClick(event,true);
             event.preventDefault()
         });
 
-        this.root.addEventListener("mousedown",event=>{
-            click=true;
+        this.root.addEventListener("mousedown",event => {
+            click = true;
             this.handleClick(event,true);
             event.preventDefault()
         });
            
-        this.root.addEventListener("mouseup",event=>{
+        this.root.addEventListener("mouseup",event => {
             this.handleClick(event,false);
-            click=false;
+            click = false;
             event.preventDefault()
         });
 
-        this.root.addEventListener("mouseout",event=>{
+        this.root.addEventListener("mouseout",event => {
             this.handleClick(event,false);
             event.preventDefault()
         });
@@ -67,25 +69,25 @@ static get observedAttributes(){
 }
 
 get config(){
-    return{
-        keyCount:parseInt(this.getAttribute("key-count")||"88"),keyboardLayout:this.getAttribute("keyboard-layout")||"A",readOnly:this.hasAttribute("read-only")
+    return {
+        keyCount:parseInt(this.getAttribute("key-count") || "88"), keyboardLayout:this.getAttribute("keyboard-layout") || "A", readOnly:this.hasAttribute("read-only")
     }
 }
 
 connectedCallback(){}
 attributeChangedCallback(){
-    this.root.innerHTML=`<link href="style.css" rel = "stylesheet"><div>${this.getNoteSvg()}</div>`
+    this.root.innerHTML = `<link href="style.css" rel = "stylesheet"><div>${this.getNoteSvg()}</div>`
 }
 
 
 
 handleClick(event,downOrMove){
     if(this.config.readOnly){return}const target=event.target;
-    if(target.tagName==="rect"){
-        const note=event.target.getAttribute("data-note");
-        const octave=parseInt(event.target.getAttribute("data-octave"));
+    if(target.tagName === "rect"){
+        const note = event.target.getAttribute("data-note");
+        const octave = parseInt(event.target.getAttribute("data-octave"));
 
-        if(downOrMove&&click){
+        if(downOrMove && click){
             this.setNoteDown(note,octave);
             this.dispatchEvent(new CustomEvent("note-down",{
                 detail:{
@@ -105,25 +107,25 @@ handleClick(event,downOrMove){
         }
     }
 }
-setNoteDown(note,octave){
-    const elem=this.root.querySelector(keySelector(note,octave));
+setNoteDown(note, octave){
+    const elem = this.root.querySelector(keySelector(note,octave));
     elem.classList.add("active");
     elem.setAttribute("data-active","data-active")
 }
 
-setNoteUp(note,octave){
-    const elem=this.root.querySelector(keySelector(note,octave));
+setNoteUp(note, octave){
+    const elem = this.root.querySelector(keySelector(note,octave));
     elem.classList.remove("active");
     elem.removeAttribute("data-active")
 }
 
 getNoteSvg(){
-    const noteCount=this.config.keyCount;
-    const generator=noteGenerator(this.config.keyboardLayout);
-    const notes=new Array(noteCount).fill(1).map(()=>generator.next().value);
-    const naturalKeys=notes.filter(note=>!note.name.includes("#")).length;
-    const lastKeySharp=notes[notes.length-1].name.includes("#");
-    const totalWidth=naturalKeys*NaturalWidth+(lastKeySharp?SharpWidth/2:0)+2;
+    const noteCount = this.config.keyCount;
+    const generator = noteGenerator(this.config.keyboardLayout);
+    const notes = new Array(noteCount).fill(1).map(()=>generator.next().value);
+    const naturalKeys = notes.filter(note => !note.name.includes("#")).length;
+    const lastKeySharp = notes[notes.length-1].name.includes("#");
+    const totalWidth = naturalKeys * NaturalWidth + (lastKeySharp ? SharpWidth / 2: 0) + 2;
     return`<svg viewBox="0 0 ${totalWidth} 52" version="1.1" xmlns="http://www.w3.org/2000/svg">${this.getKeysForNotes(notes)}
     <defs>
     <linearGradient id="black-key-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
@@ -190,24 +192,28 @@ getNoteSvg(){
 }
 
 getKeysForNotes(notes){
-    let totalOffset=-NaturalWidth+1;
-    const offsets=notes.map(note=>{
-        const isSharp=note.name.includes("#");
-        let thisOffset=0;
-        if(isSharp){thisOffset=totalOffset+7}
-        else{
-            totalOffset=totalOffset+NaturalWidth;
-            thisOffset=totalOffset
+    let totalOffset = -NaturalWidth + 1;
+    let thisOffset = 0;
+    const offsets = notes.map(note => {
+        const isSharp = note.name.includes("#");
+        if(isSharp){
+            thisOffset = totalOffset + 7;
         }
-        return{note:note.name,octave:note.octave,offset:thisOffset}
+        else {
+            totalOffset = totalOffset + NaturalWidth;
+            thisOffset = totalOffset;
+        }
+        return {
+            note: note.name, octave:note.octave, offset:thisOffset
+        }
     });
 
-    const naturalKeys=offsets.filter(pos=>!pos.note.includes("#")).map(pos=>naturalKey(pos.note,pos.octave,pos.offset));
-    const sharpKeys=offsets.filter(pos=>pos.note.includes("#")).map(pos=>sharpKey(pos.note,pos.octave,pos.offset));
+    const naturalKeys = offsets.filter(pos => !pos.note.includes("#")).map(pos => naturalKey(pos.note, pos.octave, pos.offset));
+    const sharpKeys = offsets.filter(pos=>pos.note.includes("#")).map(pos => sharpKey(pos.note, pos.octave, pos.offset));
     return`<g>\n${naturalKeys}\n${sharpKeys}\n</g>`
 }
 
 }
 
-const keySelector=(note,octave)=>`[data-note="${note}"][data-octave="${octave}"]`;
+const keySelector=(note,octave) => `[data-note="${note}"][data-octave="${octave}"]`;
 customElements.define("piano-keys",Piano)}));
