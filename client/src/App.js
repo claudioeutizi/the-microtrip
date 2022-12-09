@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-
+import Piano from './Components/Piano';
+import "./Styles/Keyboard.css"
 // fetching the GET route from the Express server which matches the GET route from server.js
 
 function App () {
@@ -13,7 +14,7 @@ function App () {
 
   return (
     <div className = "App">
-      <h2> {apiResponse} </h2>
+      <Piano keycount = {61} keyboardlayout = {"C"}/>
     </div>
   )
 }

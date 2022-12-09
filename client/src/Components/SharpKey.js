@@ -3,8 +3,9 @@
 function SharpKey(props) {
 
   return (
-    <rect className = "SharpKey" data-note = {props.note} data-octave={props.octave} x={props.offset}>
-    </rect>
+      <rect className = "SharpKey"
+        datanote = {props.dataNote} dataoctave={props.dataOctave} x={props.x}>
+      </rect>
   )
 }
 
