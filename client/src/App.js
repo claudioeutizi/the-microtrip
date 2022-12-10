@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import Piano from './Components/Piano';
+import Piano from './Components/Piano/Piano';
+import { Display } from "react-7-segment-display";
 import "./Styles/Keyboard.css"
 // fetching the GET route from the Express server which matches the GET route from server.js
 
@@ -21,6 +22,7 @@ function App () {
     <div className = "App">
       <h2>{serialLight}</h2>
       <h2>{serialError}</h2>
+      <Display value = {27} color = "black" count = {3} skew = {7}/>
       <Piano keycount = {61} keyboardlayout = {"C"}/>
     </div>
   )

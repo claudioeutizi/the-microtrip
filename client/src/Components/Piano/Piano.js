@@ -1,7 +1,7 @@
 import React from "react";
 import {useRef, useEffect} from "react";
 import NaturalKey from "./NaturalKey";
-import SharpKey from "../SharpKey";
+import SharpKey from "./SharpKey";
 
 function Piano(props) {
   const divRef = useRef();
@@ -130,8 +130,11 @@ function Piano(props) {
         </linearGradient>
 
         <linearGradient id="black-key-gradient-active" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
-            <stop offset="0%" stopColor="rgb(70, 70, 70)"></stop>
-            <stop offset="100%" stopColor="hsl(227, 0%, 22%)"></stop>
+            <stop offset="0" stopColor="rgb(70, 70, 70)"></stop>
+            <stop offset="0.852" stopColor="#hsl(227, 0%, 22%)"></stop>
+              <stop offset="0.877" stopColor="#141414"></stop>
+              <stop offset="0.887" stopColor="#343434"></stop>
+              <stop offset="0.921" stopColor="#2b2b2b"></stop>
         </linearGradient>
 
         <linearGradient id="black-key-hover" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
