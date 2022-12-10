@@ -1,7 +1,7 @@
 import React from "react";
 import {useRef, useEffect} from "react";
 import NaturalKey from "./NaturalKey";
-import SharpKey from "./SharpKey";
+import SharpKey from "../SharpKey";
 
 function Piano(props) {
   const divRef = useRef();
