@@ -1,6 +1,6 @@
 // import * as Tone from 'tone'
 
-// Tone=require('tone');
+// Tone = require('tone');
 
 
 const piano = document.getElementById("interactive-piano");
@@ -125,10 +125,10 @@ document.body.onkeyup = function(event) {
 
 //===================================PLAY/STOP===================================//
 
-function playSound(n,t){
+function playSound(n,t,v){
     // loop.start();
     t=t-1;
-    arrayTemp[samplerIndex].triggerAttack(n,t);
+    arrayTemp[samplerIndex].triggerAttack(n,t,v);
 }
 
 function stopSound(n){
@@ -166,12 +166,14 @@ function midiSuccess(midiAccess){
 function handleMidiInput(input){
     const command = input.data[0];    
     const noteNumber = input.data[1];    
-    const velocity = input.data[2];
+    const velocity = input.data[2]/10;
+    
+
     switch(command){
-        case 144:
+        case 159:
         if(velocity > 0){
             midiNoteOn(noteNumber, velocity);
-
+            console.log(velocity);
         } else {
             midiNoteOff(noteNumber);
         }
@@ -182,13 +184,17 @@ function handleMidiInput(input){
     }
 }
 
+
+//METTI IL NOTE OFF
+
 function midiNoteOn(noteNumber, velocity){
     //vedere la latenza e valutare se mettere questi passaggi all'interno di una funzione
     octave=Math.floor(noteNumber/12)+2+octaveShift;
     noteToPlay=notes[noteNumber % 12]+octave.toString();
     console.log(noteToPlay);
+    
 
-    playSound(noteToPlay,Tone.now());  //valutare la latenza di tone now all'interno o come variabile
+    playSound(noteToPlay,Tone.now(),velocity);  //valutare la latenza di tone now all'interno o come variabile
 
     piano.setNoteDown(notes[noteNumber % 12], octave);
 }
@@ -203,6 +209,7 @@ function midiNoteOff(noteNumber){
 }
 
 function updateMidiDevices(event){
+    
 }
 
 // function midi2Frequency(number){
@@ -216,4 +223,6 @@ function updateMidiDevices(event){
 //Master volume vedi esempi jesus
 //add the frequency attribute to the keys?
 //add text to the keys
+//knobs codepen
+//link per input parameter drag and drop
 
