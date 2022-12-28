@@ -1,23 +1,116 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var cors = require("cors");
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const cors = require('cors');
+var debug = require('debug')('api:server');
+var http = require('http');
+const {Server} = require('socket.io');
 
-//===============SERIAL PORT===========================
-// import {SerialPort} from 'serialport';
-// import {ReadlineParser} from '@serialport/parser-readline';
-// import moment from 'moment';
+const app = express();
 
-// //==============UUID for keys
-// import {v4 as uuidv4} from 'uuid';
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '9000');
+app.set('port', port);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}
+
+
+/**
+ * Socket.io port listener.
+ */
+
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods:["GET", "POST"],
+  }
+});
+
+io.on('connection', (socket) => {
+  console.log('new socket connection');
+  socket.emit("message", "Welcome!");
+  socket.on("disconnect", () => {
+    console.log("client disconnection");
+  })
+});
+
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var testAPIRouter = require("./routes/testAPI");
+var socketRouter = require("./routes/socket");
 var serialDataRouter = require("./routes/serialData")
-var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -31,8 +124,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use("/testAPI", testAPIRouter);
+app.use("/testAPI", socketRouter);
 app.use("/serialData", serialDataRouter);
 
 // catch 404 and forward to error handler
