@@ -6,7 +6,7 @@ const logger = require('morgan');
 const cors = require('cors');
 var debug = require('debug')('api:server');
 var http = require('http');
-const {Server} = require('socket.io');
+const { Server } = require('socket.io');
 
 const app = express();
 
@@ -101,15 +101,15 @@ const io = new Server(server, {
 
 io.on('connection', (socket) => {
   console.log('new socket connection');
-  socket.emit("message", "Welcome!");
   socket.on("disconnect", () => {
     console.log("client disconnection");
   })
 });
 
+exports.io = io;
+
 
 var indexRouter = require('./routes/index');
-var socketRouter = require("./routes/socket");
 var serialDataRouter = require("./routes/serialData")
 
 // view engine setup
@@ -124,7 +124,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use("/testAPI", socketRouter);
 app.use("/serialData", serialDataRouter);
 
 // catch 404 and forward to error handler
