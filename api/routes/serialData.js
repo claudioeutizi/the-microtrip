@@ -1,4 +1,6 @@
 var express = require("express");
+var io = require("../app").io;
+
 var router = express.Router();
 const {SerialPort} = require('serialport');
 const {ReadlineParser} = require('@serialport/parser-readline');
@@ -20,10 +22,6 @@ serialPort.on('close', () => {
 serialPort.on('error', () => {
     error = true;
 })
-
-var lightValues = [];
-var temperatureValues = [];
-var humidityValues = [];
 
 parser.on('data', (data) => {
   let param = data.substring(0, data.indexOf(':'));
@@ -55,7 +53,6 @@ router.get("/error", (request, response, next) => {
         response.send(error);
     }
 });
-
 
 router.get("/humidity", (request, response, next) => {
     response.send(humidityValues);
