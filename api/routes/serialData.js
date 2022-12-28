@@ -25,45 +25,26 @@ serialPort.on('error', () => {
 
 parser.on('data', (data) => {
   let param = data.substring(0, data.indexOf(':'));
-  let value = data.substring(data.indexOf(':')+1, data.length);
+  let value = parseFloat(data.substring(data.indexOf(':')+1, data.length));
   switch(param){
     case "Light":
-      lightValues.push({
-        light: value,
+      io.emit("light-message", {
+        value: value,
         timestamp: moment().format()
-    })
+      })
       break;
     case "Temperature":
-      temperatureValues.push({
-        temperature: value,
+      io.emit("temperature-message", {
+        value: value,
         timestamp: moment().format()
     })
       break;
     case "Humidity":
-      humidityValues.push({
-        humidity: value,
+      io.emit("humidity-message", {
+        value: value,
         timestamp: moment().format()
     })
   }
 })
-
-
-router.get("/error", (request, response, next) => {
-    if(error){
-        response.send(error);
-    }
-});
-
-router.get("/humidity", (request, response, next) => {
-    response.send(humidityValues);
-});
-
-router.get("/light", (request, response, next) => {
-    response.send(lightValues);
-});
-
-router.get("/temperature", (request, response, next) => {
-    response.send(temperatureValues);
-});
 
 module.exports = router;
