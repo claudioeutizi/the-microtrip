@@ -100,10 +100,7 @@ const io = new Server(server, {
 });
 
 io.on('connection', (socket) => {
-  console.log('new socket connection');
-  socket.on("disconnect", () => {
-    console.log("client disconnection");
-  })
+  console.log('new socket connection: '+socket.id);
 });
 
 exports.io = io;

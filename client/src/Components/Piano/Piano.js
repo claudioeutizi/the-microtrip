@@ -31,18 +31,12 @@ function Piano(props) {
     const config = {
       keyCount: parseInt(props.keyCount || "88"), 
       keyboardLayout: props.keyboardLayout || "A", 
-      readOnly: props.readOnly
   }
 
   useEffect(() => {
 
     const piano = divRef.current;
-    console.log(piano);
-
     const handleClick = (event, downOrMove) => {
-      if (config.readOnly) { 
-        return; 
-      } 
   
       const target = event.target;
       if (target.tagName === "rect") {
@@ -50,7 +44,7 @@ function Piano(props) {
         const octave = parseInt(event.target.getAttribute("dataoctave"));
         if (downOrMove && click.current) {
             setNoteDown(note, octave);
-            dispatchEvent(new CustomEvent("note-down",
+            document.dispatchEvent(new CustomEvent("notedown",
             {
               detail: {
                 note: note + octave.toString()
@@ -60,8 +54,8 @@ function Piano(props) {
         else {
           if (target.classList.contains("active")) {
             setNoteUp(note, octave);
-            dispatchEvent(new CustomEvent("note-up",
-              {
+            document.dispatchEvent(new CustomEvent("noteup",
+            {
                 detail: {
                   note: note + octave.toString()
                 }
@@ -105,7 +99,7 @@ function Piano(props) {
       event.preventDefault()
     });
 
-  })
+  }, [])
 
   const getNoteSvg = () => {
     const noteCount = config.keyCount;
@@ -204,14 +198,20 @@ function Piano(props) {
     });
 
     const naturalOffsets = offsets.filter(pos => ! pos.note.includes("#"));
+
     const sharpOffsets = offsets.filter(pos => pos.note.includes("#"));
-    const naturalKeys = naturalOffsets.map(pos => <NaturalKey dataNote={pos.note} dataOctave={pos.octave} x={pos.offset}/>);
-    const sharpKeys = sharpOffsets.map(pos => <SharpKey dataNote={pos.note} dataOctave={pos.octave} x={pos.offset}/>);
+
+    const naturalKeys = naturalOffsets.map(pos => 
+      <NaturalKey dataNote={pos.note} dataOctave={pos.octave} x={pos.offset}/>);
+
+    const sharpKeys = sharpOffsets.map(pos =>
+      <SharpKey dataNote={pos.note} dataOctave={pos.octave} x={pos.offset}/>);
 
     return <g>{naturalKeys}{sharpKeys}</g>
   }
 
   const pianoSVG = getNoteSvg();
+
 
   return (
       <div className = "Piano" ref = {divRef}>
@@ -223,10 +223,10 @@ function Piano(props) {
 
 Piano.defaultProps = {
   Notes: ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"],
+  Keys: "zsxdcvgbhnjmq2w3er5t6y7ui9o0p",
   NaturalWidth: 10,
   SharpWidth: 6,
-  observedAttributes: ["keycount", "keyboardlayout", "readonly"],
-  readOnly: false
-
+  observedAttributes: ["keycount", "keyboardlayout"],
 }
+
 export default Piano;

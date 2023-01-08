@@ -128,12 +128,12 @@ document.body.onkeyup = function(event) {
 function playSound(n,t){
     // loop.start();
     t=t-1;
-    arrayTemp[samplerIndex].triggerAttack(n,t);
+    sampler.triggerAttack(n,t);
 }
 
 function stopSound(n){
     // loop.stop();
-    arrayTemp[samplerIndex].triggerRelease(n);
+    sampler.triggerRelease(n);
 }
 
 //======================================MIDI=====================================//

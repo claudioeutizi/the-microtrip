@@ -30,19 +30,19 @@ parser.on('data', (data) => {
     case "Light":
       io.emit("light-message", {
         value: value,
-        timestamp: moment().format()
+        timestamp: moment().format(),
       })
       break;
     case "Temperature":
       io.emit("temperature-message", {
         value: value,
-        timestamp: moment().format()
+        timestamp: moment().format(),
     })
       break;
     case "Humidity":
       io.emit("humidity-message", {
         value: value,
-        timestamp: moment().format()
+        timestamp: moment().format(),
     })
   }
 })
