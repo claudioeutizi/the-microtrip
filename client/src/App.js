@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Piano from './Components/Piano/Piano';
-import "./Styles/Keyboard.css"
+import "./Styles/Piano.css"
+import "./Styles/Footer.css"
 import io from "socket.io-client"
 import { Basic } from 'react-dial-knob'
 import TempRhSensor from './Components/Graphical/TempRhSensor';
+import Footer from './Components/Graphical/Footer';
+import Room from './Components/Graphical/Room';
+import Grid from '@mui/material/Unstable_Grid2';
 
 // fetching the GET route from the Express server which matches the GET route from server.js
 
@@ -38,14 +42,24 @@ function App() {
 
   return (
     <div className = "App">
-    <Piano keyCount = {61} keyboardLayout = {"C"}/>
-      <Basic diameter={200} min={0} max={100} step={1} value={knobValue}
-        theme={{
-            donutColor: 'blue'
-        }} onValueChange={setKnobValue} ariaLabelledBy={'knob'}>
-        <label id={'knob'}>Knob Label</label>
-    </Basic>
-    <TempRhSensor light = {light.value} temp = {Math.round(temperature.value * 10) / 10} hum = {Math.round(humidity.value * 10) / 10}/>
+      <Grid container spacing = {2}>
+        <Grid xs={10}>
+          <Room />
+        </Grid>
+        <Grid xs = {2}>
+          <TempRhSensor light = {light.value} 
+          temp = {Math.round(temperature.value * 10) / 10}
+           hum = {Math.round(humidity.value * 10) / 10}/>
+        </Grid>
+        <Grid xs = {12}>
+          <Piano keyCount = {61} keyboardLayout = {"C"}/>
+        </Grid>
+        <Grid>
+          <Footer/>
+        </Grid>
+      </Grid>
+
+      
   </div>
   )
 }
