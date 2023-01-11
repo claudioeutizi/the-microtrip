@@ -29,9 +29,11 @@
 .NaturalKey.active {  
     fill: url(#white-key-gradient-active);
     transform: scale(1, 0.97);
+    transition: .1s;
 }
 
 .SharpKey.active {  
     fill: url(#black-key-gradient-active);
     transform: scale(1, 0.97);
+    transition: .1s;
 }

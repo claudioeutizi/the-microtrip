@@ -152,7 +152,6 @@ function midiFailure(){
 
 //what i need from midi when i've a connection success
 function midiSuccess(midiAccess){
-    console.log(midiAccess);
     midiAccess.addEventListener('statechange', updateMidiDevices);
     const inputs = midiAccess.inputs;
     
@@ -184,7 +183,7 @@ function handleMidiInput(input){
 
 function midiNoteOn(noteNumber, velocity){
     //vedere la latenza e valutare se mettere questi passaggi all'interno di una funzione
-    octave=Math.floor(noteNumber/12)+2+octaveShift;
+    octave = Math.floor(noteNumber/12) + 2 + octaveShift;
     noteToPlay=notes[noteNumber % 12]+octave.toString();
     console.log(noteToPlay);
 

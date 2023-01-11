@@ -4,15 +4,23 @@ import NaturalKey from "./NaturalKey";
 import SharpKey from "./SharpKey";
 
 function Piano(props) {
+
+  const notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+  const keys = "zsxdcvgbhnjmq2w3er5t6y7ui9o0p";
   const divRef = useRef();
   const click = useRef(false);
 
-  const keySelector = (note, octave) => `[dataNote="${note}"][dataOctave="${octave}"]`;
+  /* ========================================== MIDI ================================================================ */
 
+
+  /* ========================================== KEYBOARD RENDER ====================================================== */
+
+  const keySelector = (note, octave) => `[dataNote="${note}"][dataOctave="${octave}"]`;
+  
   function* noteGenerator(startNote) {
 
-    const pivot = props.Notes.indexOf(startNote);
-    const layout = [...props.Notes.slice(pivot, props.Notes.length), ...props.Notes.slice(0, pivot)];
+    const pivot = notes.indexOf(startNote);
+    const layout = [...notes.slice(pivot, notes.length), ...notes.slice(0, pivot)];
     let octave = 3;           //INITIAL OCTAVE
     let first = true;
   
@@ -44,37 +52,37 @@ function Piano(props) {
         const octave = parseInt(event.target.getAttribute("dataoctave"));
         if (downOrMove && click.current) {
             setNoteDown(note, octave);
-            document.dispatchEvent(new CustomEvent("notedown",
+        }
+        else {
+          if (target.classList.contains("active")) {
+            setNoteUp(note, octave);
+            }
+          }
+        }
+      }
+
+      const setNoteDown = (note, octave) => {
+        const elem = piano.querySelector(keySelector(note, octave));
+        elem.classList.add("active");
+        elem.setAttribute("active", true);
+        document.dispatchEvent(new CustomEvent("notedown",
             {
               detail: {
                 note: note + octave.toString()
               }
             }))
-        }
-        else {
-          if (target.classList.contains("active")) {
-            setNoteUp(note, octave);
-            document.dispatchEvent(new CustomEvent("noteup",
-            {
-                detail: {
-                  note: note + octave.toString()
-                }
-            }))
-            }
-          }
-        }
-      }
-  
-      const setNoteDown = (note, octave) => {
-        const elem = piano.querySelector(keySelector(note, octave));
-        elem.classList.add("active");
-        elem.setAttribute("active", true);
       }
   
       const setNoteUp = (note, octave) =>  {
         const elem = piano.querySelector(keySelector(note, octave));
         elem.classList.remove("active");
         elem.removeAttribute("dataactive");
+        document.dispatchEvent(new CustomEvent("noteup",
+            {
+                detail: {
+                  note: note + octave.toString()
+                }
+            }))
       } 
 
     piano.addEventListener("mouseover", event => {
@@ -99,7 +107,99 @@ function Piano(props) {
       event.preventDefault()
     });
 
-  }, [])
+    //what i need from midi when i've a connection success
+    const midiSuccess = (midiAccess) => {
+      midiAccess.addEventListener('statechange', updateMidiDevices);
+      const inputs = midiAccess.inputs;
+      
+    //we wanna catch the midi information when a midi source sends to the browser a midi message
+      inputs.forEach((input) => {
+          input.addEventListener('midimessage', handleMidiInput);
+      })
+    }
+
+    const midiFailure = () =>{
+      console.log("Could not connect MIDI!");
+    }
+
+    const midiRequest = () => {
+      if(navigator.requestMIDIAccess){
+          navigator.requestMIDIAccess().then(midiSuccess, midiFailure); //do we have access to midi from browser?
+      }
+    }
+  
+  midiRequest();
+  
+  const handleMidiInput = (input) => {
+      const command = input.data[0];    
+      const noteNumber = input.data[1];    
+      const velocity = input.data[2];
+      switch(command){
+          case 144:
+          if(velocity > 0){
+              midiNoteOn(noteNumber, velocity);
+          } else {
+              midiNoteOff(noteNumber);
+          }
+          break;
+          case 128: //it can send a 128 message instead of a 144 with 0 velocity
+          midiNoteOff(noteNumber);
+          break;
+          default: break;
+      }
+  }
+  
+  const midiNoteOn = (noteNumber) => {
+
+      const octave = Math.floor(noteNumber/12) + 2;
+      const note = notes[noteNumber % 12];
+      setNoteDown(note, octave);
+  }
+  
+  const midiNoteOff = (noteNumber) => {
+      const octave = Math.floor(noteNumber / 12) + 2;
+      const note = notes[noteNumber % 12];
+      setNoteUp(note, octave);
+  }
+  
+  function updateMidiDevices(event){
+  }
+
+  /* ====================================================== KEYBOARD EVENTS =================================================== */
+
+  document.body.onkeydown = function(event) {
+    if (event.repeat) return;
+
+    // noteToPlay = noteMap[event.key];
+    // noteToPlay=notes[noteNumber];
+    // console.log(noteToPlay);
+    const noteNumber = keys.indexOf(event.key);
+    const octave = Math.floor(noteNumber/12) + 4;
+    //const noteToPlay = notes[noteNumber % 12] + octave.toString();
+    
+    // noteP=noteToPlay.charAt(0);
+    // if(noteToPlay.includes("#")){
+    //     noteP+="#";
+    // }
+    // piano.setNoteDown(noteP, noteToPlay.slice(-1));
+    setNoteDown(notes[noteNumber % 12], octave);
+}
+
+document.body.onkeyup = function(event) {
+    // noteToStop = noteMap[event.key];
+    const noteNumber = keys.indexOf(event.key);
+    const octave = Math.floor(noteNumber/12) + 4;
+    //const noteToStop = notes[noteNumber % 12] + octave.toString();
+
+    // noteS=noteToStop.charAt(0);
+    // if(noteToStop.includes("#")){
+    //     noteS+="#";
+    // }
+    // piano.setNoteUp(noteS, noteToStop.slice(-1));
+    setNoteUp(notes[noteNumber % 12], octave);
+}
+
+  });
 
   const getNoteSvg = () => {
     const noteCount = config.keyCount;
@@ -212,7 +312,6 @@ function Piano(props) {
 
   const pianoSVG = getNoteSvg();
 
-
   return (
       <div className = "Piano" ref = {divRef}>
       {pianoSVG}
@@ -222,10 +321,9 @@ function Piano(props) {
 
 
 Piano.defaultProps = {
-  Notes: ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"],
-  Keys: "zsxdcvgbhnjmq2w3er5t6y7ui9o0p",
   NaturalWidth: 10,
   SharpWidth: 6,
+  keyboardLayout: "A",
   observedAttributes: ["keycount", "keyboardlayout"],
 }
 
