@@ -1,0 +1,13 @@
+.footer{
+    margin-top: 1rem;
+    padding: 1rem;
+    position: fixed;
+    background-color: #282c34;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+  }
+  
+  .footer-text{
+    color: white
+  }
