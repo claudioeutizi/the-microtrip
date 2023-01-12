@@ -11,7 +11,7 @@ export default function TempRhSensor(props) {
         <Card sx={{ boxShadow:3, backgroundColor:'#eeeeee', border:2, borderColor:'#b9b9b9'}} raised='true' flex = '2'>
             <CardContent sx = {{m:1, border:2, borderColor:'#808d6f'}} style = {{backgroundColor: '#a1aa97'}}>
                 <Typography sx = {{ fontWeight: 'bold', color:'#20201e', letterSpacing:2}} style = {{'fontFamily': "Seven Segment", 'textAlign':'center'}} gutterBottom variant="h5" component="div">
-                    T: {props.temp}°C
+                    T: {props.temp}&deg;C
                 </Typography>
                 <Typography sx = {{ fontWeight: 'bold', color:'#20201e', letterSpacing:2}} style = {{'fontFamily': "Seven Segment", 'textAlign':'center'}} gutterBottom variant="h5" component="div">
                     Rh: {props.hum}%

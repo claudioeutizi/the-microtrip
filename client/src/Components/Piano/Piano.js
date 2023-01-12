@@ -2,6 +2,7 @@ import React from "react";
 import {useRef, useEffect} from "react";
 import NaturalKey from "./NaturalKey";
 import SharpKey from "./SharpKey";
+import { Box, Stack, Typography } from "@mui/material";
 
 function Piano(props) {
 
@@ -167,37 +168,40 @@ function Piano(props) {
 
   /* ====================================================== KEYBOARD EVENTS =================================================== */
 
-  document.body.onkeydown = function(event) {
-    if (event.repeat) return;
+    document.body.onkeydown = function(event) {
+      if (event.repeat) return;
+        if(keys.includes(event.key)){
+        // noteToPlay = noteMap[event.key];
+        // noteToPlay=notes[noteNumber];
+        // console.log(noteToPlay);
+        const noteNumber = keys.indexOf(event.key);
+        const octave = Math.floor(noteNumber/12) + 4;
+        //const noteToPlay = notes[noteNumber % 12] + octave.toString();
+        
+        // noteP=noteToPlay.charAt(0);
+        // if(noteToPlay.includes("#")){
+        //     noteP+="#";
+        // }
+        // piano.setNoteDown(noteP, noteToPlay.slice(-1));
+        setNoteDown(notes[noteNumber % 12], octave);
+      }
+  }
 
-    // noteToPlay = noteMap[event.key];
-    // noteToPlay=notes[noteNumber];
-    // console.log(noteToPlay);
-    const noteNumber = keys.indexOf(event.key);
-    const octave = Math.floor(noteNumber/12) + 4;
-    //const noteToPlay = notes[noteNumber % 12] + octave.toString();
-    
-    // noteP=noteToPlay.charAt(0);
-    // if(noteToPlay.includes("#")){
-    //     noteP+="#";
-    // }
-    // piano.setNoteDown(noteP, noteToPlay.slice(-1));
-    setNoteDown(notes[noteNumber % 12], octave);
-}
+  document.body.onkeyup = function(event) {
+      // noteToStop = noteMap[event.key];
+      if(keys.includes(event.key)){
+        const noteNumber = keys.indexOf(event.key);
+        const octave = Math.floor(noteNumber/12) + 4;
+        //const noteToStop = notes[noteNumber % 12] + octave.toString();
 
-document.body.onkeyup = function(event) {
-    // noteToStop = noteMap[event.key];
-    const noteNumber = keys.indexOf(event.key);
-    const octave = Math.floor(noteNumber/12) + 4;
-    //const noteToStop = notes[noteNumber % 12] + octave.toString();
-
-    // noteS=noteToStop.charAt(0);
-    // if(noteToStop.includes("#")){
-    //     noteS+="#";
-    // }
-    // piano.setNoteUp(noteS, noteToStop.slice(-1));
-    setNoteUp(notes[noteNumber % 12], octave);
-}
+        // noteS=noteToStop.charAt(0);
+        // if(noteToStop.includes("#")){
+        //     noteS+="#";
+        // }
+        // piano.setNoteUp(noteS, noteToStop.slice(-1));
+        setNoteUp(notes[noteNumber % 12], octave);
+      }
+  }
 
   });
 
@@ -313,9 +317,16 @@ document.body.onkeyup = function(event) {
   const pianoSVG = getNoteSvg();
 
   return (
-      <div className = "Piano" ref = {divRef}>
-      {pianoSVG}
-      </div>
+      <Stack sx = {{bgcolor:"#282828"}} direction = "row" spacing = {2} justifyContent = "space-between">
+        <Box flex = {2}>
+          <Typography sx = {{ fontWeight: 'bold', color:'white', letterSpacing:2}} style = {{'textAlign':'center'}} gutterBottom variant="h5" component="div">
+            Pitch and Mod Wheels
+          </Typography>
+        </Box>
+        <Box className = "Piano" flex = {10} ref = {divRef}>
+          {pianoSVG}
+        </Box>
+      </Stack>
     );
 }
 

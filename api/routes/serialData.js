@@ -6,7 +6,7 @@ const {SerialPort} = require('serialport');
 const {ReadlineParser} = require('@serialport/parser-readline');
 const moment = require('moment');
 
-const serialPort = new SerialPort({path: 'COM9', baudRate: 115200,});
+const serialPort = new SerialPort({path: 'COM11', baudRate: 115200,});
 const parser = serialPort.pipe(new ReadlineParser({delimiter: '\n'}));
 
 let error = false;
@@ -20,6 +20,7 @@ serialPort.on('close', () => {
 })
 
 serialPort.on('error', () => {
+  console.log('Error occurred');
     error = true;
 })
 
