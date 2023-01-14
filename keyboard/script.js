@@ -1,4 +1,4 @@
-// import * as Tone from 'tone'
+v// import * as Tone from 'tone'
 
 // Tone = require('tone');
 
@@ -128,12 +128,12 @@ document.body.onkeyup = function(event) {
 function playSound(n,t,v){
     // loop.start();
     t=t-1;
-    arrayTemp[samplerIndex].triggerAttack(n,t,v);
+    sampler.triggerAttack(n,t);
 }
 
 function stopSound(n){
     // loop.stop();
-    arrayTemp[samplerIndex].triggerRelease(n);
+    sampler.triggerRelease(n);
 }
 
 //======================================MIDI=====================================//
@@ -152,7 +152,6 @@ function midiFailure(){
 
 //what i need from midi when i've a connection success
 function midiSuccess(midiAccess){
-    console.log(midiAccess);
     midiAccess.addEventListener('statechange', updateMidiDevices);
     const inputs = midiAccess.inputs;
     
@@ -189,7 +188,7 @@ function handleMidiInput(input){
 
 function midiNoteOn(noteNumber, velocity){
     //vedere la latenza e valutare se mettere questi passaggi all'interno di una funzione
-    octave=Math.floor(noteNumber/12)+2+octaveShift;
+    octave = Math.floor(noteNumber/12) + 2 + octaveShift;
     noteToPlay=notes[noteNumber % 12]+octave.toString();
     console.log(noteToPlay);
     
