@@ -1,110 +1,126 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Piano from './Components/Piano/Piano';
-import "./Styles/Piano.css"
-import "./Styles/Footer.css"
-import io from "socket.io-client"
-import TempRhSensor from './Components/Graphical/TempRhSensor';
-import Footer from './Components/Graphical/Footer';
-import Room from './Components/Graphical/Room';
+import "./Components/styles/Piano.css"
+import "./Components/styles/Footer.css"
+import Footer from './Components/Footer';
+import Room from './Components/Room';
 import Grid from '@mui/material/Unstable_Grid2';
-import LocalWeather from './Components/Graphical/LocalWeather';
+import Display from './Components/Display';
 import * as cities from './cities';
+import { WEATHER_API_KEY, WEATHER_API_URL } from './utility/api';
+import Cities from './Components/Cities';
+import { useSocket } from './utility/useSocket';
 
 // fetching the GET route from the Express server which matches the GET route from server.js
 
 function App() {
 
-  const [latitude, setLatitude] = useState([]);
-  const [longitude, setLongitude] = useState([]);
-  const [currentPositionAccess, setCurrentPositionAccess] = useState(false);
-  const [city, setCity] = useState(2);
-  const [localWeatherData, setLocalWeatherData] = useState([]);
-  const [temperature, setTemperature] = useState({});
-  const [humidity, setHumidity] = useState({});
-  const [light, setLight] = useState({});
+  //Socket from where to get real-time data from micro:bit
+  const socket = useSocket('http://localhost:9000');
 
-  const toggleCurrentPosition = (toggle) => {
-    setCurrentPositionAccess(toggle);
-    console.log(currentPositionAccess)
+  const [currentWeather, setCurrentWeather] = useState(null);
+  const [internalHumidity, setInternalHumidity] = useState('-');
+  const [internalTemperature, setInternalTemperature] = useState('-');
+  const [internalLight, setInternalLight] = useState('-');
+
+  // const toggleCurrentPosition = (toggle) => {
+  //   setCurrentPositionAccess(toggle);
+  //   console.log(currentPositionAccess)
+  // }
+
+  const handleOnSearchChange = async (cityData) => {
+
+    // if(currentPosition){
+    //     navigator.geolocation.getCurrentPosition(function(position) {
+    //       [lat, lon] = [position.coords.latitude, position.coords.longitude];
+    //     });
+    //   } else {
+
+    const [lat, lon] = cityData.value.split(" ");
+    const weatherFetch = fetch(`${WEATHER_API_URL}/weather/?lat=${lat}&lon=${lon}&units=metric&appid=${WEATHER_API_KEY}`)
+
+    Promise.all([weatherFetch])
+      .then(async (response) => {
+        const weatherResponse = await response[0].json();
+        setCurrentWeather({ city: cityData.label, ...weatherResponse });
+      })
+      .catch((err) => console.log(err));
   }
-  
+
   useEffect(() => {
 
+    const handleTemperatureMessage = (data) => {
+      setInternalTemperature(data);
+    }
+
+    const handleHumidityMessage = (data) => {
+      setInternalHumidity(data);
+    }
+
+    const handleLightMessage = (data) => {
+      setInternalLight(data);
+    }
+
     /* MESSAGES FROM MICRO:BIT */
-    const socket = io.connect("http://localhost:9000");
-    socket.on("temperature-message", (data) => {
-      setTemperature(data);
-    })
-    socket.on("humidity-message", (data) => {
-      setHumidity(data);
-    })
-    socket.on("light-message", (data) => {
-      setLight(data);
-    })
+    if (socket) {
+      socket.on("temperature-message", handleTemperatureMessage);
+      socket.on("humidity-message", handleHumidityMessage);
+      socket.on("light-message", handleLightMessage);
+    }
+
+    return () => {
+      if (socket) {
+        socket.off("temperature-message", handleTemperatureMessage);
+        socket.off("humidity-message", handleHumidityMessage);
+        socket.off("light-message", handleLightMessage);
+      }
+    }
+  }, [socket]);
+
+  useEffect(() => {
+
+    const handleNoteUp = (event) => {
+      console.log("note up: " + event.detail.note);
+    }
+  
+    const handleNoteDown = (event) => {
+      console.log("note down: " + event.detail.note);
+    }
 
     /* MESSAGES FROM PIANO KEYBOARD IN ORDER TO PRODUCE SOUND */
-    document.addEventListener("notedown", event => {
-      console.log("note down: "+event.detail.note)
-    })
+    document.addEventListener("notedown", handleNoteDown);
+    document.addEventListener("noteup", handleNoteUp);
 
-    document.addEventListener("noteup", event => {
-      console.log("note up: "+event.detail.note)
-    })
+    return () => {
+      document.removeEventListener('notedown', handleNoteDown);
+      document.removeEventListener('noteup', handleNoteUp);
+
+    };
 
   }, []);
 
-  useEffect(() => {
-  
-    /* MESSAGES FROM WEATHER API: GEOLOCALIZATION AND CITIES */
-    const fetchWeatherData = async (currentPosition, cityChoice) => {
-      if(currentPosition){
-          navigator.geolocation.getCurrentPosition(function(position) {
-            setLatitude(position.coords.latitude);
-            setLongitude(position.coords.longitude);
-          });
-        } else {
-          setLatitude(cities.default[cityChoice].latitude);
-          setLongitude(cities.default[cityChoice].longitude);
-        }
-        
-        (typeof latitude !== 'undefined' && typeof longitude !== 'undefined') ? (await fetch(`${process.env.REACT_APP_API_URL}/weather/?lat=${latitude}&lon=${longitude}&units=metric&APPID=${process.env.REACT_APP_API_KEY}`)
-          .then(res => res.json())
-          .then(result => {
-            setLocalWeatherData(result);
-        })) : (setLocalWeatherData([]))
-    }
-
-    fetchWeatherData(currentPositionAccess, city);
-  }, [latitude, longitude, currentPositionAccess, city]);
-
 
   return (
-    <div className = "App">
-      <Grid container spacing = {4}>
-        <Grid xs={10}>
-          <Room/>
+    <div className="App">
+      <Grid container spacing={4}>
+        <Grid xs={8}>
+          <Cities onSearchChange={handleOnSearchChange} />
+        </Grid>
+        <Grid xs={8}>
+          <Room />
         </Grid>
         <Grid>
-          {(typeof localWeatherData.main != 'undefined') ? (
-            <LocalWeather toggleCurrentPosition = {toggleCurrentPosition} continent = {cities.default[city].continent} 
-            city = {(currentPositionAccess === false)?(cities.default[city].name):(localWeatherData.name)} weatherData={localWeatherData}/>
-        ): (
-          <div></div>
-        )}
+          {currentWeather && <Display externalData={currentWeather}
+            light={internalLight.value} temperature={internalTemperature.value} humidity={internalHumidity.value} />}
         </Grid>
-        <Grid xs = {2}>
-          <TempRhSensor light = {light.value} 
-            temp = {Math.round(temperature.value * 10) / 10}
-            hum = {Math.round(humidity.value * 10) / 10}/>
-        </Grid>
-        <Grid xs = {12}>
-          <Piano keyCount = {61} keyboardLayout = {"C"}/>
+        <Grid xs={12}>
+          <Piano keyCount={61} keyboardLayout={"C"} />
         </Grid>
         <Grid>
-          <Footer/>
+          <Footer />
         </Grid>
       </Grid>
-  </div>
+    </div>
   )
 }
 

@@ -1,0 +1,111 @@
+.device {
+    font-family: 'roboto';
+    width: fit-content;
+    max-width: 200px;
+    display: block;
+    background-color: #eeeeee;
+    border: 20px;
+    border-radius: 6px;
+    border-color: #b9b9b9;
+}
+
+.display {
+    margin: 10px;
+    border: 5px;
+    border-color: #808d6f;
+    background-color: #a1aa97;
+}
+
+.top {
+    display: block;
+    align-items: center;
+    overflow: auto;
+}
+
+.city {
+    font-weight: 600;
+    font-size: 18px;
+    text-align:center;
+    margin: 5px;
+    letter-spacing: 1px;
+}
+
+.weather-description {
+    text-align: center;
+    font-weight: 400;
+    font-size: 14px;
+    margin: 5px;
+}
+
+.data-container {
+    max-width: 180px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.data {
+    max-width: 70px;
+    display: block;
+    align-items: center;
+}
+
+.data.internal {
+    text-align: right;
+    margin-right: 5px;
+    border: 1px solid;
+}
+
+.data.external {
+    text-align: left;
+    margin-left: 5px;
+}
+
+.data-value {
+    font-family: 'Seven Segment';
+    font-weight: bolder;
+    font-size: 20px;
+    margin: 10px;
+    max-width: 60px;
+    letter-spacing: -1px;
+}
+
+.data-label {
+    text-align:left;
+    margin: 10px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.details {
+    margin: 10px;
+    height: fit-content;
+    overflow: auto;
+}
+
+.parameter-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.parameter-label {
+    margin: 0px;
+    text-align: left;
+    font-weight: 400;
+    font-size: 12px;
+}
+
+.parameter-value {
+    margin: 0px;
+    text-align: right;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.parameter-label.top {
+    text-align: left;
+    margin: 0px;
+    font-weight: 600;
+    border-bottom: 1px solid;
+}
+
