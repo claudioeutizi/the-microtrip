@@ -127,7 +127,6 @@ function App() {
     <div className="App">
       <Grid container spacing={3}>
         <Grid xs={8}>
-          <Cities onSearchChange={handleOnSearchChange} />
         </Grid>
         <Grid xs={8}>
           <Map onCityChange={handleOnSearchChange}></Map>
