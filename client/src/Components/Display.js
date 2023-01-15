@@ -1,12 +1,20 @@
 import { Box, Card, CardActions, Switch } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 import "./styles/Display.css"
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 
-const Display = ({ externalData, light, temperature, humidity }) => {
+const Display = ({ onSwitchChange, externalData, light, temperature, humidity }) => {
+
+    const [positionSwitch, setPositionSwitch] = useState(false);
+
+    const handleOnPositionChange = (event, value) => {
+        setPositionSwitch(value);
+        onSwitchChange(value);
+    }
+
     return (
         <Box bgcolor={"#eeeeee"} flex={1}>
-            <Card className='device' raised='true'>
+            <Card className='device' raised={true}>
                 <div className='display'>
                     <div className='top'>
                         <p className="city">
@@ -47,10 +55,9 @@ const Display = ({ externalData, light, temperature, humidity }) => {
                     </div>
                 </div>
                 <CardActions>
-                    {/* <Switch onChange = {(event, toggle) => {props.toggleCurrentPosition(toggle)}} sx={{border:1, borderColor: '#808d6f', boxShadow:2}} 
-            aria-label="measure" icon = {<LocationOnIcon />} checkedIcon = {<LocationOnIcon />}>
+                    <Switch defaultValue={false} onChange = {handleOnPositionChange} icon = {<LocationOnIcon />} checkedIcon = {<LocationOnIcon />}>
             <LocationOnIcon />
-        </Switch> */}
+        </Switch>
                 </CardActions>
             </Card>
         </Box>

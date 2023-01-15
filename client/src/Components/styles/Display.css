@@ -11,7 +11,8 @@
 
 .display {
     margin: 10px;
-    border: 5px;
+    border: 10px;
+    height: fit-content;
     border-color: #808d6f;
     background-color: #a1aa97;
 }

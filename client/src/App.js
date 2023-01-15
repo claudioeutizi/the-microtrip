@@ -6,9 +6,9 @@ import Footer from './Components/Footer';
 import Room from './Components/Room';
 import Grid from '@mui/material/Unstable_Grid2';
 import Display from './Components/Display';
-import * as cities from './cities';
 import { WEATHER_API_KEY, WEATHER_API_URL } from './utility/api';
 import Cities from './Components/Cities';
+import Map from './Components/Map';
 import { useSocket } from './utility/useSocket';
 
 // fetching the GET route from the Express server which matches the GET route from server.js
@@ -19,26 +19,49 @@ function App() {
   const socket = useSocket('http://localhost:9000');
 
   const [currentWeather, setCurrentWeather] = useState(null);
+  const [cityData, setCityData] = useState(null);
   const [internalHumidity, setInternalHumidity] = useState('-');
   const [internalTemperature, setInternalTemperature] = useState('-');
   const [internalLight, setInternalLight] = useState('-');
 
-  // const toggleCurrentPosition = (toggle) => {
-  //   setCurrentPositionAccess(toggle);
-  //   console.log(currentPositionAccess)
-  // }
+  const handleOnPositionSwitchChange = async (switchValue) => {
+    console.log(switchValue)
+    if (switchValue) {
+      handleOnCoordinatesChange()
+    } else {
+      try {
+        handleOnSearchChange(cityData);
+      } catch (error) {
+        handleOnCoordinatesChange();
+        console.log(error);
+      }
+    }
+  }
+
+  const handleOnCoordinatesChange = async () => {
+    try {
+      const locationData = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+      });
+      const [lat, lon] = [locationData.coords.latitude, locationData.coords.longitude];
+      const weatherFetch = fetch(`${WEATHER_API_URL}/weather/?lat=${lat}&lon=${lon}&units=metric&appid=${WEATHER_API_KEY}`)
+
+      Promise.all([weatherFetch])
+        .then(async (response) => {
+          const weatherResponse = await response[0].json();
+          setCurrentWeather({ city: weatherResponse.name, ...weatherResponse });
+        })
+        .catch((err) => console.log(err));
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const handleOnSearchChange = async (cityData) => {
 
-    // if(currentPosition){
-    //     navigator.geolocation.getCurrentPosition(function(position) {
-    //       [lat, lon] = [position.coords.latitude, position.coords.longitude];
-    //     });
-    //   } else {
-
+    setCityData(cityData);
     const [lat, lon] = cityData.value.split(" ");
     const weatherFetch = fetch(`${WEATHER_API_URL}/weather/?lat=${lat}&lon=${lon}&units=metric&appid=${WEATHER_API_KEY}`)
-
     Promise.all([weatherFetch])
       .then(async (response) => {
         const weatherResponse = await response[0].json();
@@ -77,12 +100,13 @@ function App() {
     }
   }, [socket]);
 
+
   useEffect(() => {
 
     const handleNoteUp = (event) => {
       console.log("note up: " + event.detail.note);
     }
-  
+
     const handleNoteDown = (event) => {
       console.log("note down: " + event.detail.note);
     }
@@ -99,18 +123,17 @@ function App() {
 
   }, []);
 
-
   return (
     <div className="App">
-      <Grid container spacing={4}>
+      <Grid container spacing={3}>
         <Grid xs={8}>
           <Cities onSearchChange={handleOnSearchChange} />
         </Grid>
         <Grid xs={8}>
-          <Room />
+          <Map onCityChange={handleOnSearchChange}></Map>
         </Grid>
         <Grid>
-          {currentWeather && <Display externalData={currentWeather}
+          {currentWeather && <Display externalData={currentWeather} onSwitchChange={handleOnPositionSwitchChange}
             light={internalLight.value} temperature={internalTemperature.value} humidity={internalHumidity.value} />}
         </Grid>
         <Grid xs={12}>

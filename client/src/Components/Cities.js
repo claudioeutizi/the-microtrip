@@ -12,7 +12,7 @@ const Cities = ({ onSearchChange }) => {
         onSearchChange(searchData);
     }
 
-    const loadOptions = (inputValue) => {
+    const loadOptions = async (inputValue) => {
         // var cityDateTime;
         return fetch(`${GEO_API_URL}/cities?limit=3&minPopulation=100000&namePrefix=${inputValue}`, geoApiOptions)
             .then(response => response.json())
@@ -46,4 +46,4 @@ const Cities = ({ onSearchChange }) => {
   )
 }
 
-export default Cities
+export default Cities;
