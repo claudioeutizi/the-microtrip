@@ -1,7 +1,7 @@
 const cities = [
     {
         name: 'Milan',
-        continent: 'Europe',
+        id: 'Q490',
         position: {
             lat: 45.464664,
             lon: 9.188540,
@@ -10,7 +10,7 @@ const cities = [
 
     {
         name: 'New York',
-        continent: 'America',
+        id: 'Q60',
         position: {
             lat: 40.730610,
             lon: -73.935242,
@@ -19,7 +19,7 @@ const cities = [
 
     {
         name: 'London',
-        continent: 'Europe',
+        id: 'Q84',
         position: {
             lat: 51.509865,
             lon: -0.118092,
@@ -28,7 +28,7 @@ const cities = [
 
     {
         name: 'Los Angeles',
-        continent: 'America',
+        id: 'Q65',
         position: {
             lat: 34.052235,
             lon: -118.243683,

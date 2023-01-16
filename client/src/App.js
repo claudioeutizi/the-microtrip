@@ -1,15 +1,14 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useEffect, useState } from 'react';
 import Piano from './Components/Piano/Piano';
 import "./Components/styles/Piano.css"
 import "./Components/styles/Footer.css"
 import Footer from './Components/Footer';
-import Room from './Components/Room';
 import Grid from '@mui/material/Unstable_Grid2';
 import Display from './Components/Display';
 import { WEATHER_API_KEY, WEATHER_API_URL } from './utility/api';
-import Cities from './Components/Cities';
 import Map from './Components/Map';
 import { useSocket } from './utility/useSocket';
+import moment from 'moment';
 
 // fetching the GET route from the Express server which matches the GET route from server.js
 
@@ -17,7 +16,6 @@ function App() {
 
   //Socket from where to get real-time data from micro:bit
   const socket = useSocket('http://localhost:9000');
-
   const [currentWeather, setCurrentWeather] = useState(null);
   const [cityData, setCityData] = useState(null);
   const [internalHumidity, setInternalHumidity] = useState('-');
@@ -45,11 +43,11 @@ function App() {
       });
       const [lat, lon] = [locationData.coords.latitude, locationData.coords.longitude];
       const weatherFetch = fetch(`${WEATHER_API_URL}/weather/?lat=${lat}&lon=${lon}&units=metric&appid=${WEATHER_API_KEY}`)
-
+      const dateTime = moment().format();
       Promise.all([weatherFetch])
         .then(async (response) => {
           const weatherResponse = await response[0].json();
-          setCurrentWeather({ city: weatherResponse.name, ...weatherResponse });
+          setCurrentWeather({ city: weatherResponse.name, dateTime: dateTime, ...weatherResponse });
         })
         .catch((err) => console.log(err));
     } catch (error) {
@@ -65,9 +63,10 @@ function App() {
     Promise.all([weatherFetch])
       .then(async (response) => {
         const weatherResponse = await response[0].json();
-        setCurrentWeather({ city: cityData.label, ...weatherResponse });
+        setCurrentWeather({ city: cityData.label, ...weatherResponse, timezone: cityData.timezone });
       })
       .catch((err) => console.log(err));
+    console.log(currentWeather)
   }
 
   useEffect(() => {
@@ -128,15 +127,15 @@ function App() {
       <Grid container spacing={3}>
         <Grid xs={8}>
         </Grid>
-        <Grid xs={8}>
-          <Map onCityChange={handleOnSearchChange}></Map>
-        </Grid>
-        <Grid>
-          {currentWeather && <Display externalData={currentWeather} onSwitchChange={handleOnPositionSwitchChange}
-            light={internalLight.value} temperature={internalTemperature.value} humidity={internalHumidity.value} />}
-        </Grid>
+          <Grid xs={8}>
+            <Map onCityChange={handleOnSearchChange}></Map>
+          </Grid>
+          <Grid>
+            {currentWeather && <Display externalData={currentWeather} onSwitchChange={handleOnPositionSwitchChange}
+              light={internalLight.value} temperature={internalTemperature.value} humidity={internalHumidity.value} />}
+          </Grid>
         <Grid xs={12}>
-          <Piano keyCount={61} keyboardLayout={"C"} />
+          <Piano keyCount={61} keyboardLayout={"C"}/>
         </Grid>
         <Grid>
           <Footer />
