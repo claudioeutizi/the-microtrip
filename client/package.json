@@ -5,6 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@g200kg/webaudio-controls": "github:g200kg/webaudio-controls",
     "@googlemaps/react-wrapper": "^1.1.35",
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.3",
@@ -24,6 +25,7 @@
     "socket.io-client": "^4.5.4",
     "tone": "^14.7.77",
     "web-vitals": "^2.1.4",
+    "webaudio-controls-react-typescript": "^0.0.11",
     "websocket": "^1.0.34"
   },
   "scripts": {

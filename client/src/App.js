@@ -127,15 +127,15 @@ function App() {
       <Grid container spacing={3}>
         <Grid xs={8}>
         </Grid>
-          <Grid xs={8}>
-            <Map onCityChange={handleOnSearchChange}></Map>
-          </Grid>
-          <Grid>
-            {currentWeather && <Display externalData={currentWeather} onSwitchChange={handleOnPositionSwitchChange}
-              light={internalLight.value} temperature={internalTemperature.value} humidity={internalHumidity.value} />}
-          </Grid>
+        <Grid xs={8}>
+          <Map onCityChange={handleOnSearchChange}></Map>
+        </Grid>
+        <Grid>
+          {currentWeather && <Display externalData={currentWeather} onSwitchChange={handleOnPositionSwitchChange}
+            light={internalLight.value} temperature={internalTemperature.value} humidity={internalHumidity.value} />}
+        </Grid>
         <Grid xs={12}>
-          <Piano keyCount={61} keyboardLayout={"C"}/>
+          <Piano keyCount={61} keyboardLayout={"C"} />
         </Grid>
         <Grid>
           <Footer />

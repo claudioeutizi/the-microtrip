@@ -11,3 +11,21 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.pitch-wheel {
+  width: 200px;
+  height: 200px;
+}
+
+.wheel-path {
+  fill: none;
+  stroke: #000;
+  stroke-width: 4px;
+}
+
+.pointer-path {
+  fill: none;
+  stroke: #000;
+  stroke-width: 4px;
+  transform-origin: center;
+}
