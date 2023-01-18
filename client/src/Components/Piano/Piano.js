@@ -3,7 +3,6 @@ import { useRef, useEffect } from "react";
 import NaturalKey from "./NaturalKey";
 import SharpKey from "./SharpKey";
 import { Box, Stack, Typography } from "@mui/material";
-import {WebAudioKnob} from 'webaudio-controls-react-typescript'
 
 function Piano(props) {
 
@@ -135,7 +134,7 @@ function Piano(props) {
 
   //what i need from midi when i've a connection success
   useEffect(() => {
-    
+
     const midiSuccess = (midiAccess) => {
       setMidiAccess(midiAccess);
       midiAccess.addEventListener('statechange', updateMidiDevices);
@@ -196,14 +195,14 @@ function Piano(props) {
     }
 
     return () => {
-      if(midiAccess){
-          midiAccess.removeEventListener('statechange', updateMidiDevices);
-          const inputs = midiAccess.inputs;
-          inputs.forEach((input) => {
-              input.removeEventListener('midimessage', handleMidiInput);
-          });
+      if (midiAccess) {
+        midiAccess.removeEventListener('statechange', updateMidiDevices);
+        const inputs = midiAccess.inputs;
+        inputs.forEach((input) => {
+          input.removeEventListener('midimessage', handleMidiInput);
+        });
       }
-  };
+    };
 
 
   }, [midiAccess, notes, setNoteDown, setNoteUp]);
@@ -348,10 +347,10 @@ function Piano(props) {
     const sharpOffsets = offsets.filter(pos => pos.note.includes("#"));
 
     const naturalKeys = naturalOffsets.map(pos =>
-      <NaturalKey key = {pos.note+pos.octave} dataNote={pos.note} dataOctave={pos.octave} x={pos.offset} />);
+      <NaturalKey key={pos.note + pos.octave} dataNote={pos.note} dataOctave={pos.octave} x={pos.offset} />);
 
     const sharpKeys = sharpOffsets.map(pos =>
-      <SharpKey key = {pos.note+pos.octave} dataNote={pos.note} dataOctave={pos.octave} x={pos.offset} />);
+      <SharpKey key={pos.note + pos.octave} dataNote={pos.note} dataOctave={pos.octave} x={pos.offset} />);
 
     return <g>{naturalKeys}{sharpKeys}</g>
   }
@@ -364,32 +363,6 @@ function Piano(props) {
         <Typography sx={{ fontWeight: 'bold', color: 'white', letterSpacing: 2 }} style={{ 'textAlign': 'center' }} gutterBottom variant="h5" component="div">
           Pitch and Mod Wheels
         </Typography>
-        <WebAudioKnob
-  bodyColor="#000"
-  conv={null}
-  defvalue={0}
-  diameter={200}
-  enable={1}
-  height={null}
-  highlightColor="#fff"
-  indicatorColor="#e00"
-  log={0}
-  max={100}
-  midicc={null}
-  midilearn={0}
-  min={0}
-  onKnobEvent={function noRefCheck(){}}
-  onKnobInput={function noRefCheck(){}}
-  outline={0}
-  sensitivity={1}
-  sprites={null}
-  src="./images/Aqua.png"
-  step={1}
-  tooltip="tooltip text"
-  value={0}
-  valuetip={1}
-  width={null}
-/>
       </Box>
       <Box className="Piano" flex={10} ref={divRef}>
         {pianoSVG}

@@ -9,6 +9,7 @@ import { WEATHER_API_KEY, WEATHER_API_URL } from './utility/api';
 import Map from './Components/Map';
 import { useSocket } from './utility/useSocket';
 import moment from 'moment';
+import Room from './Components/Room';
 
 // fetching the GET route from the Express server which matches the GET route from server.js
 
@@ -126,6 +127,7 @@ function App() {
     <div className="App">
       <Grid container spacing={3}>
         <Grid xs={8}>
+          <Room></Room>
         </Grid>
         <Grid xs={8}>
           <Map onCityChange={handleOnSearchChange}></Map>
