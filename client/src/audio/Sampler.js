@@ -1,12 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import * as Tone from 'tone';
-import { mellotron, sitar, guitar } from './Instruments';
+import instruments from './Instruments';
 
 
 
 const SamplerEngine = ({ noteUp, noteDown, playTime, stopTime, velocity }) => {
 
-  const instArray = [mellotron, sitar, guitar];
   const selectedInst = 2;
   const [sampler, setSampler] = useState(null);
 
@@ -14,23 +13,23 @@ const SamplerEngine = ({ noteUp, noteDown, playTime, stopTime, velocity }) => {
   useEffect(() => {
 
     setSampler(new Tone.Sampler({
-      'A2': instArray[selectedInst].A2,
-      "C3": instArray[selectedInst].C3,
-      "D#3": instArray[selectedInst].Ds3,
-      "F#3": instArray[selectedInst].Fs3,
-      "A3": instArray[selectedInst].A3,
-      "C4": instArray[selectedInst].C4,
-      "D#4": instArray[selectedInst].Ds4,
-      "F#4": instArray[selectedInst].Fs4,
-      "A4": instArray[selectedInst].A4,
-      "C5": instArray[selectedInst].C5,
-      "D#5": instArray[selectedInst].Ds5,
-      "F#5": instArray[selectedInst].Fs5,
-      "A5": instArray[selectedInst].A5,
-      "C6": instArray[selectedInst].C6,
-      "D#6": instArray[selectedInst].Ds6,
-      "F#6": instArray[selectedInst].Fs6,
-      "A6": instArray[selectedInst].A6
+      'A2': instruments[selectedInst].samples.A2,
+      "C3": instruments[selectedInst].samples.C3,
+      "D#3":instruments[selectedInst].samples.Ds3,
+      "F#3":instruments[selectedInst].samples.Fs3,
+      "A3": instruments[selectedInst].samples.A3,
+      "C4": instruments[selectedInst].samples.C4,
+      "D#4":instruments[selectedInst].samples.Ds4,
+      "F#4":instruments[selectedInst].samples.Fs4,
+      "A4": instruments[selectedInst].samples.A4,
+      "C5": instruments[selectedInst].samples.C5,
+      "D#5":instruments[selectedInst].samples.Ds5,
+      "F#5":instruments[selectedInst].samples.Fs5,
+      "A5": instruments[selectedInst].samples.A5,
+      "C6": instruments[selectedInst].samples.C6,
+      "D#6":instruments[selectedInst].samples.Ds6,
+      "F#6":instruments[selectedInst].samples.Fs6,
+      "A6": instruments[selectedInst].samples.A6
     }).toDestination());
 
   }, []);
