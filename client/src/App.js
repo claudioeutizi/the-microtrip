@@ -1,15 +1,17 @@
-import React, { createContext, useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Piano from './Components/Piano/Piano';
 import "./Components/styles/Piano.css"
 import "./Components/styles/Footer.css"
 import Footer from './Components/Footer';
+import Room from './Components/Room';
 import Grid from '@mui/material/Unstable_Grid2';
 import Display from './Components/Display';
+import * as cities from './cities';
 import { WEATHER_API_KEY, WEATHER_API_URL } from './utility/api';
-import Map from './Components/Map';
+import Cities from './Components/Cities';
 import { useSocket } from './utility/useSocket';
-import moment from 'moment';
-import Room from './Components/Room';
+import * as Tone from 'tone'
+import SamplerEngine from './audio/Sampler';
 
 // fetching the GET route from the Express server which matches the GET route from server.js
 
@@ -17,57 +19,34 @@ function App() {
 
   //Socket from where to get real-time data from micro:bit
   const socket = useSocket('http://localhost:9000');
+
   const [currentWeather, setCurrentWeather] = useState(null);
-  const [cityData, setCityData] = useState(null);
   const [internalHumidity, setInternalHumidity] = useState('-');
   const [internalTemperature, setInternalTemperature] = useState('-');
   const [internalLight, setInternalLight] = useState('-');
 
-  const handleOnPositionSwitchChange = async (switchValue) => {
-    console.log(switchValue)
-    if (switchValue) {
-      handleOnCoordinatesChange()
-    } else {
-      try {
-        handleOnSearchChange(cityData);
-      } catch (error) {
-        handleOnCoordinatesChange();
-        console.log(error);
-      }
-    }
-  }
-
-  const handleOnCoordinatesChange = async () => {
-    try {
-      const locationData = await new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject);
-      });
-      const [lat, lon] = [locationData.coords.latitude, locationData.coords.longitude];
-      const weatherFetch = fetch(`${WEATHER_API_URL}/weather/?lat=${lat}&lon=${lon}&units=metric&appid=${WEATHER_API_KEY}`)
-      const dateTime = moment().format();
-      Promise.all([weatherFetch])
-        .then(async (response) => {
-          const weatherResponse = await response[0].json();
-          setCurrentWeather({ city: weatherResponse.name, dateTime: dateTime, ...weatherResponse });
-        })
-        .catch((err) => console.log(err));
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  // const toggleCurrentPosition = (toggle) => {
+  //   setCurrentPositionAccess(toggle);
+  //   console.log(currentPositionAccess)
+  // }
 
   const handleOnSearchChange = async (cityData) => {
 
-    setCityData(cityData);
+    // if(currentPosition){
+    //     navigator.geolocation.getCurrentPosition(function(position) {
+    //       [lat, lon] = [position.coords.latitude, position.coords.longitude];
+    //     });
+    //   } else {
+
     const [lat, lon] = cityData.value.split(" ");
     const weatherFetch = fetch(`${WEATHER_API_URL}/weather/?lat=${lat}&lon=${lon}&units=metric&appid=${WEATHER_API_KEY}`)
+
     Promise.all([weatherFetch])
       .then(async (response) => {
         const weatherResponse = await response[0].json();
-        setCurrentWeather({ city: cityData.label, ...weatherResponse, timezone: cityData.timezone });
+        setCurrentWeather({ city: cityData.label, ...weatherResponse });
       })
       .catch((err) => console.log(err));
-    console.log(currentWeather)
   }
 
   useEffect(() => {
@@ -101,47 +80,70 @@ function App() {
   }, [socket]);
 
 
+  const [noteUp, setNoteUp] = useState(null);
+  const [noteDown, setNoteDown] = useState(null);
+  const [velocity, setVelocity] = useState(null);
+  const [playTime, setPlay] = useState(0);
+  const [stopTime, setStop] = useState(0);
+  // const [triggerPlay, setTriggerP] = useState(0);
+  // const [triggerStop, setTriggerS] = useState(0);
+  
+
+  const handleNoteUp = (event) => {
+    console.log("note up: " + event.detail.note);
+    setNoteUp(event.detail.note);
+    setStop(Tone.now())
+    // setTriggerS(prevStop => prevStop + 1);
+  }
+
+  const handleNoteDown = (event) => {
+    console.log("note down: " + event.detail.note);
+    setVelocity(event.detail.velocity);
+    setNoteDown(event.detail.note);
+    setPlay(Tone.now())
+    // setTriggerP(prevPlay => prevPlay + 1);
+  }
+
   useEffect(() => {
-
-    const handleNoteUp = (event) => {
-      console.log("note up: " + event.detail.note);
-    }
-
-    const handleNoteDown = (event) => {
-      console.log("note down: " + event.detail.note);
-    }
-
     /* MESSAGES FROM PIANO KEYBOARD IN ORDER TO PRODUCE SOUND */
     document.addEventListener("notedown", handleNoteDown);
     document.addEventListener("noteup", handleNoteUp);
 
+   
+
     return () => {
       document.removeEventListener('notedown', handleNoteDown);
       document.removeEventListener('noteup', handleNoteUp);
-
     };
 
   }, []);
 
+
+
+
   return (
     <div className="App">
-      <Grid container direction="row"
-        justifyContent="space-between"
-        rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-        <Grid item className="room-container" xs={8}>
-          <Room></Room>
+      <Grid container spacing={4}>
+        <Grid xs={8}>
+          <Cities onSearchChange={handleOnSearchChange} />
         </Grid>
-        <Grid item className="map-container" xs={8}>
-          <Map onCityChange={handleOnSearchChange}></Map>
+        <Grid xs={8}>
+          <Room/>
         </Grid>
-        <Grid item className="display-container" xs={4}>
-          {currentWeather && <Display externalData={currentWeather} onSwitchChange={handleOnPositionSwitchChange}
+        <Grid xs={8}>
+        <button onClick={() => Tone.start()}>Start</button>
+        </Grid>
+        <Grid xs={8}>
+          <SamplerEngine noteUp={noteUp} noteDown={noteDown} playTime={playTime} stopTime={stopTime} velocity={velocity}/>
+        </Grid>
+        <Grid>
+          {currentWeather && <Display externalData={currentWeather}
             light={internalLight.value} temperature={internalTemperature.value} humidity={internalHumidity.value} />}
         </Grid>
-        <Grid item className="piano-keyboard-container" xs={12}>
+        <Grid xs={12}>
           <Piano keyCount={61} keyboardLayout={"C"} />
         </Grid>
-        <Grid item xs={12} md>
+        <Grid>
           <Footer />
         </Grid>
       </Grid>

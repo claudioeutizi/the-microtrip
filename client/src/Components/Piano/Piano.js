@@ -1,11 +1,8 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo } from "react";
 import { useRef, useEffect } from "react";
 import NaturalKey from "./NaturalKey";
 import SharpKey from "./SharpKey";
 import { Box, Stack, Typography } from "@mui/material";
-import Slider from 'webaudio-controls-react-typescript/dist/images/images/vsliderbody.png';
-import Knob from 'webaudio-controls-react-typescript/dist/images/images/vsliderknob.png';
-import { WebAudioSlider } from "webaudio-controls-react-typescript";
 
 function Piano(props) {
 
@@ -13,7 +10,6 @@ function Piano(props) {
   const keys = useMemo(() => "zsxdcvgbhnjmq2w3er5t6y7ui9o0p", []);
   const divRef = useRef();
   const click = useRef(false);
-  const [midiAccess, setMidiAccess] = useState(null);
 
   /* ========================================== MIDI ================================================================ */
 
@@ -26,7 +22,7 @@ function Piano(props) {
 
     const pivot = notes.indexOf(startNote);
     const layout = [...notes.slice(pivot, notes.length), ...notes.slice(0, pivot)];
-    let octave = 2;           //INITIAL OCTAVE
+    let octave = 3;           //INITIAL OCTAVE
     let first = true;
 
     while (true) {
@@ -45,18 +41,22 @@ function Piano(props) {
     keyboardLayout: props.keyboardLayout || "A",
   }
 
-  const setNoteDown = useCallback((note, octave) => {
+  const setNoteDown = useCallback((note, octave, velocity) => {
     const piano = divRef.current;
     if (piano) {
       const elem = piano.querySelector(keySelector(note, octave));
-      elem.classList.add("active");
-      elem.setAttribute("active", true);
-      document.dispatchEvent(new CustomEvent("notedown",
-        {
-          detail: {
-            note: note + octave.toString()
-          }
-        }))
+      if (!elem.classList.contains("active")){
+        elem.classList.add("active");
+        elem.setAttribute("active", true);
+        document.dispatchEvent(new CustomEvent("notedown",
+          {
+            detail: {
+              note: note + octave.toString(),
+              velocity: velocity/127
+            }
+          }))
+      }
+      
     }
   }, []);
 
@@ -77,15 +77,13 @@ function Piano(props) {
 
   useEffect(() => {
 
-    console.log("click rerenders");
-
     const handleClick = (event, downOrMove) => {
       const target = event.target;
       if (target.tagName === "rect") {
         const note = event.target.getAttribute("datanote");
         const octave = parseInt(event.target.getAttribute("dataoctave"));
         if (downOrMove && click.current) {
-          setNoteDown(note, octave);
+          setNoteDown(note, octave, 127);
         }
         else {
           if (target.classList.contains("active")) {
@@ -139,7 +137,6 @@ function Piano(props) {
   useEffect(() => {
 
     const midiSuccess = (midiAccess) => {
-      setMidiAccess(midiAccess);
       midiAccess.addEventListener('statechange', updateMidiDevices);
       const inputs = midiAccess.inputs;
 
@@ -149,9 +146,11 @@ function Piano(props) {
       })
     }
 
+
     const midiFailure = () => {
       console.log("Could not connect MIDI!");
     }
+    
 
     const midiRequest = () => {
       if (navigator.requestMIDIAccess) {
@@ -159,9 +158,7 @@ function Piano(props) {
       }
     }
 
-    if (!midiAccess) {
-      midiRequest();
-    }
+    midiRequest();
 
     const handleMidiInput = (input) => {
       const command = input.data[0];
@@ -182,46 +179,35 @@ function Piano(props) {
       }
     }
 
-    const midiNoteOn = (noteNumber) => {
-      const octave = Math.floor(noteNumber / 12) - 2;
+    const midiNoteOn = (noteNumber, velocity) => {
+      const octave = Math.floor(noteNumber / 12) + 2;
       const note = notes[noteNumber % 12];
-      setNoteDown(note, octave);
+      console.log("midi note down")
+      setNoteDown(note, octave , velocity);
     }
 
     const midiNoteOff = (noteNumber) => {
-      const octave = Math.floor(noteNumber / 12) - 2;
+      const octave = Math.floor(noteNumber / 12) + 2;
       const note = notes[noteNumber % 12];
+      console.log("midi note up")
       setNoteUp(note, octave);
     }
 
     function updateMidiDevices(event) {
     }
 
-    return () => {
-      if (midiAccess) {
-        midiAccess.removeEventListener('statechange', updateMidiDevices);
-        const inputs = midiAccess.inputs;
-        inputs.forEach((input) => {
-          input.removeEventListener('midimessage', handleMidiInput);
-        });
-      }
-    };
-
-
-  }, [midiAccess, notes, setNoteDown, setNoteUp]);
+  }, [notes, setNoteDown, setNoteUp]);
 
   /* ====================================================== KEYBOARD EVENTS =================================================== */
 
   useEffect(() => {
-
-    console.log("keyboard rerenders");
 
     const handleKeyDown = (event) => {
       if (event.repeat) return;
       if (keys.includes(event.key)) {
         const noteNumber = keys.indexOf(event.key);
         const octave = Math.floor(noteNumber / 12) + 4;
-        setNoteDown(notes[noteNumber % 12], octave);
+        setNoteDown(notes[noteNumber % 12], octave, 127);
       }
     }
 
@@ -350,10 +336,10 @@ function Piano(props) {
     const sharpOffsets = offsets.filter(pos => pos.note.includes("#"));
 
     const naturalKeys = naturalOffsets.map(pos =>
-      <NaturalKey key={pos.note + pos.octave} dataNote={pos.note} dataOctave={pos.octave} x={pos.offset} />);
+      <NaturalKey dataNote={pos.note} dataOctave={pos.octave} x={pos.offset} />);
 
     const sharpKeys = sharpOffsets.map(pos =>
-      <SharpKey key={pos.note + pos.octave} dataNote={pos.note} dataOctave={pos.octave} x={pos.offset} />);
+      <SharpKey dataNote={pos.note} dataOctave={pos.octave} x={pos.offset} />);
 
     return <g>{naturalKeys}{sharpKeys}</g>
   }
@@ -361,22 +347,13 @@ function Piano(props) {
   const pianoSVG = getNoteSvg();
 
   return (
-    <Stack className= "piano-container" sx={{ bgcolor: "#282828" }} direction="row" spacing={2} justifyContent="space-between">
-      <Box className= "wheels-container" sx={{display:'flex'}}>
-        <WebAudioSlider
-          id={"modulation-wheel"}
-          src={Slider}
-          knobsrc={Knob}
-          tracking={"rel"}
-        />
-        <WebAudioSlider
-          id={"pitch-wheel"}
-          src={Slider}
-          knobsrc={Knob}
-          tracking={"rel"}
-        />
+    <Stack sx={{ bgcolor: "#282828" }} direction="row" spacing={2} justifyContent="space-between">
+      <Box flex={2}>
+        <Typography sx={{ fontWeight: 'bold', color: 'white', letterSpacing: 2 }} style={{ 'textAlign': 'center' }} gutterBottom variant="h5" component="div">
+          Pitch and Mod Wheels
+        </Typography>
       </Box>
-      <Box className="Piano" flex={8} ref={divRef}>
+      <Box className="Piano" flex={10} ref={divRef}>
         {pianoSVG}
       </Box>
     </Stack>
