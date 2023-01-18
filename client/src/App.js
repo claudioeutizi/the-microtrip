@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Piano from './Components/Piano/Piano';
 import "./Components/styles/Piano.css"
 import "./Components/styles/Footer.css"
@@ -158,7 +158,7 @@ function App() {
             light={internalLight.value} temperature={internalTemperature.value} humidity={internalHumidity.value} />}
         </Grid>
         <Grid xs={12}>
-          <Piano keyCount={61} keyboardLayout={"C"} />
+          <Piano keyCount={61} keyboardLayout={"C"}/>
         </Grid>
         <Grid>
           <Footer />
