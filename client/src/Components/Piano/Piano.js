@@ -3,6 +3,9 @@ import { useRef, useEffect } from "react";
 import NaturalKey from "./NaturalKey";
 import SharpKey from "./SharpKey";
 import { Box, Stack, Typography } from "@mui/material";
+import Slider from 'webaudio-controls-react-typescript/dist/images/images/vsliderbody.png';
+import Knob from 'webaudio-controls-react-typescript/dist/images/images/vsliderknob.png';
+import { WebAudioSlider } from "webaudio-controls-react-typescript";
 
 function Piano(props) {
 
@@ -358,13 +361,22 @@ function Piano(props) {
   const pianoSVG = getNoteSvg();
 
   return (
-    <Stack sx={{ bgcolor: "#282828" }} direction="row" spacing={2} justifyContent="space-between">
-      <Box flex={2}>
-        <Typography sx={{ fontWeight: 'bold', color: 'white', letterSpacing: 2 }} style={{ 'textAlign': 'center' }} gutterBottom variant="h5" component="div">
-          Pitch and Mod Wheels
-        </Typography>
+    <Stack className= "piano-container" sx={{ bgcolor: "#282828" }} direction="row" spacing={2} justifyContent="space-between">
+      <Box className= "wheels-container" sx={{display:'flex'}}>
+        <WebAudioSlider
+          id={"modulation-wheel"}
+          src={Slider}
+          knobsrc={Knob}
+          tracking={"rel"}
+        />
+        <WebAudioSlider
+          id={"pitch-wheel"}
+          src={Slider}
+          knobsrc={Knob}
+          tracking={"rel"}
+        />
       </Box>
-      <Box className="Piano" flex={10} ref={divRef}>
+      <Box className="Piano" flex={8} ref={divRef}>
         {pianoSVG}
       </Box>
     </Stack>

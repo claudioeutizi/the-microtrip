@@ -1,4 +1,13 @@
 .leaflet-container {
-    height: 600px;
-    width: 600px;
+    border: 10px solid #B27F46;
+    border-radius: 0.5%;
+    height: 400px;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    background: #ddd;
+    outline-offset: 1px;
+    overflow: hidden;
+    padding: 1rem;
 }

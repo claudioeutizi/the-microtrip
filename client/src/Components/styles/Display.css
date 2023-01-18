@@ -1,8 +1,15 @@
+.device-container {
+    width: fit-content;
+    height: fit-content;
+    margin: 0px;
+}
+
 .device {
     font-family: 'roboto';
     width: fit-content;
     max-width: 200px;
     display: block;
+    margin:0px;
     background-color: #eeeeee;
     border: 20px;
     border-radius: 6px;

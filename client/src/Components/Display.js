@@ -43,7 +43,6 @@ const Display = ({ onSwitchChange, externalData, light, temperature, humidity })
 
 
     return (
-        <Box bgcolor={"#eeeeee"} flex={1}>
             <Card className='device' raised={true}>
                 <div className='display'>
                     <div className='top'>
@@ -93,7 +92,6 @@ const Display = ({ onSwitchChange, externalData, light, temperature, humidity })
                     </Switch>
                 </CardActions>
             </Card>
-        </Box>
     )
 }
 

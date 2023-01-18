@@ -46,8 +46,8 @@ const Map = ({ onCityChange }) => {
     }
 
     return (
-        <div className="map">
             <MapContainer
+            className = "map"
                 center={position}
                 zoom={ZOOM_LEVEL}
                 scrollWheelZoom={false}
@@ -70,7 +70,6 @@ const Map = ({ onCityChange }) => {
                     </Marker>
                 })}
             </MapContainer>
-        </div>
     )
 }
 

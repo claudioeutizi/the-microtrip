@@ -125,21 +125,23 @@ function App() {
 
   return (
     <div className="App">
-      <Grid container spacing={3}>
-        <Grid xs={8}>
+      <Grid container direction="row"
+        justifyContent="space-between"
+        rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+        <Grid item className="room-container" xs={8}>
           <Room></Room>
         </Grid>
-        <Grid xs={8}>
+        <Grid item className="map-container" xs={8}>
           <Map onCityChange={handleOnSearchChange}></Map>
         </Grid>
-        <Grid>
+        <Grid item className="display-container" xs={4}>
           {currentWeather && <Display externalData={currentWeather} onSwitchChange={handleOnPositionSwitchChange}
             light={internalLight.value} temperature={internalTemperature.value} humidity={internalHumidity.value} />}
         </Grid>
-        <Grid xs={12}>
+        <Grid item className="piano-keyboard-container" xs={12}>
           <Piano keyCount={61} keyboardLayout={"C"} />
         </Grid>
-        <Grid>
+        <Grid item xs={12} md>
           <Footer />
         </Grid>
       </Grid>
