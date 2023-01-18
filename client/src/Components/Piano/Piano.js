@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useRef, useEffect } from "react";
 import NaturalKey from "./NaturalKey";
 import SharpKey from "./SharpKey";
@@ -10,6 +10,7 @@ function Piano(props) {
   const keys = useMemo(() => "zsxdcvgbhnjmq2w3er5t6y7ui9o0p", []);
   const divRef = useRef();
   const click = useRef(false);
+  const [midiAccess, setMidiAccess] = useState(null);
 
   /* ========================================== MIDI ================================================================ */
 
@@ -22,7 +23,7 @@ function Piano(props) {
 
     const pivot = notes.indexOf(startNote);
     const layout = [...notes.slice(pivot, notes.length), ...notes.slice(0, pivot)];
-    let octave = 3;           //INITIAL OCTAVE
+    let octave = 2;           //INITIAL OCTAVE
     let first = true;
 
     while (true) {
@@ -45,18 +46,18 @@ function Piano(props) {
     const piano = divRef.current;
     if (piano) {
       const elem = piano.querySelector(keySelector(note, octave));
-      if (!elem.classList.contains("active")){
+      if (!elem.classList.contains("active")) {
         elem.classList.add("active");
         elem.setAttribute("active", true);
         document.dispatchEvent(new CustomEvent("notedown",
           {
             detail: {
               note: note + octave.toString(),
-              velocity: velocity/127
+              velocity: velocity / 127,
             }
           }))
       }
-      
+
     }
   }, []);
 
@@ -135,8 +136,9 @@ function Piano(props) {
 
   //what i need from midi when i've a connection success
   useEffect(() => {
-
+    console.log("midi rerenders");
     const midiSuccess = (midiAccess) => {
+      setMidiAccess(midiAccess);
       midiAccess.addEventListener('statechange', updateMidiDevices);
       const inputs = midiAccess.inputs;
 
@@ -145,20 +147,25 @@ function Piano(props) {
         input.addEventListener('midimessage', handleMidiInput);
       })
     }
+    
+
+    const updateMidiDevices = () => {
+    }
 
 
     const midiFailure = () => {
       console.log("Could not connect MIDI!");
     }
-    
+
 
     const midiRequest = () => {
       if (navigator.requestMIDIAccess) {
         navigator.requestMIDIAccess().then(midiSuccess, midiFailure); //do we have access to midi from browser?
       }
     }
-
-    midiRequest();
+    if (!midiAccess) {
+      midiRequest();
+    }
 
     const handleMidiInput = (input) => {
       const command = input.data[0];
@@ -180,23 +187,30 @@ function Piano(props) {
     }
 
     const midiNoteOn = (noteNumber, velocity) => {
-      const octave = Math.floor(noteNumber / 12) + 2;
+      const octave = Math.floor(noteNumber / 12) - 2;
       const note = notes[noteNumber % 12];
       console.log("midi note down")
-      setNoteDown(note, octave , velocity);
+      setNoteDown(note, octave, velocity);
     }
 
     const midiNoteOff = (noteNumber) => {
-      const octave = Math.floor(noteNumber / 12) + 2;
+      const octave = Math.floor(noteNumber / 12) - 2;
       const note = notes[noteNumber % 12];
       console.log("midi note up")
       setNoteUp(note, octave);
     }
 
-    function updateMidiDevices(event) {
-    }
+    return () => {
+      if (midiAccess) {
+        midiAccess.removeEventListener('statechange', updateMidiDevices);
+        const inputs = midiAccess.inputs;
+        inputs.forEach((input) => {
+          input.removeEventListener('midimessage', handleMidiInput);
+        });
+      }
+    };
 
-  }, [notes, setNoteDown, setNoteUp]);
+  }, [midiAccess, notes, setNoteDown, setNoteUp]);
 
   /* ====================================================== KEYBOARD EVENTS =================================================== */
 
@@ -336,10 +350,10 @@ function Piano(props) {
     const sharpOffsets = offsets.filter(pos => pos.note.includes("#"));
 
     const naturalKeys = naturalOffsets.map(pos =>
-      <NaturalKey dataNote={pos.note} dataOctave={pos.octave} x={pos.offset} />);
+      <NaturalKey key={pos.note+pos.octave} dataNote={pos.note} dataOctave={pos.octave} x={pos.offset} />);
 
     const sharpKeys = sharpOffsets.map(pos =>
-      <SharpKey dataNote={pos.note} dataOctave={pos.octave} x={pos.offset} />);
+      <SharpKey key={pos.note+pos.octave} dataNote={pos.note} dataOctave={pos.octave} x={pos.offset} />);
 
     return <g>{naturalKeys}{sharpKeys}</g>
   }

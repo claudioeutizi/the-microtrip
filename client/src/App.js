@@ -1,15 +1,15 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useEffect, useState } from 'react';
 import Piano from './Components/Piano/Piano';
 import "./Components/styles/Piano.css"
 import "./Components/styles/Footer.css"
 import Footer from './Components/Footer';
-import Room from './Components/Room';
 import Grid from '@mui/material/Unstable_Grid2';
 import Display from './Components/Display';
-import * as cities from './cities';
 import { WEATHER_API_KEY, WEATHER_API_URL } from './utility/api';
-import Cities from './Components/Cities';
+import Map from './Components/Map';
 import { useSocket } from './utility/useSocket';
+import moment from 'moment';
+import Room from './Components/Room';
 import * as Tone from 'tone'
 import SamplerEngine from './audio/Sampler';
 
@@ -19,34 +19,64 @@ function App() {
 
   //Socket from where to get real-time data from micro:bit
   const socket = useSocket('http://localhost:9000');
-
   const [currentWeather, setCurrentWeather] = useState(null);
+  const [cityData, setCityData] = useState(null);
   const [internalHumidity, setInternalHumidity] = useState('-');
   const [internalTemperature, setInternalTemperature] = useState('-');
   const [internalLight, setInternalLight] = useState('-');
+  const [noteUp, setNoteUp] = useState(null);
+  const [noteDown, setNoteDown] = useState(null);
+  const [velocity, setVelocity] = useState(null);
+  const [playTime, setPlay] = useState(0);
+  const [stopTime, setStop] = useState(0);
+  // const [triggerPlay, setTriggerP] = useState(0);
+  // const [triggerStop, setTriggerS] = useState(0);
 
-  // const toggleCurrentPosition = (toggle) => {
-  //   setCurrentPositionAccess(toggle);
-  //   console.log(currentPositionAccess)
-  // }
+  const handleOnPositionSwitchChange = async (switchValue) => {
+    console.log(switchValue)
+    if (switchValue) {
+      handleOnCoordinatesChange()
+    } else {
+      try {
+        handleOnSearchChange(cityData);
+      } catch (error) {
+        handleOnCoordinatesChange();
+        console.log(error);
+      }
+    }
+  }
+
+  const handleOnCoordinatesChange = async () => {
+    try {
+      const locationData = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+      });
+      const [lat, lon] = [locationData.coords.latitude, locationData.coords.longitude];
+      const weatherFetch = fetch(`${WEATHER_API_URL}/weather/?lat=${lat}&lon=${lon}&units=metric&appid=${WEATHER_API_KEY}`)
+      const dateTime = moment().format();
+      Promise.all([weatherFetch])
+        .then(async (response) => {
+          const weatherResponse = await response[0].json();
+          setCurrentWeather({ city: weatherResponse.name, dateTime: dateTime, ...weatherResponse });
+        })
+        .catch((err) => console.log(err));
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const handleOnSearchChange = async (cityData) => {
 
-    // if(currentPosition){
-    //     navigator.geolocation.getCurrentPosition(function(position) {
-    //       [lat, lon] = [position.coords.latitude, position.coords.longitude];
-    //     });
-    //   } else {
-
+    setCityData(cityData);
     const [lat, lon] = cityData.value.split(" ");
     const weatherFetch = fetch(`${WEATHER_API_URL}/weather/?lat=${lat}&lon=${lon}&units=metric&appid=${WEATHER_API_KEY}`)
-
     Promise.all([weatherFetch])
       .then(async (response) => {
         const weatherResponse = await response[0].json();
-        setCurrentWeather({ city: cityData.label, ...weatherResponse });
+        setCurrentWeather({ city: cityData.label, ...weatherResponse, timezone: cityData.timezone });
       })
       .catch((err) => console.log(err));
+    console.log(currentWeather)
   }
 
   useEffect(() => {
@@ -79,16 +109,6 @@ function App() {
     }
   }, [socket]);
 
-
-  const [noteUp, setNoteUp] = useState(null);
-  const [noteDown, setNoteDown] = useState(null);
-  const [velocity, setVelocity] = useState(null);
-  const [playTime, setPlay] = useState(0);
-  const [stopTime, setStop] = useState(0);
-  // const [triggerPlay, setTriggerP] = useState(0);
-  // const [triggerStop, setTriggerS] = useState(0);
-  
-
   const handleNoteUp = (event) => {
     console.log("note up: " + event.detail.note);
     setNoteUp(event.detail.note);
@@ -109,8 +129,6 @@ function App() {
     document.addEventListener("notedown", handleNoteDown);
     document.addEventListener("noteup", handleNoteUp);
 
-   
-
     return () => {
       document.removeEventListener('notedown', handleNoteDown);
       document.removeEventListener('noteup', handleNoteUp);
@@ -119,25 +137,24 @@ function App() {
   }, []);
 
 
-
-
   return (
     <div className="App">
       <Grid container spacing={4}>
         <Grid xs={8}>
-          <Cities onSearchChange={handleOnSearchChange} />
+          <Map onCityChange={handleOnSearchChange} />
         </Grid>
         <Grid xs={8}>
-          <Room/>
+          <Room />
         </Grid>
         <Grid xs={8}>
-        <button onClick={() => Tone.start()}>Start</button>
+          <button onClick={() => Tone.start()}>Start</button>
         </Grid>
         <Grid xs={8}>
-          <SamplerEngine noteUp={noteUp} noteDown={noteDown} playTime={playTime} stopTime={stopTime} velocity={velocity}/>
+          <SamplerEngine noteUp={noteUp} noteDown={noteDown} playTime={playTime} stopTime={stopTime} velocity={velocity} />
         </Grid>
         <Grid>
           {currentWeather && <Display externalData={currentWeather}
+            onSwitchChange={handleOnPositionSwitchChange}
             light={internalLight.value} temperature={internalTemperature.value} humidity={internalHumidity.value} />}
         </Grid>
         <Grid xs={12}>
