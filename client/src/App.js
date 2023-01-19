@@ -10,7 +10,6 @@ import Map from './Components/Map';
 import { useSocket } from './utility/useSocket';
 import moment from 'moment';
 import Room from './Components/Room';
-import * as Tone from 'tone'
 import SamplerEngine from './audio/Sampler';
 
 // fetching the GET route from the Express server which matches the GET route from server.js
@@ -25,11 +24,6 @@ function App() {
   const [internalHumidity, setInternalHumidity] = useState('-');
   const [internalTemperature, setInternalTemperature] = useState('-');
   const [internalLight, setInternalLight] = useState('-');
-  const [noteUp, setNoteUp] = useState(null);
-  const [noteDown, setNoteDown] = useState(null);
-  const [velocity, setVelocity] = useState(null);
-  const [playTime, setPlay] = useState(0);
-  const [stopTime, setStop] = useState(0);
   // const [triggerPlay, setTriggerP] = useState(0);
   // const [triggerStop, setTriggerS] = useState(0);
 
@@ -108,22 +102,22 @@ function App() {
     }
   }, [socket]);
 
-  const handleNoteUp = (event) => {
-    console.log("note up: " + event.detail.note);
-    setNoteUp(event.detail.note);
-    setStop(Tone.now())
-    // setTriggerS(prevStop => prevStop + 1);
-  }
+  // const handleNoteUp = (event) => {
+  //   console.log("note up: " + event.detail.note);
+  //   setNoteUp(event.detail.note);
+  //   setStop(Tone.now())
+  //   // setTriggerS(prevStop => prevStop + 1);
+  // }
 
-  const handleNoteDown = (event) => {
-    console.log("note down: " + event.detail.note);
-    if(Tone.now()>0.8){
-    setVelocity(event.detail.velocity);
-    setNoteDown(event.detail.note);
-    setPlay(Tone.now())
-    }
-    // setTriggerP(prevPlay => prevPlay + 1);
-  }
+  // const handleNoteDown = (event) => {
+  //   console.log("note down: " + event.detail.note);
+  //   if(Tone.now()>0.8){
+  //   setVelocity(event.detail.velocity);
+  //   setNoteDown(event.detail.note);
+  //   setPlay(Tone.now())
+  //   }
+  //   // setTriggerP(prevPlay => prevPlay + 1);
+  // }
 
 
 
@@ -132,16 +126,16 @@ function App() {
       setInstrument(event.detail.instrument)
     }
 
-    /* MESSAGES FROM PIANO KEYBOARD IN ORDER TO PRODUCE SOUND */
-    document.addEventListener("notedown", handleNoteDown);
-    document.addEventListener("noteup", handleNoteUp);
+    // /* MESSAGES FROM PIANO KEYBOARD IN ORDER TO PRODUCE SOUND */
+    // document.addEventListener("notedown", handleNoteDown);
+    // document.addEventListener("noteup", handleNoteUp);
     window.addEventListener("mapbuttonclick", handleMapButtonClick);
     
   
 
     return () => {
-      document.removeEventListener('notedown', handleNoteDown);
-      document.removeEventListener('noteup', handleNoteUp);
+      // document.removeEventListener('notedown', handleNoteDown);
+      // document.removeEventListener('noteup', handleNoteUp);
       window.removeEventListener("mapbuttonclick", handleMapButtonClick);
 
     };
@@ -160,8 +154,7 @@ function App() {
           <Room />
         </Grid>
         <Grid xs={8}>
-          <SamplerEngine noteUp={noteUp} noteDown={noteDown} playTime={playTime} 
-          stopTime={stopTime} velocity={velocity} selectedInst={instrument}/>
+          <SamplerEngine selectedInst={instrument}/>
         </Grid>
         <Grid>
           {currentWeather && <Display externalData={currentWeather}
