@@ -4,14 +4,13 @@ import instruments from './Instruments';
 
 
 
-const SamplerEngine = ({ noteUp, noteDown, playTime, stopTime, velocity }) => {
-
-  const selectedInst = 2;
+const SamplerEngine = ({ noteUp, noteDown, playTime, stopTime, velocity, selectedInst}) => {
+  // let selectedInstPrev;
+  console.log("sampler engine",selectedInst)
   const [sampler, setSampler] = useState(null);
-
+  
 
   useEffect(() => {
-
     setSampler(new Tone.Sampler({
       'A2': instruments[selectedInst].samples.A2,
       "C3": instruments[selectedInst].samples.C3,
@@ -32,24 +31,21 @@ const SamplerEngine = ({ noteUp, noteDown, playTime, stopTime, velocity }) => {
       "A6": instruments[selectedInst].samples.A6
     }).toDestination());
 
-  }, []);
+  }, [selectedInst]);
 
   useEffect(() => {
     if (noteUp) {
-      console.log(stopTime)
-      sampler.triggerRelease(noteUp, stopTime - 0.7);
+      console.log("Stop time", stopTime)
+      sampler.triggerRelease(noteUp, stopTime-0.8);
     }
-  }, [sampler, noteUp, stopTime]);
+  }, [noteUp, stopTime]);
 
   useEffect(() => {
     if (noteDown) {
-      console.log(playTime);
-      console.log(velocity)
-      sampler.triggerAttack(noteDown, playTime - 0.7, velocity);
+      console.log("Playtime", playTime);
+      sampler.triggerAttack(noteDown, playTime-0.8, velocity);
     }
-  }, [sampler, noteDown, playTime, velocity]);
-
-  //polifonia da rivedere sostituire il trigger playtime con un contatore e velocity
+  }, [noteDown, playTime, velocity]);
 
 
   return (
@@ -61,3 +57,9 @@ const SamplerEngine = ({ noteUp, noteDown, playTime, stopTime, velocity }) => {
 export default SamplerEngine;
 
 
+//---Risolto il problema che dava togliendo una dependacy
+//---Ora tone viene avviato automaticamente quando si clicca una città sulla mappa
+//---Aggiunto un check in modo che se tone non è ancora avviato non si distrugge il sito ogni volta, 
+//---semplicemente non suona
+
+  //polifonia da rivedere sostituire il trigger playtime con un contatore e velocity

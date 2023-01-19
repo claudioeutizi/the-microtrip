@@ -21,6 +21,7 @@ function App() {
   const socket = useSocket('http://localhost:9000');
   const [currentWeather, setCurrentWeather] = useState(null);
   const [cityData, setCityData] = useState(null);
+  const [instrument, setInstrument] = useState(0);
   const [internalHumidity, setInternalHumidity] = useState('-');
   const [internalTemperature, setInternalTemperature] = useState('-');
   const [internalLight, setInternalLight] = useState('-');
@@ -33,7 +34,6 @@ function App() {
   // const [triggerStop, setTriggerS] = useState(0);
 
   const handleOnPositionSwitchChange = async (switchValue) => {
-    console.log(switchValue)
     if (switchValue) {
       handleOnCoordinatesChange()
     } else {
@@ -76,7 +76,6 @@ function App() {
         setCurrentWeather({ city: cityData.label, ...weatherResponse, timezone: cityData.timezone });
       })
       .catch((err) => console.log(err));
-    console.log(currentWeather)
   }
 
   useEffect(() => {
@@ -118,23 +117,36 @@ function App() {
 
   const handleNoteDown = (event) => {
     console.log("note down: " + event.detail.note);
+    if(Tone.now()>0.5){
     setVelocity(event.detail.velocity);
     setNoteDown(event.detail.note);
     setPlay(Tone.now())
+    }
     // setTriggerP(prevPlay => prevPlay + 1);
   }
 
+
+
   useEffect(() => {
+    const handleMapButtonClick = (event) => {
+      setInstrument(event.detail.instrument)
+    }
+
     /* MESSAGES FROM PIANO KEYBOARD IN ORDER TO PRODUCE SOUND */
     document.addEventListener("notedown", handleNoteDown);
     document.addEventListener("noteup", handleNoteUp);
+    window.addEventListener("mapbuttonclick", handleMapButtonClick);
+    
+  
 
     return () => {
       document.removeEventListener('notedown', handleNoteDown);
       document.removeEventListener('noteup', handleNoteUp);
+      window.removeEventListener("mapbuttonclick", handleMapButtonClick);
+
     };
 
-  }, []);
+  }, [instrument]);
 
 
   return (
@@ -147,10 +159,8 @@ function App() {
           <Room />
         </Grid>
         <Grid xs={8}>
-          <button onClick={() => Tone.start()}>Start</button>
-        </Grid>
-        <Grid xs={8}>
-          <SamplerEngine noteUp={noteUp} noteDown={noteDown} playTime={playTime} stopTime={stopTime} velocity={velocity} />
+          <SamplerEngine noteUp={noteUp} noteDown={noteDown} playTime={playTime} 
+          stopTime={stopTime} velocity={velocity} selectedInst={instrument}/>
         </Grid>
         <Grid>
           {currentWeather && <Display externalData={currentWeather}
