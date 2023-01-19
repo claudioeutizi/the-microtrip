@@ -12,6 +12,7 @@ import moment from 'moment';
 import Room from './Components/Room';
 import * as Tone from 'tone'
 import SamplerEngine from './audio/Sampler';
+import Synthesizer from './Components/Synth/Synthesizer';
 
 // fetching the GET route from the Express server which matches the GET route from server.js
 
@@ -144,7 +145,7 @@ function App() {
           <Map onCityChange={handleOnSearchChange} />
         </Grid>
         <Grid xs={8}>
-          <Room />
+          <Synthesizer></Synthesizer>
         </Grid>
         <Grid xs={8}>
           <button onClick={() => Tone.start()}>Start</button>
