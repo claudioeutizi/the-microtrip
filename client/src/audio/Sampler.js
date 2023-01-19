@@ -5,12 +5,22 @@ import instruments from './Instruments';
 
 
 const SamplerEngine = ({ noteUp, noteDown, playTime, stopTime, velocity, selectedInst}) => {
-  // let selectedInstPrev;
   console.log("sampler engine",selectedInst)
   const [sampler, setSampler] = useState(null);
-  
+
+
+  const envelope = new Tone.AmplitudeEnvelope(
+    // console.log("envelope generated"),
+    {
+    attack: 1,
+    decay: 0.1,
+    sustain: 1,
+    release: 1
+  })
+
 
   useEffect(() => {
+    console.log("inside sampler")
     setSampler(new Tone.Sampler({
       'A2': instruments[selectedInst].samples.A2,
       "C3": instruments[selectedInst].samples.C3,
@@ -29,37 +39,42 @@ const SamplerEngine = ({ noteUp, noteDown, playTime, stopTime, velocity, selecte
       "D#6":instruments[selectedInst].samples.Ds6,
       "F#6":instruments[selectedInst].samples.Fs6,
       "A6": instruments[selectedInst].samples.A6
-    }).toDestination());
+    }));
+
 
   }, [selectedInst]);
+    if(sampler){
+      console.log("connettiti cazzo")
+      sampler.chain(envelope, Tone.Destination);
+    }
+ 
 
   useEffect(() => {
     if (noteUp) {
-      console.log("Stop time", stopTime)
+      // console.log("Stop time", stopTime)
+     
       sampler.triggerRelease(noteUp, stopTime-0.8);
+      envelope.triggerRelease();
     }
   }, [noteUp, stopTime]);
 
   useEffect(() => {
     if (noteDown) {
-      console.log("Playtime", playTime);
+      // console.log("Playtime", playTime);
+      
+      console.log("inside note down")
       sampler.triggerAttack(noteDown, playTime-0.8, velocity);
+      envelope.triggerAttack();
     }
   }, [noteDown, playTime, velocity]);
-
-
+  // 
+  
   return (
     null
   );
+  
 };
 
-
 export default SamplerEngine;
-
-
-//---Risolto il problema che dava togliendo una dependacy
-//---Ora tone viene avviato automaticamente quando si clicca una città sulla mappa
-//---Aggiunto un check in modo che se tone non è ancora avviato non si distrugge il sito ogni volta, 
-//---semplicemente non suona
 
   //polifonia da rivedere sostituire il trigger playtime con un contatore e velocity

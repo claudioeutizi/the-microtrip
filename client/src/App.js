@@ -117,7 +117,7 @@ function App() {
 
   const handleNoteDown = (event) => {
     console.log("note down: " + event.detail.note);
-    if(Tone.now()>0.5){
+    if(Tone.now()>0.8){
     setVelocity(event.detail.velocity);
     setNoteDown(event.detail.note);
     setPlay(Tone.now())
@@ -147,6 +147,7 @@ function App() {
     };
 
   }, [instrument]);
+
 
 
   return (
