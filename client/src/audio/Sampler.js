@@ -1,26 +1,47 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import * as Tone from 'tone';
 import instruments from './Instruments';
-import { Envelope } from "tone";
+
+
+console.log("outside")
+const envelopeArray = [];
+const samplerArray = [];
+
 
 const SamplerEngine = ({ selectedInst }) => {
-  const [sampler, setSampler] = useState(null);
-  // const [noteUp, setNoteUp] = useState(null);
-  // const [noteDown, setNoteDown] = useState(null);
-  // const [velocity, setVelocity] = useState(null);
-  // const [playTime, setPlay] = useState(0);
-  // const [stopTime, setStop] = useState(0);
+  console.log("Inside sampler engine")
+  const [sampler, setSampler] = useState([]);
 
-  useEffect(() => {
-    console.log("instrument changes")
-    const envelope = new Envelope(
+
+  //--------------PARAMETERS------------------//
+  const polyphony = 7;
+  let attack = 0.01;
+  let decay = 0.5;
+  let sustain = 1;
+  let release = 0;
+
+
+  //------------------------------------------//
+  const polyArray = Array(polyphony).fill(0);
+  let stopIndex;
+  let polyNumberPlay;
+  let polyNumberStop;
+
+  //---------------GENERATORS----------------//
+  function createEnvelope(A, D, S, R) {
+
+    const envelope = new Tone.AmplitudeEnvelope(
       {
-        attack: 1,
-        decay: 0.1,
-        sustain: 1,
-        release: 1
+        attack: A,
+        decay: D,
+        sustain: S,
+        release: R
       });
+    return envelope;
+  }
 
+
+  function createSampler(selectedInst) {
     const sampler = new Tone.Sampler({
       'A2': instruments[selectedInst].samples.A2,
       "C3": instruments[selectedInst].samples.C3,
@@ -39,21 +60,53 @@ const SamplerEngine = ({ selectedInst }) => {
       "D#6": instruments[selectedInst].samples.Ds6,
       "F#6": instruments[selectedInst].samples.Fs6,
       "A6": instruments[selectedInst].samples.A6,
-    }).toDestination()
+    });
+    return sampler;
+  }
 
-    setSampler(sampler);
 
-    return () => {
-      setSampler(null);
+
+  function assignPolyphony(note, polyArray, method) {
+    if (method) {
+      for(let i=0; i<polyphony; i++)
+        if(polyArray[i]===0){
+          polyArray[i]=note;
+            return i;
+        }
+    }
+    else {
+      stopIndex=polyArray.indexOf(note)
+      polyArray[stopIndex]=0;
+      return stopIndex
     }
 
+  }
+  //------------------------------------------//
+  useEffect(() => {
+
+    for (let i = 0; i < polyphony; i++) {
+      samplerArray[i]=createSampler(selectedInst);
+    }
+    setSampler(samplerArray);
   }, [selectedInst]);
+
+
+  //Connections and generation
+  if (sampler[polyphony-1]) {
+    for (let i = 0; i < polyphony; i++) {
+      console.log("for cycle")
+      envelopeArray[i] = createEnvelope(attack, decay, sustain, release)
+      samplerArray[i].chain(envelopeArray[i], Tone.Destination)
+    }
+  }
 
 
   const handleNoteUp = useCallback((event) => {
     if (sampler) {
       console.log("note up: " + event.detail.note);
-      sampler.triggerRelease(event.detail.note, Tone.now() - 0.8);
+      polyNumberStop=assignPolyphony(event.detail.note, polyArray,0);
+      console.log("sampler to stop", polyNumberStop);
+      samplerArray[polyNumberStop].triggerRelease(event.detail.note, Tone.now() - 0.8, 0, 0, envelopeArray[polyNumberStop].triggerRelease());
     }
   }, [sampler]);
 
@@ -62,14 +115,17 @@ const SamplerEngine = ({ selectedInst }) => {
     if (sampler) {
       console.log("note down: " + event.detail.note);
       if (Tone.now() > 0.8) {
-        sampler.triggerAttack(event.detail.note, Tone.now() - 0.8, event.detail.velocity);
+        polyNumberPlay=assignPolyphony(event.detail.note, polyArray,1);
+        console.log("sampler to play", polyNumberPlay);
+        samplerArray[polyNumberPlay].triggerAttack(event.detail.note, Tone.now() - 0.8, event.detail.velocity, 0, envelopeArray[polyNumberPlay].triggerAttack(Tone.now() - 0.1));
       }
     }
   }, [sampler]);
 
+
+  //LISTENERS
   useEffect(() => {
-    console.log("events")
-    /* MESSAGES FROM PIANO KEYBOARD IN ORDER TO PRODUCE SOUND */
+    // console.log("events")
     document.addEventListener("notedown", handleNoteDown);
     document.addEventListener("noteup", handleNoteUp);
 
@@ -79,47 +135,6 @@ const SamplerEngine = ({ selectedInst }) => {
     }
   }, [handleNoteDown, handleNoteUp]);
 
-  // const handleNoteUp = () => {
-  //   if (noteUp) {
-  //     sampler.triggerRelease(noteUp, stopTime - 0.8);
-  //     // envelope.triggerRelease();
-  //   }
-
-  // }
-  // const handleNoteDown = () => {
-  //   if (noteDown) {
-  //     // console.log("Playtime", playTime);
-  //     console.log("inside note down")
-  //     sampler.triggerAttack(noteDown, playTime - 0.8, velocity);
-  //     // envelope.triggerAttack();
-  //   }
-  // }
-
-  // if (sampler) {
-  //   console.log("connettiti cazzo")
-  //   sampler.chain(envelope, Tone.Destination);
-  // }
-
-
-  // useEffect(() => {
-  //   if (noteUp) {
-  //     // console.log("Stop time", stopTime)
-
-  //     sampler.triggerRelease(noteUp, stopTime - 0.8);
-  //     envelope.triggerRelease();
-  //   }
-  // }, [noteUp, stopTime]);
-
-  // useEffect(() => {
-  //   if (noteDown) {
-  //     // console.log("Playtime", playTime);
-
-  //     console.log("inside note down")
-  //     sampler.triggerAttack(noteDown, playTime - 0.8, velocity);
-  //     envelope.triggerAttack();
-  //   }
-  // }, [noteDown, playTime, velocity]);
-  // 
 
   return (
     null
