@@ -8,20 +8,8 @@ const envelopeArray = [];
 const samplerArray = [];
 
 
-const SamplerEngine = ({ selectedInst }) => {
-  console.log("Inside sampler engine")
-  const [sampler, setSampler] = useState([]);
+const SamplerEngine = ({ selectedInst, polyphony, attack, decay, sustain, release }) => {
 
-
-  //--------------PARAMETERS------------------//
-  const polyphony = 7;
-  let attack = 0.01;
-  let decay = 0.5;
-  let sustain = 1;
-  let release = 0;
-
-
-  //------------------------------------------//
   const polyArray = Array(polyphony).fill(0);
   let stopIndex;
   let polyNumberPlay;
@@ -68,15 +56,15 @@ const SamplerEngine = ({ selectedInst }) => {
 
   function assignPolyphony(note, polyArray, method) {
     if (method) {
-      for(let i=0; i<polyphony; i++)
-        if(polyArray[i]===0){
-          polyArray[i]=note;
-            return i;
+      for (let i = 0; i < polyphony; i++)
+        if (polyArray[i] === 0) {
+          polyArray[i] = note;
+          return i;
         }
     }
     else {
-      stopIndex=polyArray.indexOf(note)
-      polyArray[stopIndex]=0;
+      stopIndex = polyArray.indexOf(note)
+      polyArray[stopIndex] = 0;
       return stopIndex
     }
 
@@ -85,47 +73,44 @@ const SamplerEngine = ({ selectedInst }) => {
   useEffect(() => {
 
     for (let i = 0; i < polyphony; i++) {
-      samplerArray[i]=createSampler(selectedInst);
+      samplerArray[i] = createSampler(selectedInst);
     }
-    setSampler(samplerArray);
   }, [selectedInst]);
 
 
   //Connections and generation
-  if (sampler[polyphony-1]) {
+  if (samplerArray[polyphony - 1]) {
     for (let i = 0; i < polyphony; i++) {
-      console.log("for cycle")
       envelopeArray[i] = createEnvelope(attack, decay, sustain, release)
       samplerArray[i].chain(envelopeArray[i], Tone.Destination)
     }
   }
 
-
+  //-----------HANDLERS--------------//
   const handleNoteUp = useCallback((event) => {
-    if (sampler) {
+    if (samplerArray) {
       console.log("note up: " + event.detail.note);
-      polyNumberStop=assignPolyphony(event.detail.note, polyArray,0);
+      polyNumberStop = assignPolyphony(event.detail.note, polyArray, 0);
       console.log("sampler to stop", polyNumberStop);
       samplerArray[polyNumberStop].triggerRelease(event.detail.note, Tone.now() - 0.8, 0, 0, envelopeArray[polyNumberStop].triggerRelease());
     }
-  }, [sampler]);
+  }, [samplerArray]);
 
 
   const handleNoteDown = useCallback((event) => {
-    if (sampler) {
+    if (samplerArray) {
       console.log("note down: " + event.detail.note);
       if (Tone.now() > 0.8) {
-        polyNumberPlay=assignPolyphony(event.detail.note, polyArray,1);
+        polyNumberPlay = assignPolyphony(event.detail.note, polyArray, 1);
         console.log("sampler to play", polyNumberPlay);
         samplerArray[polyNumberPlay].triggerAttack(event.detail.note, Tone.now() - 0.8, event.detail.velocity, 0, envelopeArray[polyNumberPlay].triggerAttack(Tone.now() - 0.1));
       }
     }
-  }, [sampler]);
+  }, [samplerArray]);
 
 
   //LISTENERS
   useEffect(() => {
-    // console.log("events")
     document.addEventListener("notedown", handleNoteDown);
     document.addEventListener("noteup", handleNoteUp);
 
@@ -144,4 +129,3 @@ const SamplerEngine = ({ selectedInst }) => {
 
 export default SamplerEngine;
 
-  //polifonia da rivedere sostituire il trigger playtime con un contatore e velocity
