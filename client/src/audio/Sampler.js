@@ -6,9 +6,9 @@ import instruments from './Instruments';
 console.log("outside")
 const envelopeArray = [];
 const samplerArray = [];
+const samplerNode = new Tone.Gain();
 
-
-const SamplerEngine = ({ selectedInst, polyphony, attack, decay, sustain, release }) => {
+const SamplerEngine = ({ setSampler, selectedInst, polyphony, attack, decay, sustain, release }) => {
 
   const polyArray = Array(polyphony).fill(0);
   let stopIndex;
@@ -53,7 +53,7 @@ const SamplerEngine = ({ selectedInst, polyphony, attack, decay, sustain, releas
   }
 
 
-
+//correggere interazione con la release, non viene considerata e viene liberato uno slot per una nota che sta ancora suonando
   function assignPolyphony(note, polyArray, method) {
     if (method) {
       for (let i = 0; i < polyphony; i++)
@@ -61,6 +61,7 @@ const SamplerEngine = ({ selectedInst, polyphony, attack, decay, sustain, releas
           polyArray[i] = note;
           return i;
         }
+        
     }
     else {
       stopIndex = polyArray.indexOf(note)
@@ -75,6 +76,13 @@ const SamplerEngine = ({ selectedInst, polyphony, attack, decay, sustain, releas
     for (let i = 0; i < polyphony; i++) {
       samplerArray[i] = createSampler(selectedInst);
     }
+
+    return () => {
+      for (let i = 0; i < polyphony; i++) {
+        samplerArray[i] = null;
+      }
+    }
+
   }, [selectedInst]);
 
 
@@ -82,9 +90,20 @@ const SamplerEngine = ({ selectedInst, polyphony, attack, decay, sustain, releas
   if (samplerArray[polyphony - 1]) {
     for (let i = 0; i < polyphony; i++) {
       envelopeArray[i] = createEnvelope(attack, decay, sustain, release)
-      samplerArray[i].chain(envelopeArray[i], Tone.Destination)
+      samplerArray[i].chain(envelopeArray[i], samplerNode)
     }
+    // samplerNode.toDestination();
   }
+
+  useEffect(() => {
+    if (samplerNode) {
+      setSampler(samplerNode);
+    }
+
+    return () => {
+      samplerNode.dispose();
+    }
+  }, [setSampler])
 
   //-----------HANDLERS--------------//
   const handleNoteUp = useCallback((event) => {
@@ -92,7 +111,8 @@ const SamplerEngine = ({ selectedInst, polyphony, attack, decay, sustain, releas
       console.log("note up: " + event.detail.note);
       polyNumberStop = assignPolyphony(event.detail.note, polyArray, 0);
       console.log("sampler to stop", polyNumberStop);
-      samplerArray[polyNumberStop].triggerRelease(event.detail.note, Tone.now() - 0.8, 0, 0, envelopeArray[polyNumberStop].triggerRelease());
+      // envelopeArray[polyNumberStop].triggerRelease();
+      samplerArray[polyNumberStop].triggerRelease(event.detail.note, Tone.now() - 0.8, 1, 0, envelopeArray[polyNumberStop].triggerRelease(Tone.now() - 0.1));
     }
   }, [samplerArray]);
 
