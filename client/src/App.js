@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Piano from './Components/Piano/Piano';
-import "./Components/styles/Piano.css"
-import "./Components/styles/Footer.css"
+import './App.css'
 import Footer from './Components/Footer';
-import Grid from '@mui/material/Unstable_Grid2';
 import Display from './Components/Display';
 import { WEATHER_API_KEY, WEATHER_API_URL } from './utility/api';
 import Map from './Components/Map';
 import { useSocket } from './utility/useSocket';
 import moment from 'moment';
-import Room from './Components/Room';
 import * as Tone from 'tone'
-import SamplerEngine from './audio/Sampler';
-import Synthesizer from './Components/Synth/Synthesizer';
+import Instrument from './Components/Synth/Synthesizer/Instrument';
 
 // fetching the GET route from the Express server which matches the GET route from server.js
 
@@ -140,31 +136,21 @@ function App() {
 
   return (
     <div className="App">
-      <Grid container spacing={4}>
-        <Grid xs={8}>
+        <div>
           <Map onCityChange={handleOnSearchChange} />
-        </Grid>
-        <Grid xs={8}>
-          <Synthesizer></Synthesizer>
-        </Grid>
-        <Grid xs={8}>
-          <button onClick={() => Tone.start()}>Start</button>
-        </Grid>
-        <Grid xs={8}>
-          <SamplerEngine noteUp={noteUp} noteDown={noteDown} playTime={playTime} stopTime={stopTime} velocity={velocity} />
-        </Grid>
-        <Grid>
           {currentWeather && <Display externalData={currentWeather}
             onSwitchChange={handleOnPositionSwitchChange}
             light={internalLight.value} temperature={internalTemperature.value} humidity={internalHumidity.value} />}
-        </Grid>
-        <Grid xs={12}>
+        </div>
+        <div>
+          <Instrument></Instrument>
+        </div>
+        <div>
           <Piano keyCount={61} keyboardLayout={"C"}/>
-        </Grid>
-        <Grid>
+        </div>
+        <div>
           <Footer />
-        </Grid>
-      </Grid>
+        </div>
     </div>
   )
 }

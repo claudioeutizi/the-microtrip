@@ -2,13 +2,15 @@ import React, { useCallback, useMemo, useState } from "react";
 import { useRef, useEffect } from "react";
 import NaturalKey from "./NaturalKey";
 import SharpKey from "./SharpKey";
-import { Box, Stack, Typography } from "@mui/material";
-
+import '../styles/Piano.css'
+import { WebAudioKnob } from "webaudio-controls-react-typescript";
+import $ from 'jquery';
 function Piano(props) {
 
   const notes = useMemo(() => ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"], []);
   const keys = useMemo(() => "zsxdcvgbhnjmq2w3er5t6y7ui9o0p", []);
-  const divRef = useRef();
+  const pianoRef = useRef();
+  const containerRef = useRef();
   const click = useRef(false);
   const [midiAccess, setMidiAccess] = useState(null);
 
@@ -43,7 +45,7 @@ function Piano(props) {
   }
 
   const setNoteDown = useCallback((note, octave, velocity) => {
-    const piano = divRef.current;
+    const piano = pianoRef.current;
     if (piano) {
       const elem = piano.querySelector(keySelector(note, octave));
       if (!elem.classList.contains("active")) {
@@ -62,7 +64,7 @@ function Piano(props) {
   }, []);
 
   const setNoteUp = useCallback((note, octave) => {
-    const piano = divRef.current;
+    const piano = pianoRef.current;
     if (piano) {
       const elem = piano.querySelector(keySelector(note, octave));
       elem.classList.remove("active");
@@ -113,7 +115,7 @@ function Piano(props) {
       event.preventDefault()
     }
 
-    const piano = divRef.current;
+    const piano = pianoRef.current;
 
     if (piano) {
 
@@ -147,7 +149,7 @@ function Piano(props) {
         input.addEventListener('midimessage', handleMidiInput);
       })
     }
-    
+
 
     const updateMidiDevices = () => {
     }
@@ -248,6 +250,10 @@ function Piano(props) {
 
 
   }, [keys, notes, setNoteDown, setNoteUp]);
+
+  /* WHEELS */
+
+  /* PIANO SVG CREATION */
 
   const getNoteSvg = () => {
     const noteCount = config.keyCount;
@@ -350,27 +356,60 @@ function Piano(props) {
     const sharpOffsets = offsets.filter(pos => pos.note.includes("#"));
 
     const naturalKeys = naturalOffsets.map(pos =>
-      <NaturalKey key={pos.note+pos.octave} dataNote={pos.note} dataOctave={pos.octave} x={pos.offset} />);
+      <NaturalKey key={pos.note + pos.octave} dataNote={pos.note} dataOctave={pos.octave} x={pos.offset} />);
 
     const sharpKeys = sharpOffsets.map(pos =>
-      <SharpKey key={pos.note+pos.octave} dataNote={pos.note} dataOctave={pos.octave} x={pos.offset} />);
+      <SharpKey key={pos.note + pos.octave} dataNote={pos.note} dataOctave={pos.octave} x={pos.offset} />);
 
     return <g>{naturalKeys}{sharpKeys}</g>
   }
 
   const pianoSVG = getNoteSvg();
 
+  /* WHEEL RESIZE */
+
+  const handleResize = () => {
+    if (containerRef) {
+      const { width, height } = containerRef.current.getBoundingClientRect();
+      $('#pitch-wheel')[0].height = Math.round(height * 0.7);
+      $('#pitch-wheel')[0].width = Math.round(width * 0.03);
+      $('#modulation-wheel')[0].height = Math.round(height * 0.7);
+      $('#modulation-wheel')[0].width = Math.round(width * 0.03);
+    }
+  }
+
+  useEffect(() => {
+    if (containerRef) {
+
+      const { width, height } = containerRef.current.getBoundingClientRect();
+      $('#pitch-wheel')[0].height = Math.round(height * 0.7);
+      $('#pitch-wheel')[0].width = Math.round(width * 0.03);
+      $('#modulation-wheel')[0].height = Math.round(height * 0.7);
+      $('#modulation-wheel')[0].width = Math.round(width * 0.03);
+
+      window.addEventListener("resize", handleResize);
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      }
+    }
+  }, [containerRef]);
+
   return (
-    <Stack sx={{ bgcolor: "#282828" }} direction="row" spacing={2} justifyContent="space-between">
-      <Box flex={2}>
-        <Typography sx={{ fontWeight: 'bold', color: 'white', letterSpacing: 2 }} style={{ 'textAlign': 'center' }} gutterBottom variant="h5" component="div">
-          Pitch and Mod Wheels
-        </Typography>
-      </Box>
-      <Box className="Piano" flex={10} ref={divRef}>
+    <div ref={containerRef} className="piano-container">
+      <WebAudioKnob className="wheel"
+        src={require("webaudio-controls-react-typescript/dist/images/images/76_bender_palette.png")}
+        sprites={100}
+        onChange={(value) => { console.log(value) }} id="pitch-wheel" />
+      <WebAudioKnob
+        className="wheel"
+        src={require("webaudio-controls-react-typescript/dist/images/images/76_bender_palette.png")}
+        id="modulation-wheel" sprites={100}
+        onChange={(value) => { console.log(value) }}
+      />
+      <div className="Piano" ref={pianoRef}>
         {pianoSVG}
-      </Box>
-    </Stack>
+      </div>
+    </div>
   );
 }
 
