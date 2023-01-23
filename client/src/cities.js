@@ -2,6 +2,7 @@ const cities = [
     {
         name: 'Madrid',
         //classic guitar
+        instId: 2,
         id: 'Q2807',
         position: {
             lat: 40.416775,
@@ -92,6 +93,7 @@ const cities = [
     {
         name: 'New Delhi',
         //sitar
+        instId: 1,
         id: 'Q987',
         position: {
             lat: 28.679079,
@@ -139,6 +141,7 @@ const cities = [
     {
         name: 'London',
         //mello
+        instId: 0,
         id: 'Q84',
         position: {
             lat: 51.509865,
