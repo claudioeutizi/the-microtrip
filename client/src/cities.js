@@ -57,6 +57,7 @@ const cities = [
     {
         name: 'Mexico City',
         //marimba
+        instId: 3,
         id: 'Q1489',
         position: {
             lat: 19.432608,

@@ -22,7 +22,7 @@ const InstrumentComponent = ({ selectedInst }) => {
   //PARAMETERS
 
   //SAMPLER & ENVELOPE (aggiungere curva?)
-  let attack = 0.01;
+  let attack = 0.001;
   let decay = 0.3;
   let sustain = 1;
   let release = 0;        //problema interazione release

@@ -20,7 +20,8 @@ const instruments = [
       C6: require('./Samples/Mellotron/MellotronC6.wav'),
       Ds6: require('./Samples/Mellotron/MellotronDs6.wav'),
       Fs6: require('' + noSample),
-      A6: require('' + noSample)
+      A6: require('' + noSample),
+      C7: require('' + noSample),
     }
   },
 
@@ -43,7 +44,8 @@ const instruments = [
       C6: require('./Samples/Sitar/SitarC6.wav'),
       Ds6: require('./Samples/Sitar/SitarDs6.wav'),
       Fs6: require('./Samples/Sitar/SitarFs6.wav'),
-      A6: require('./Samples/Sitar/SitarA6.wav')
+      A6: require('./Samples/Sitar/SitarA6.wav'),
+      C7: require('' + noSample),
     }
   },
 
@@ -67,8 +69,35 @@ const instruments = [
       Ds6: require('./Samples/Guitar/GuitarDs6.wav'),
       Fs6: require('./Samples/Guitar/GuitarFs6.wav'),
       A6: require('' + noSample),
+      C7: require('' + noSample),
     }
   },
+
+  {
+    name: 'marimba',
+    samples: {
+      A2: require('' + noSample),
+      C3: require('./Samples/Marimba/MarimbaC3.wav'),
+      Ds3: require('./Samples/Marimba/MarimbaDs3.wav'),
+      Fs3: require('./Samples/Marimba/MarimbaFs3.wav'),
+      A3: require('./Samples/Marimba/MarimbaA3.wav'),
+      C4: require('./Samples/Marimba/MarimbaC4.wav'),
+      Ds4: require('./Samples/Marimba/MarimbaDs4.wav'),
+      Fs4: require('./Samples/Marimba/MarimbaFs4.wav'),
+      A4: require('./Samples/Marimba/MarimbaA4.wav'),
+      C5: require( './Samples/Marimba/MarimbaC5.wav'),
+      Ds5: require('./Samples/Marimba/MarimbaDs5.wav'),
+      Fs5: require('./Samples/Marimba/MarimbaFs5.wav'),
+      A5: require( './Samples/Marimba/MarimbaA5.wav'),
+      C6: require( './Samples/Marimba/MarimbaC6.wav'),
+      Ds6: require('./Samples/Marimba/MarimbaDs6.wav'),
+      Fs6: require('./Samples/Marimba/MarimbaFs6.wav'),
+      A6: require('./Samples/Marimba/MarimbaA6.wav'),
+      C7: require('./Samples/Marimba/MarimbaC7.wav'),
+    }
+  },
+
+
 ]
 
 
