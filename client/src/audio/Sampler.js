@@ -8,13 +8,13 @@ const envelopeArray = [];
 const samplerArray = [];
 const samplerNode = new Tone.Gain();
 
-const SamplerEngine = ({ setSampler, selectedInst, polyphony, attack, decay, sustain, release }) => {
+const SamplerEngine = ({ samplerGain, setSampler, selectedInst, polyphony, attack, decay, sustain, release, type, fadeIn, fadeOut, gain, NOISE_ON }) => {
 
   const polyArray = Array(polyphony).fill(0);
   let stopIndex;
   let polyNumberPlay;
   let polyNumberStop;
-
+  let noise;
   //---------------GENERATORS----------------//
   function createEnvelope(A, D, S, R) {
 
@@ -53,7 +53,7 @@ const SamplerEngine = ({ setSampler, selectedInst, polyphony, attack, decay, sus
   }
 
 
-//correggere interazione con la release, non viene considerata e viene liberato uno slot per una nota che sta ancora suonando
+  //correggere interazione con la release, non viene considerata e viene liberato uno slot per una nota che sta ancora suonando
   function assignPolyphony(note, polyArray, method) {
     if (method) {
       for (let i = 0; i < polyphony; i++)
@@ -61,7 +61,7 @@ const SamplerEngine = ({ setSampler, selectedInst, polyphony, attack, decay, sus
           polyArray[i] = note;
           return i;
         }
-        
+
     }
     else {
       stopIndex = polyArray.indexOf(note)
@@ -69,6 +69,21 @@ const SamplerEngine = ({ setSampler, selectedInst, polyphony, attack, decay, sus
       return stopIndex
     }
 
+  }
+
+  //NOISE
+  if (NOISE_ON) {
+    console.log("Noise ON")
+    noise = new Tone.Noise({
+      fadeIn: fadeIn,
+      fadeOut: fadeOut,
+      type: type
+    })
+    noise.volume.value=gain;
+    noise.connect(samplerNode)
+  }
+  else if (noise) {
+    noise.dispose();
   }
   //------------------------------------------//
   useEffect(() => {
@@ -86,6 +101,7 @@ const SamplerEngine = ({ setSampler, selectedInst, polyphony, attack, decay, sus
   }, [selectedInst]);
 
 
+
   //Connections and generation
   if (samplerArray[polyphony - 1]) {
     for (let i = 0; i < polyphony; i++) {
@@ -96,6 +112,7 @@ const SamplerEngine = ({ setSampler, selectedInst, polyphony, attack, decay, sus
   }
 
   useEffect(() => {
+    // samplerNode.gain= samplerGain;
     if (samplerNode) {
       setSampler(samplerNode);
     }
@@ -113,6 +130,9 @@ const SamplerEngine = ({ setSampler, selectedInst, polyphony, attack, decay, sus
       console.log("sampler to stop", polyNumberStop);
       // envelopeArray[polyNumberStop].triggerRelease();
       samplerArray[polyNumberStop].triggerRelease(event.detail.note, Tone.now() - 0.8, 1, 0, envelopeArray[polyNumberStop].triggerRelease(Tone.now() - 0.1));
+      if(NOISE_ON){
+        noise.stop(Tone.now() - 0.8)
+      }
     }
   }, [samplerArray]);
 
@@ -124,6 +144,9 @@ const SamplerEngine = ({ setSampler, selectedInst, polyphony, attack, decay, sus
         polyNumberPlay = assignPolyphony(event.detail.note, polyArray, 1);
         console.log("sampler to play", polyNumberPlay);
         samplerArray[polyNumberPlay].triggerAttack(event.detail.note, Tone.now() - 0.8, event.detail.velocity, 0, envelopeArray[polyNumberPlay].triggerAttack(Tone.now() - 0.1));
+        if(NOISE_ON){
+          noise.start(Tone.now() - 0.8)
+        }
       }
     }
   }, [samplerArray]);

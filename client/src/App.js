@@ -127,7 +127,7 @@ function App() {
           <Map onCityChange={handleOnSearchChange} />
         </Grid>
         <Grid xs={8}>
-          <Room />
+          <Room/>
         </Grid>
         <Grid xs={8}>
           <InstrumentComponent selectedInst={instrument}/>

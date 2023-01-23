@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import InstrumentComponent from './InstrumentComponent';
 import * as Tone from 'tone';
 
 
@@ -25,6 +24,7 @@ const Filter = ({ HP_ON, LP_ON, LFO_H_ON, depthH, rateH, resonanceH, typeH, LFO_
             if (LFO_H_ON) {
                 minFreq_LFO_H = Math.pow(10, Math.log10(lowCut) - 1 * depthH);
                 maxFreq_LFO_H = Math.pow(10, Math.log10(lowCut) + 1 * depthH);
+
                 console.log("depth range HPF", minFreq_LFO_H, maxFreq_LFO_H)
                 lfoH = new Tone.LFO(rateH, 0, 1);
                 scaleExpH = new Tone.ScaleExp(minFreq_LFO_H, maxFreq_LFO_H, 3);
