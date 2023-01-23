@@ -27,7 +27,7 @@ const InstrumentComponent = ({ selectedInst }) => {
   let sustain = 1;
   let release = 0;        //problema interazione release
   let polyphony = 7;
-  let samplerGain = 10;
+  let samplerGain = 0;
 
   //Noise
   let NOISE_ON = 0;
@@ -82,13 +82,14 @@ const InstrumentComponent = ({ selectedInst }) => {
   
 
   useEffect(() => {
-
+      
       let routingArray=[sampler, filterH, filterL, dist, vibrato, delay, reverb]
 
       console.log(DELAY_ON)
       console.log(routingArray)
 
       if(sampler){
+  
         let currentNode;
         let nextNode = Tone.Destination;
         let length = routingArray.length;
