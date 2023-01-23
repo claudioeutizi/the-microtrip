@@ -100,45 +100,20 @@ function App() {
     }
   }, [socket]);
 
-  // const handleNoteUp = (event) => {
-  //   console.log("note up: " + event.detail.note);
-  //   setNoteUp(event.detail.note);
-  //   setStop(Tone.now())
-  //   // setTriggerS(prevStop => prevStop + 1);
-  // }
-
-  // const handleNoteDown = (event) => {
-  //   console.log("note down: " + event.detail.note);
-  //   if(Tone.now()>0.8){
-  //   setVelocity(event.detail.velocity);
-  //   setNoteDown(event.detail.note);
-  //   setPlay(Tone.now())
-  //   }
-  //   // setTriggerP(prevPlay => prevPlay + 1);
-  // }
-
-
-
   useEffect(() => {
     const handleMapButtonClick = (event) => {
       setInstrument(event.detail.instrument)
     }
 
     // /* MESSAGES FROM PIANO KEYBOARD IN ORDER TO PRODUCE SOUND */
-    // document.addEventListener("notedown", handleNoteDown);
-    // document.addEventListener("noteup", handleNoteUp);
     window.addEventListener("mapbuttonclick", handleMapButtonClick);
 
     return () => {
-      // document.removeEventListener('notedown', handleNoteDown);
-      // document.removeEventListener('noteup', handleNoteUp);
       window.removeEventListener("mapbuttonclick", handleMapButtonClick);
 
     };
 
   }, [instrument]);
-
-
 
   return (
     <div className="App">
@@ -149,6 +124,9 @@ function App() {
             light={internalLight.value} temperature={internalTemperature.value} humidity={internalHumidity.value} />}
         </div>
         <div>
+          <Instrument></Instrument>
+          <InstrumentComponent selectedInst={instrument}>
+          </InstrumentComponent>
         </div>
         <div>
           <Piano keyCount={61} keyboardLayout={"C"}/>
