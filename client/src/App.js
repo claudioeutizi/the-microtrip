@@ -9,7 +9,7 @@ import { useSocket } from './utility/useSocket';
 import moment from 'moment';
 import * as Tone from 'tone'
 import Instrument from './Components/Synth/Synthesizer/Instrument';
-
+import InstrumentComponent from './audio/InstrumentComponent'
 // fetching the GET route from the Express server which matches the GET route from server.js
 
 function App() {
