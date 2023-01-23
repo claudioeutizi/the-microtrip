@@ -128,8 +128,6 @@ function App() {
     // document.addEventListener("notedown", handleNoteDown);
     // document.addEventListener("noteup", handleNoteUp);
     window.addEventListener("mapbuttonclick", handleMapButtonClick);
-    
-  
 
     return () => {
       // document.removeEventListener('notedown', handleNoteDown);
