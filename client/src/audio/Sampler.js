@@ -90,6 +90,7 @@ const SamplerEngine = ({ samplerGain, setSampler, selectedInst, polyphony, attac
 
     for (let i = 0; i < polyphony; i++) {
       samplerArray[i] = createSampler(selectedInst);
+      samplerArray[i].volume.value=samplerGain;
     }
 
     return () => {
@@ -108,11 +109,13 @@ const SamplerEngine = ({ samplerGain, setSampler, selectedInst, polyphony, attac
       envelopeArray[i] = createEnvelope(attack, decay, sustain, release)
       samplerArray[i].chain(envelopeArray[i], samplerNode)
     }
-    // samplerNode.toDestination();
+
   }
 
   useEffect(() => {
-    // samplerNode.gain= samplerGain;
+    for (let i = 0; i < polyphony; i++) {
+      samplerArray[i].volume.value=samplerGain;
+    }
     if (samplerNode) {
       setSampler(samplerNode);
     }
