@@ -11,6 +11,26 @@ const Filter = () => {
     const [onOffLfoHpf, setOnOffLfoHpf] = useState(false);
     const [onOffLfoLpf, setOnOffLfoLpf] = useState(false);
 
+    const waveforms = [
+        {
+            id: 0,
+            label: "sine"
+        },
+        {
+            id: 1,
+            label: "square"
+        },
+        {
+            id: 2,
+            label: "triangle"
+        },
+        {
+            id: 3,
+            label: "sawtooth"
+        },
+
+    ]
+
     return (
         <div id="filter-container">
             {/* Title */}
@@ -131,14 +151,12 @@ const Filter = () => {
                 }} src={ledImg} value={onOffLfoHpf} enable={0} type="toggle"></WebAudioSwitch>
             </div>
 
-            <div className="screen-container lfo" style={{
-                "gridColumnStart": 1,
-                "gridColumnEnd": "span 2",
-                "gridRow": 8,
-            }}>
-                <div className="screen-display lfo">
-                    <p className="display-text">WAVEFORM</p>
-                </div>
+            <div className="screen-container lfo">
+                <select label="Waveform">
+                    {waveforms.map((waveform) => {
+                        return <option value = {waveform.value}>{waveform.label}</option>
+                    })}
+                </select>
             </div>
 
             <div className="knob" id="lfo-lpf-rate" style={{

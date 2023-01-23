@@ -28,10 +28,6 @@ const Sampler = () => {
                         return <option value = {instrument.value}>{instrument.label}</option>
                     })}
                 </select>
-
-                {/* <div className="screen-display sampler">
-                    <p>Instrument</p>
-                </div> */}
             </div>
             <div id="sampler-knobs-row">
                 <div className="knob">
