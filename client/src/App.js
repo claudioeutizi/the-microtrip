@@ -143,7 +143,6 @@ function App() {
             light={internalLight.value} temperature={internalTemperature.value} humidity={internalHumidity.value} />}
         </div>
         <div>
-          <Instrument></Instrument>
         </div>
         <div>
           <Piano keyCount={61} keyboardLayout={"C"}/>
