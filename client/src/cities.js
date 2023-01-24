@@ -122,6 +122,7 @@ const cities = [
     {
         name: 'Cremona',
         //violin
+        instId: 4,
         id: 'Q6231',
         position: {
             lat: 45.116667,

@@ -22,6 +22,10 @@ const instruments = [
       Fs6: require('' + noSample),
       A6: require('' + noSample),
       C7: require('' + noSample),
+      Ds7: require('' + noSample),
+      Fs7: require('' + noSample),
+      A7: require( '' + noSample),
+      C8: require('' + noSample),
     }
   },
 
@@ -46,6 +50,10 @@ const instruments = [
       Fs6: require('./Samples/Sitar/SitarFs6.wav'),
       A6: require('./Samples/Sitar/SitarA6.wav'),
       C7: require('' + noSample),
+      Ds7: require('' + noSample),
+      Fs7: require('' + noSample),
+      A7: require( '' + noSample),
+      C8: require('' + noSample),
     }
   },
 
@@ -70,6 +78,10 @@ const instruments = [
       Fs6: require('./Samples/Guitar/GuitarFs6.wav'),
       A6: require('' + noSample),
       C7: require('' + noSample),
+      Ds7: require('' + noSample),
+      Fs7: require('' + noSample),
+      A7: require( '' + noSample),
+      C8: require('' + noSample),
     }
   },
 
@@ -94,32 +106,42 @@ const instruments = [
       Fs6: require('./Samples/Marimba/MarimbaFs6.wav'),
       A6: require('./Samples/Marimba/MarimbaA6.wav'),
       C7: require('./Samples/Marimba/MarimbaC7.wav'),
+      Ds7: require('' + noSample),
+      Fs7: require('' + noSample),
+      A7: require( '' + noSample),
+      C8: require('' + noSample),
     }
   },
 
+  {
+    name: 'violin',
+    samples: {
+      A2: require('' + noSample),
+      C3: require( '' + noSample),
+      Ds3: require('' + noSample),
+      Fs3: require('' + noSample),
+      A3: require( '' + noSample),
+      C4: require('' + noSample),
+      Ds4: require('' + noSample),
+      Fs4: require('' + noSample),
+      A4: require( './Samples/Violin/ViolinA4.wav'),
+      C5: require( './Samples/Violin/ViolinC5.wav'),
+      Ds5: require('./Samples/Violin/ViolinDs5.wav'),
+      Fs5: require('./Samples/Violin/ViolinFs5.wav'),
+      A5: require( './Samples/Violin/ViolinA5.wav'),
+      C6: require( './Samples/Violin/ViolinC6.wav'),
+      Ds6: require('./Samples/Violin/ViolinDs6.wav'),
+      Fs6: require('./Samples/Violin/ViolinFs6.wav'),
+      A6: require( './Samples/Violin/ViolinA6.wav'),
+      C7: require( './Samples/Violin/ViolinC7.wav'),
+      Ds7: require( './Samples/Violin/ViolinDs7.wav'),
+      Fs7: require( './Samples/Violin/ViolinFs7.wav'),
+      A7: require( './Samples/Violin/ViolinA7.wav'),
+      C8: require( './Samples/Violin/ViolinC8.wav'),
+    }
+  },
 
 ]
-
-
-// const guitar = {
-//   C3: require(''+noSample),
-//   Ds3: require(''+noSample),
-//   Fs3: require(''+noSample),
-//   A3: require(''+noSample),
-//   C4: require(''+noSample),
-//   Ds4 : require(''+noSample),
-//   Fs4 : require(''+noSample),
-//   A4: require(''+noSample),
-//   C5: require(''+noSample),
-//   Ds5 : require(''+noSample),
-//   Fs5 : require(''+noSample),
-//   A5: require(''+noSample),
-//   C6: require(''+noSample),
-//   Ds6: require(''+noSample),
-//   Fs6: require(''+noSample),
-//   A6: require(''+noSample)
-// };
-
 
 
 
