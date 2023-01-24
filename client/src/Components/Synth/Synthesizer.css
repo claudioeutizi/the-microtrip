@@ -71,10 +71,12 @@
 }
 
 .screen-container.lfo {
+    grid-column-start: 1;
+    grid-column-end: span 2;
+    margin-right: 20px;
     top: 0px;
     width: 90%;
     height: 40px;
-    margin-right: 20px;
 }
 
 .screen-display {
@@ -109,12 +111,22 @@
 }
 
 select {
+    font-family: "Source Code Pro", monospace;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 15px;
+    color: #272822;
+    text-shadow: 0 0 0.5px #272822,
+        0.2px 0.2px 0.5px #4A4B45,
+        -0.2px 0.2px 0.5px #51524C,
+        0.2px -0.2px 0.5px #4A4B45,
+        0 0 0.75px #51524C,
+        0 0 1.25px #5F5F5F;
     -webkit-appearance: none;
     -moz-appearance: none;
     -ms-appearance: none;
     appearance: none;
-    outline: 0;
-    background-image: linear-gradient(90deg, transparent 15%, rgba(134, 135, 129, 0.05), transparent 85%),
+    background: linear-gradient(90deg, transparent 15%, rgba(134, 135, 129, 0.05), transparent 85%),
         radial-gradient(rgba(92, 93, 87, 0.75), transparent 70%),
         linear-gradient(#65675C, #727469, #6E746A);
     background-size: 10px 100%, 200px 200px, 100% 100%;
@@ -129,7 +141,7 @@ select {
         0 -2px 1px #7A7772 inset;
     border: 1px solid black;
 }
- 
+
 select {
     width: 100%;
     height: 100%;
@@ -137,24 +149,24 @@ select {
     padding: 0 0 0 .5em;
     cursor: pointer;
 }
- 
+
 select::-ms-expand {
     display: none;
     background-image: linear-gradient(90deg, transparent 15%, rgba(134, 135, 129, 0.05), transparent 85%),
-    radial-gradient(rgba(92, 93, 87, 0.75), transparent 70%),
-    linear-gradient(#65675C, #727469, #6E746A);
-background-size: 10px 100%, 200px 200px, 100% 100%;
-background-position: 0 0, center center, 0 0;
-background-repeat: repeat, no-repeat, no-repeat;
-box-shadow: 0 0 2px 0 #2B262C,
-    0 0 1px 1px #221B23 inset,
-    0 0 3px #221B23 inset,
-    0 0 3px 0.5px #383838 inset,
-    0 0 5px #484848 inset,
-    9px 0 7px -4px #605A5C inset,
-    0 -2px 1px #7A7772 inset;
+        radial-gradient(rgba(92, 93, 87, 0.75), transparent 70%),
+        linear-gradient(#65675C, #727469, #6E746A);
+    background-size: 10px 100%, 200px 200px, 100% 100%;
+    background-position: 0 0, center center, 0 0;
+    background-repeat: repeat, no-repeat, no-repeat;
+    box-shadow: 0 0 2px 0 #2B262C,
+        0 0 1px 1px #221B23 inset,
+        0 0 3px #221B23 inset,
+        0 0 3px 0.5px #383838 inset,
+        0 0 5px #484848 inset,
+        9px 0 7px -4px #605A5C inset,
+        0 -2px 1px #7A7772 inset;
 }
- 
+
 .screen-display::after {
     content: '\25BC';
     position: absolute;
@@ -163,8 +175,8 @@ box-shadow: 0 0 2px 0 #2B262C,
     bottom: 0;
     padding: 0 1em;
     background-image: linear-gradient(90deg, transparent 15%, rgba(134, 135, 129, 0.05), transparent 85%),
-    radial-gradient(rgba(92, 93, 87, 0.75), transparent 70%),
-    linear-gradient(#65675C, #727469, #6E746A);
+        radial-gradient(rgba(92, 93, 87, 0.75), transparent 70%),
+        linear-gradient(#65675C, #727469, #6E746A);
     background-size: 10px 100%, 200px 200px, 100% 100%;
     background-position: 0 0, center center, 0 0;
     background-repeat: repeat, no-repeat, no-repeat;
@@ -177,11 +189,11 @@ box-shadow: 0 0 2px 0 #2B262C,
         0 -2px 1px #7A7772 inset;
     pointer-events: none;
 }
- 
+
 .screen-display:hover::after {
     color: #7A7772;
 }
- 
+
 .screen-display::after {
     -webkit-transition: .25s all ease;
     -o-transition: .25s all ease;
@@ -267,6 +279,14 @@ option {
     border-radius: 2px;
     border: 2px solid #D6D8DD;
     grid-template-rows: 20% 35% 45%;
+    box-shadow:
+        0 0 2px 0 #2B262C,
+        0 0 1px 1px #221B23,
+        0 0 3px #221B23,
+        0 0 3px 0.5px #383838,
+        0 0 3px #484848,
+        3px 0 3px -7px #605A5C,
+        0 -2px 1px #7A7772;
 
 }
 
@@ -298,6 +318,14 @@ option {
     border-radius: 2px;
     border: 2px solid #D6D8DD;
     grid-template-rows: 10% 22.5% 22.5% 22.5% 22.5%;
+    box-shadow:
+        0 0 2px 0 #2B262C,
+        0 0 1px 1px #221B23,
+        0 0 3px #221B23,
+        0 0 3px 0.5px #383838,
+        0 0 3px #484848,
+        3px 0 3px -7px #605A5C,
+        0 -2px 1px #7A7772;
 }
 
 /* NOISE */
@@ -312,6 +340,14 @@ option {
     border-radius: 2px;
     border: 2px solid #D6D8DD;
     grid-template-rows: 20% 30% 50%;
+    box-shadow:
+        0 0 2px 0 #2B262C,
+        0 0 1px 1px #221B23,
+        0 0 3px #221B23,
+        0 0 3px 0.5px #383838,
+        0 0 3px #484848,
+        3px 0 3px -7px #605A5C,
+        0 -2px 1px #7A7772;
 }
 
 #noise-knobs-row {
@@ -330,11 +366,19 @@ option {
     width: 100%;
     border-radius: 2px;
     border: 2px solid #D6D8DD;
-    grid-template-rows: 7.5% 2.5% 12.5% 15% 12.5% 2.5% 12.5% 10% 12.5% 12.5%; 
+    grid-template-rows: 7.5% 2.5% 12.5% 15% 12.5% 2.5% 12.5% 10% 12.5% 12.5%;
     /* Filter 1, filter-type 2, on-off 3, cutoff 4, resonance 5, lfo 6, on-off 7, selector 8, rate 9, depth 10*/
     grid-template-columns: 50% 50%;
     justify-items: center;
     align-items: center;
+    box-shadow:
+        0 0 2px 0 #2B262C,
+        0 0 1px 1px #221B23,
+        0 0 3px #221B23,
+        0 0 3px 0.5px #383838,
+        0 0 3px #484848,
+        3px 0 3px -7px #605A5C,
+        0 -2px 1px #7A7772;
 }
 
 /* DISTORTION */
@@ -351,6 +395,14 @@ option {
     height: 95%;
     border-radius: 2px;
     border: 2px solid #D6D8DD;
+    box-shadow:
+        0 0 2px 0 #2B262C,
+        0 0 1px 1px #221B23,
+        0 0 3px #221B23,
+        0 0 3px 0.5px #383838,
+        0 0 3px #484848,
+        3px 0 3px -7px #605A5C,
+        0 -2px 1px #7A7772;
 }
 
 /* VIBRATO */
@@ -367,6 +419,14 @@ option {
     height: 95%;
     border-radius: 2px;
     border: 2px solid #D6D8DD;
+    box-shadow:
+        0 0 2px 0 #2B262C,
+        0 0 1px 1px #221B23,
+        0 0 3px #221B23,
+        0 0 3px 0.5px #383838,
+        0 0 3px #484848,
+        3px 0 3px -7px #605A5C,
+        0 -2px 1px #7A7772;
 }
 
 /* DELAY */
@@ -383,6 +443,14 @@ option {
     height: 95%;
     border-radius: 2px;
     border: 2px solid #D6D8DD;
+    box-shadow:
+        0 0 2px 0 #2B262C,
+        0 0 1px 1px #221B23,
+        0 0 3px #221B23,
+        0 0 3px 0.5px #383838,
+        0 0 3px #484848,
+        3px 0 3px -7px #605A5C,
+        0 -2px 1px #7A7772;
 }
 
 /* REVERB */
@@ -399,6 +467,14 @@ option {
     height: 95%;
     border-radius: 2px;
     border: 2px solid #D6D8DD;
+    box-shadow:
+        0 0 2px 0 #2B262C,
+        0 0 1px 1px #221B23,
+        0 0 3px #221B23,
+        0 0 3px 0.5px #383838,
+        0 0 3px #484848,
+        3px 0 3px -7px #605A5C,
+        0 -2px 1px #7A7772;
 }
 
 /* MASTER */
@@ -412,6 +488,14 @@ option {
     border-radius: 2px;
     border: 2px solid #D6D8DD;
     grid-template-rows: 30% 10% 60%;
+    box-shadow:
+        0 0 2px 0 #2B262C,
+        0 0 1px 1px #221B23,
+        0 0 3px #221B23,
+        0 0 3px 0.5px #383838,
+        0 0 3px #484848,
+        3px 0 3px -7px #605A5C,
+        0 -2px 1px #7A7772;
 }
 
 .knob {
@@ -429,7 +513,7 @@ option {
 }
 
 .onoff p {
-    margin:1px;
+    margin: 1px;
 }
 
 .screen-buttons {
