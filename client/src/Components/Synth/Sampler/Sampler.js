@@ -1,8 +1,24 @@
 
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { WebAudioKnob } from 'webaudio-controls-react-typescript'
 import knobImg from 'webaudio-controls-react-typescript/dist/images/images/MS20_def.png'
+import Knob from './Controls/Knob'
+
 const Sampler = () => {
+
+    const [knobValue, setKnobValue] = useState(0);
+    const [showInput, setShowInput] = useState(false);
+    const inputRef = useRef(null);
+
+    useEffect(() => {
+        const handleMouseUp = (event) => {
+            if (event.target !== inputRef.current) setShowInput(false);
+        }
+        document.addEventListener("mouseup", handleMouseUp);
+        return () => {
+            document.removeEventListener("mouseup", handleMouseUp);
+        };
+    }, [inputRef, setShowInput]);
 
     const instruments = [
         {
@@ -25,20 +41,13 @@ const Sampler = () => {
             <div className="screen-container sampler">
                 <select label="Instrument">
                     {instruments.map((instrument) => {
-                        return <option value = {instrument.value}>{instrument.label}</option>
+                        return <option value={instrument.value}>{instrument.label}</option>
                     })}
                 </select>
             </div>
             <div id="sampler-knobs-row">
-                <div className="knob">
-                    <p className="type-module">Gain</p>
-                    <div className="knob-container"></div>
-                    <WebAudioKnob className="medium-knob" id="sampler-gain" src={knobImg}></WebAudioKnob>
-                </div>
-                <div className="knob">
-                    <p className="type-module">Fine Tune</p>
-                    <WebAudioKnob className="medium-knob" id="sampler-finetune" src={knobImg}></WebAudioKnob>
-                </div>
+                <Knob diameter = {64} id={"sampler-gain"} defValue = {0} parameter = {"Gain"}></Knob>
+                <Knob diameter = {64} id={"sampler-finetune"} defValue = {0} parameter = {"Fine Tune"}></Knob>
             </div>
         </div>
     )

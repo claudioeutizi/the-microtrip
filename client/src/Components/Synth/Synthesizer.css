@@ -10,7 +10,7 @@
     grid-template-columns: repeat(5, minmax(90px, 1fr)) repeat(2, minmax(120px, 1fr)) minmax(90px, 1fr);
     grid-column-gap: 10px;
     width: 100vw;
-    height: 800px;
+    height: 1000px;
     border-radius: 3px;
     padding-left: 20px;
     background-image: linear-gradient(#343432,
@@ -366,8 +366,7 @@ option {
     width: 100%;
     border-radius: 2px;
     border: 2px solid #D6D8DD;
-    grid-template-rows: 7.5% 2.5% 12.5% 15% 12.5% 2.5% 12.5% 10% 12.5% 12.5%;
-    /* Filter 1, filter-type 2, on-off 3, cutoff 4, resonance 5, lfo 6, on-off 7, selector 8, rate 9, depth 10*/
+    grid-template-rows: 7.5% 2.5% 12.5% 15% 12.5% 2.5% 12.5% 5% 15% 15%;
     grid-template-columns: 50% 50%;
     justify-items: center;
     align-items: center;
@@ -386,11 +385,10 @@ option {
 #distortion-container {
     grid-column-start: 6;
     grid-column-end: span 2;
-    grid-column-gap: 2px;
     grid-row: 2;
     display: inline-grid;
     grid-template-columns: 33.33333% 33.33333% 33.33333%;
-    grid-template-rows: 30% 70%;
+    grid-template-rows: 40% 60%;
     width: 100%;
     height: 95%;
     border-radius: 2px;
@@ -410,11 +408,10 @@ option {
 #vibrato-container {
     grid-column-start: 6;
     grid-column-end: span 2;
-    grid-column-gap: 2px;
     grid-row: 3;
     display: inline-grid;
     grid-template-columns: 25% 25% 25% 25%;
-    grid-template-rows: 30% 70%;
+    grid-template-rows: 40% 60%;
     width: 100%;
     height: 95%;
     border-radius: 2px;
@@ -434,11 +431,10 @@ option {
 #delay-container {
     grid-column-start: 6;
     grid-column-end: span 2;
-    grid-column-gap: 2px;
     grid-row: 4;
     display: inline-grid;
     grid-template-columns: 25% 25% 25% 25%;
-    grid-template-rows: 30% 70%;
+    grid-template-rows: 40% 60%;
     width: 100%;
     height: 95%;
     border-radius: 2px;
@@ -458,11 +454,10 @@ option {
 #reverb-container {
     grid-column-start: 6;
     grid-column-end: span 2;
-    grid-column-gap: 2px;
     grid-row: 5;
     display: inline-grid;
     grid-template-columns: 25% 25% 25% 25%;
-    grid-template-rows: 30% 70%;
+    grid-template-rows: 40% 60%;
     width: 100%;
     height: 95%;
     border-radius: 2px;
@@ -500,8 +495,23 @@ option {
 
 .knob {
     display: grid;
-    align-content: center;
     justify-content: center;
+    justify-items: center;
+    align-items: center;
+    align-content: center;
+    font-size: 9px;
+    width: 100%;
+    letter-spacing: 1px;
+    text-align: center;
+    font-family: "Source Code Pro", monospace;
+    font-weight: 500;
+    color: #D6D8DD;
+    text-transform: uppercase;
+    text-shadow: 0 0 0.5px #7F7573,
+        0 0 1px #7F7573,
+        0 0 5px #7F7573,
+        0 0 1px #DED6D3;
+    position: relative;
 }
 
 .onoff {
@@ -572,6 +582,40 @@ option {
         0 0 1px #7F7573,
         0 0 5px #7F7573,
         0 0 1px #DED6D3;
+}
+
+.knob-container {
+    display: grid;
+    grid-template-rows: 20% 60% 20%;
+    width: 100%;
+    grid-template-columns: 33.33333% 33.33333% 33.33333%;
+}
+
+.indicator {
+    position: absolute;
+    height: 10px;
+    aspect-ratio: 1/1;
+    background: white;
+    z-index: 1;
+}
+
+.indicator.left {
+    left: 30%;
+    top: 85%;
+    bottom: 25%
+}
+
+.indicator.right {
+    right: 30%;
+    top: 85%;
+    bottom: 25%
+}
+
+.indicator.half {
+    left: 47%;
+    right: 45%;
+    bottom: 70%;
+    top: 25%
 }
 
 .medium-knob {

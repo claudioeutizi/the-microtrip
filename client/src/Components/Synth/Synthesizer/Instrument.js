@@ -8,8 +8,8 @@ import Distortion from '../Sampler/Distortion';
 import Reverb from '../Sampler/Reverb';
 import Vibrato from '../Sampler/Vibrato';
 import Delay from '../Sampler/Delay';
-export default function Instrument() {
 
+export default function Instrument() {
     return (
         <div className='instrument'>
             <div id="logo-container">
