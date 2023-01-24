@@ -2,6 +2,7 @@ const noSample = './Samples/Null.wav';
 
 const instruments = [
   {
+    id: 0,
     name: 'mellotron',
     samples: {
       A2: require('' + noSample),
@@ -30,6 +31,7 @@ const instruments = [
   },
 
   {
+    id: 1,
     name: 'sitar',
     samples: {
       A2: require('' + noSample),
@@ -58,6 +60,7 @@ const instruments = [
   },
 
   {
+    id: 2,
     name: 'guitar',
     samples: {
       A2: require('' + noSample),
@@ -86,6 +89,7 @@ const instruments = [
   },
 
   {
+    id: 3,
     name: 'marimba',
     samples: {
       A2: require('' + noSample),
@@ -114,6 +118,7 @@ const instruments = [
   },
 
   {
+    id: 4,
     name: 'violin',
     samples: {
       A2: require('' + noSample),

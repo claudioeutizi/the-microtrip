@@ -8,14 +8,27 @@ import Distortion from '../Sampler/Distortion';
 import Reverb from '../Sampler/Reverb';
 import Vibrato from '../Sampler/Vibrato';
 import Delay from '../Sampler/Delay';
+import { useEffect, useState } from 'react';
 
-export default function Instrument() {
+export default function Instrument({selectedInstrument}) {
+
+    const [sampler, setSampler] = useState(null);
+
+    useEffect(() => {
+        if(sampler){
+            sampler.toDestination();
+        return () => {
+            sampler.dispose();
+        }
+    }
+    }, [sampler])
+
     return (
         <div className='instrument'>
             <div id="logo-container">
                 <span className="logo">Synth</span>
             </div>
-            <Sampler />
+            <Sampler setSampler = {setSampler} selectedInst = {selectedInstrument} polyphony={7}/>
             <Adsr></Adsr>
             <Noise></Noise>
             <Filter></Filter>

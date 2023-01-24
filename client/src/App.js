@@ -124,9 +124,9 @@ function App() {
             light={internalLight.value} temperature={internalTemperature.value} humidity={internalHumidity.value} />}
         </div>
         <div>
-          <Instrument></Instrument>
-          <InstrumentComponent selectedInst={instrument}>
-          </InstrumentComponent>
+          <Instrument selectedInstrument={instrument}></Instrument>
+          {/* <InstrumentComponent selectedInst={instrument}>
+          </InstrumentComponent> */}
         </div>
         <div>
           <Piano keyCount={61} keyboardLayout={"C"}/>
