@@ -132,7 +132,7 @@ const SamplerEngine = ({ samplerGain, setSampler, selectedInst, polyphony, attac
       polyNumberStop = assignPolyphony(event.detail.note, polyArray, 0);
       console.log("sampler to stop", polyNumberStop);
       // envelopeArray[polyNumberStop].triggerRelease();
-      samplerArray[polyNumberStop].triggerRelease(event.detail.note, Tone.now() - 0.8, 1, 0, envelopeArray[polyNumberStop].triggerRelease(Tone.now() - 0.1));
+      samplerArray[polyNumberStop].triggerRelease(event.detail.note, Tone.now() - 0.8);
       if(NOISE_ON){
         noise.stop(Tone.now() - 0.8)
       }

@@ -57,6 +57,7 @@ const cities = [
     {
         name: 'Mexico City',
         //marimba
+        instId: 3,
         id: 'Q1489',
         position: {
             lat: 19.432608,
@@ -121,6 +122,7 @@ const cities = [
     {
         name: 'Cremona',
         //violin
+        instId: 4,
         id: 'Q6231',
         position: {
             lat: 45.116667,
