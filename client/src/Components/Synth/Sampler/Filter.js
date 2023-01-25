@@ -4,17 +4,20 @@ import OnOffSwitch from './Controls/OnOffSwitch'
 import Knob from './Controls/Knob'
 import * as Tone from 'tone'
 
-const Filter = ({ HP_ON, LFO_H_ON, depthH, rateH, resonanceH, typeH, LFO_L_ON, depthL, rateL, typeL, setFilterH, setFilterL, lowCut, rolloff }) => {
+const Filter = ({ HP_ON, LFO_H_ON, depthH, rateH, typeH, LFO_L_ON, depthL, rateL, typeL, setFilterH, setFilterL, rolloff }) => {
     const [highCut, setCutoffLPF] = useState(20000);
     const [resonanceL, setResonanceLPF] = useState(0);
+    const [lowCut, setCutoffHPF] = useState(20000);
+    const [resonanceH, setResonanceHPF] = useState(0);
     const [LP_ON, setLP_ON] = useState(false);
+    // const [HP_ON, setHP_ON] = useState(false);
     const [filterNodeH, setFilterNodeH] = useState(null);
     const [filterNodeL, setFilterNodeL] = useState(null);
     let LPF, HPF, lfoH, minFreq_LFO_H, maxFreq_LFO_H, scaleExpH, lfoL, minFreq_LFO_L, maxFreq_LFO_L, scaleExpL;
 
     useEffect(() => {
         if (HP_ON) {
-            console.log("enters the HP")
+            console.log("HP generation")
             setFilterNodeH(new Tone.Filter({
                 rolloff: rolloff,
                 type: "highpass",
@@ -37,14 +40,13 @@ const Filter = ({ HP_ON, LFO_H_ON, depthH, rateH, resonanceH, typeH, LFO_L_ON, d
             // else if (lfoH) {
             //     lfoH.disconnect(HPF.frequency);
             // }
-
-            // setFilterH(filterNodeH);
+            setFilterH(filterNodeH);
         }
-        // else{
-        //     setFilterH(null)
-        // }
+        else {
+            setFilterH(null)
+        }
         if (LP_ON) {
-            console.log("enters the LP")
+            console.log("LP generation")
             setFilterNodeL(new Tone.Filter({
                 rolloff: rolloff,
                 type: "lowpass",
@@ -94,10 +96,24 @@ const Filter = ({ HP_ON, LFO_H_ON, depthH, rateH, resonanceH, typeH, LFO_L_ON, d
         }
     }, [resonanceL])
 
+    useEffect(() => {
+        if (filterNodeL) {
+            filterNodeL.set({
+                frequency: lowCut
+            });
+            setFilterL(filterNodeL);
+        }
+    }, [lowCut])
 
     useEffect(() => {
-console.log(LP_ON)
-    }, [LP_ON])
+        if (filterNodeH) {
+            filterNodeH.set({
+                Q: resonanceH
+            });
+            setFilterH(filterNodeH);
+        }
+    }, [resonanceH])
+
     //GENERATION
     // useEffect(() => {
     //     if (filterNodeH) {
@@ -117,7 +133,6 @@ console.log(LP_ON)
 
     //     }
     // }, [filterNodeH, filterNodeL, setFilterH, setFilterL])
-
 
 
     const waveforms = [
@@ -169,7 +184,7 @@ console.log(LP_ON)
                     gridColumn: 1,
                 }}
                 setState={setLP_ON}>
-                
+
             </OnOffSwitch>
 
             <OnOffSwitch
@@ -196,23 +211,33 @@ console.log(LP_ON)
                     "gridRow": 4,
                     "gridColumn": 2,
                 }}
+                min={20} max={20000}
+                setValue={setCutoffHPF}
+                log={1}
+                step={10}
+                defaultValue={20000}
                 diameter={64} parameter="Cutoff" unit="Hz"></Knob>
 
             <Knob id="filter-lpf-resonance" style={{
                 "gridRow": 5,
                 "gridColumn": 1,
             }}
-            min={0} max={10}
-            setValue={setResonanceLPF}
-            step={0.1}
-            defaultValue={0}
-             diameter={48} parameter="Resonance"></Knob>
+                min={0} max={10}
+                setValue={setResonanceLPF}
+                step={0.1}
+                defaultValue={0}
+                diameter={48} parameter="Resonance"></Knob>
 
 
             <Knob id="filter-hpf-resonance" style={{
                 "gridRow": 5,
                 "gridColumn": 2,
-            }} diameter={48} parameter="resonance"></Knob>
+            }}
+            min={0} max={10}
+            setValue={setResonanceHPF}
+            step={0.1}
+            defaultValue={0} 
+            diameter={48} parameter="resonance"></Knob>
 
             {/* LFO title */}
             <p className="type" style={{

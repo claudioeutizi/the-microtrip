@@ -11,6 +11,12 @@ import Delay from '../Sampler/Delay';
 import { useCallback, useEffect, useState } from 'react';
 import * as Tone from 'tone'
 
+
+//TO DO
+//gain node che controlla tutti i sampler
+//fix del cutoff che accende il filtro
+
+
 export default function Instrument({ selectedInstrument }) {
 
     const [sampler, setSampler] = useState(null);
@@ -41,7 +47,7 @@ export default function Instrument({ selectedInstrument }) {
                 }
             }
         }
-    }, [sampler, filterL,])
+    }, [sampler, filterL])
 
     return (
         <div className='instrument'>
@@ -49,9 +55,9 @@ export default function Instrument({ selectedInstrument }) {
                 <span className="logo">Synth</span>
             </div>
             <Sampler setSampler={setSampler} selectedInst={selectedInstrument} polyphony={7} />
-            <Filter LP_ON={1} HP_ON={0} setFilterL={setFilterL} lowCut={0} rolloff={-24}
-                LFO_H_ON={0} rateH={0} resonanceH={0} typeH={"sine"} depthH={0}
-                LFO_L_ON={0} rateL={0} resonanceL={0} typeL={"sine"} depthL={0} />
+            <Filter LP_ON={1} setFilterL={setFilterL} rolloff={-24} setFilterH={setFilterH}
+                LFO_H_ON={0} rateH={0} typeH={"sine"} depthH={0}
+                LFO_L_ON={0} rateL={0} typeL={"sine"} depthL={0} />
             <Distortion></Distortion>
             <Vibrato></Vibrato>
             <Delay></Delay>

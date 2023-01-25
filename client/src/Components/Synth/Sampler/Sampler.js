@@ -178,8 +178,9 @@ const Sampler = ({ setSampler, selectedInst, polyphony, type, fadeIn, fadeOut, g
             console.log("note up: " + event.detail.note);
             polyNumberStop = assignPolyphony(event.detail.note, polyArray, 0);
             console.log("sampler to stop", polyNumberStop);
+            samplerArray[polyNumberStop].triggerRelease();
             envelopeArray[polyNumberStop].triggerRelease();
-            samplerArray[polyNumberStop].triggerRelease(event.detail.note, Tone.now() - 0.8);
+            
             // if (NOISE_ON) {
             //     noise.stop(Tone.now() - 0.8)
             // }
