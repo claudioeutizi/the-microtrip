@@ -29,8 +29,6 @@ export default function Instrument({selectedInstrument}) {
                 <span className="logo">Synth</span>
             </div>
             <Sampler setSampler = {setSampler} selectedInst = {selectedInstrument} polyphony={7}/>
-            <Adsr></Adsr>
-            <Noise></Noise>
             <Filter></Filter>
             <Distortion></Distortion>
             <Vibrato></Vibrato>

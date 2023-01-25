@@ -111,7 +111,7 @@ const Filter = () => {
             <div className="screen-container lfo">
                 <select label="Waveform">
                     {waveforms.map((waveform) => {
-                        return <option value={waveform.value}>{waveform.label}</option>
+                        return <option key={waveform.id} value={waveform.id}>{waveform.label}</option>
                     })}
                 </select>
             </div>

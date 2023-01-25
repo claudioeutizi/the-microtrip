@@ -1,7 +1,5 @@
 
 import React from 'react'
-import { WebAudioKnob } from 'webaudio-controls-react-typescript'
-import knobImg from 'webaudio-controls-react-typescript/dist/images/images/MS20_def.png'
 import Knob from './Controls/Knob'
 
 const Noise = () => {
@@ -27,7 +25,7 @@ const Noise = () => {
             <div className="screen-container noise">
                 <select label="Type">
                     {types.map((type) => {
-                        return <option value={type.value}>{type.label}</option>
+                        return <option key={type.value} value={type.value}>{type.label}</option>
                     })}
                 </select>
             </div>

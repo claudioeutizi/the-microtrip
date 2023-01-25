@@ -3,10 +3,27 @@ import React, { useEffect, useCallback, useState } from 'react'
 import instruments from '../../../audio/Instruments';
 import Knob from './Controls/Knob'
 import * as Tone from 'tone'
+import Noise from './Noise';
+import Adsr from './Adsr';
 
 const envelopeArray = [];
 const samplerArray = [];
 const samplerNode = new Tone.Gain();
+
+const types = [
+    {
+        value: 0,
+        label: "white"
+    },
+    {
+        value: 1,
+        label: "pink"
+    },
+    {
+        value: 2,
+        label: "brown"
+    },
+]
 
 const Sampler = ({ setSampler, selectedInst, polyphony, attack, decay, sustain, release, type, fadeIn, fadeOut, gain, NOISE_ON }) => {
 
@@ -17,19 +34,23 @@ const Sampler = ({ setSampler, selectedInst, polyphony, attack, decay, sustain, 
     let noise;
 
     const [samplerGain, setSamplerGain] = useState(0);
+    const [envelopeAttack, setEnvelopeAttack] = useState(0);
+    const [envelopeDecay, setEnvelopeDecay] = useState(0);
+    const [envelopeSustain, setEnvelopeSustain] = useState(0);
+    const [envelopeRelease, setEnvelopeRelease] = useState(0);
 
     //---------------GENERATORS----------------//
-    // function createEnvelope(A, D, S, R) {
+    function createEnvelope(A, D, S, R) {
 
-    //     const envelope = new Tone.AmplitudeEnvelope(
-    //         {
-    //             attack: A,
-    //             decay: D,
-    //             sustain: S,
-    //             release: R
-    //         });
-    //     return envelope;
-    // }
+        const envelope = new Tone.AmplitudeEnvelope(
+            {
+                attack: A,
+                decay: D,
+                sustain: S,
+                release: R
+            });
+        return envelope;
+    }
 
 
     function createSampler(selectedInst) {
@@ -111,7 +132,7 @@ const Sampler = ({ setSampler, selectedInst, polyphony, attack, decay, sustain, 
     //Connections and generation
     if (samplerArray[polyphony - 1]) {
         for (let i = 0; i < polyphony; i++) {
-            // envelopeArray[i] = createEnvelope(attack, decay, sustain, release)
+            envelopeArray[i] = createEnvelope(envelopeAttack, envelopeDecay, envelopeSustain, envelopeRelease)
             samplerArray[i].connect(samplerNode)
         }
 
@@ -128,7 +149,7 @@ const Sampler = ({ setSampler, selectedInst, polyphony, attack, decay, sustain, 
     }, [setSampler])
 
     useEffect(() => {
-        samplerArray.map(sampler => sampler.volume.value = (20*Math.log10(samplerGain)));
+        samplerArray.map(sampler => sampler.volume.value = (20 * Math.log10(samplerGain)));
     }, [samplerGain])
 
     //-----------HANDLERS--------------//
@@ -152,8 +173,8 @@ const Sampler = ({ setSampler, selectedInst, polyphony, attack, decay, sustain, 
             if (Tone.now() > 0.8) {
                 polyNumberPlay = assignPolyphony(event.detail.note, polyArray, 1);
                 console.log("sampler to play", polyNumberPlay);
-                // samplerArray[polyNumberPlay].triggerAttack(event.detail.note, Tone.now() - 0.8,
-                //     event.detail.velocity, 0, envelopeArray[polyNumberPlay].triggerAttack(Tone.now() - 0.1));
+                samplerArray[polyNumberPlay].triggerAttack(event.detail.note, Tone.now() - 0.8,
+                    event.detail.velocity, 0, envelopeArray[polyNumberPlay].triggerAttack(Tone.now() - 0.1));
                 samplerArray[polyNumberPlay].triggerAttack(event.detail.note, Tone.now() - 0.8, event.detail.velocity);
                 // if (NOISE_ON) {
                 //     noise.start(Tone.now() - 0.8)
@@ -162,6 +183,8 @@ const Sampler = ({ setSampler, selectedInst, polyphony, attack, decay, sustain, 
         }
     }, [samplerArray]);
 
+
+    /* ==================================== ENVELOPE ================================================= */
 
     //LISTENERS
     useEffect(() => {
@@ -175,23 +198,35 @@ const Sampler = ({ setSampler, selectedInst, polyphony, attack, decay, sustain, 
     }, [handleNoteDown, handleNoteUp]);
 
     return (
-        <div id="sampler-container">
-            <p className="type">Sampler</p>
-            <div className="screen-container sampler">
-                <select label="Instrument">
-                    {instruments.map((instrument) => {
-                        return <option value={instrument.id}>{instrument.name}</option>
-                    })}
-                </select>
+        <div id="sampler-group">
+            <div id="sampler-container">
+                <p className="type">Sampler</p>
+                <div className="screen-container sampler">
+                    <select label="Instrument">
+                        {instruments.map((instrument) => {
+                            return <option key={instrument.id} value={instrument.id}>{instrument.name}</option>
+                        })}
+                    </select>
+                </div>
+                <div id="sampler-knobs-row">
+                    <Knob min={0.001} max={1} setValue={setSamplerGain}
+                        id={"sampler-gain"}
+                        diameter={64}
+                        log={1}
+                        step={0.001}
+                        unit="dB"
+                        conv="Math.round(20*Math.log10(x))"
+                        defaultValue={0.5} parameter={"Gain"}>
+                    </Knob>
+                    <Knob diameter={64} id={"sampler-finetune"} defValue={0} parameter={"Fine Tune"}></Knob>
+                </div>
             </div>
-            <div id="sampler-knobs-row">
-                <Knob min={0.001} max={1} setValue={setSamplerGain}
-                    diameter={64} id={"sampler-gain"} log={1}
-                    step = {0.001}
-                    defValue={-6} parameter={"Gain"}>
-                </Knob>
-                <Knob diameter={64} id={"sampler-finetune"} defValue={0} parameter={"Fine Tune"}></Knob>
-            </div>
+            <Adsr setAttack={setEnvelopeAttack}
+                setDecay={setEnvelopeDecay}
+                setSustain={setEnvelopeSustain}
+                setRelease={setEnvelopeRelease}>
+            </Adsr>
+            <Noise></Noise>
         </div>
     )
 }
