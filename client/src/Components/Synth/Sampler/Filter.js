@@ -4,12 +4,12 @@ import OnOffSwitch from './Controls/OnOffSwitch'
 import Knob from './Controls/Knob'
 import * as Tone from 'tone'
 
-const Filter = ({ LP_ON, HP_ON, LFO_H_ON, depthH, rateH, resonanceH, typeH, LFO_L_ON, depthL, rateL, resonanceL, typeL, setFilterH, setFilterL, lowCut, rolloff }) => {
+const Filter = ({ HP_ON, LFO_H_ON, depthH, rateH, resonanceH, typeH, LFO_L_ON, depthL, rateL, typeL, setFilterH, setFilterL, lowCut, rolloff }) => {
     const [highCut, setCutoffLPF] = useState(20000);
-    // const [LP_ON, setLP_ON] = useState(false);
+    const [resonanceL, setResonanceLPF] = useState(0);
+    const [LP_ON, setLP_ON] = useState(false);
     const [filterNodeH, setFilterNodeH] = useState(null);
     const [filterNodeL, setFilterNodeL] = useState(null);
-    // let depthLog= Math.Pow(10,depth);
     let LPF, HPF, lfoH, minFreq_LFO_H, maxFreq_LFO_H, scaleExpH, lfoL, minFreq_LFO_L, maxFreq_LFO_L, scaleExpL;
 
     useEffect(() => {
@@ -78,13 +78,23 @@ const Filter = ({ LP_ON, HP_ON, LFO_H_ON, depthH, rateH, resonanceH, typeH, LFO_
     //PARAMS UPDATE
     useEffect(() => {
         if (filterNodeL) {
-            console.log(highCut)
             filterNodeL.set({
                 frequency: highCut
             });
             setFilterL(filterNodeL);
         }
     }, [highCut])
+
+    useEffect(() => {
+        if (filterNodeL) {
+            filterNodeL.set({
+                Q: resonanceL
+            });
+            setFilterL(filterNodeL);
+        }
+    }, [resonanceL])
+
+
     useEffect(() => {
 console.log(LP_ON)
     }, [LP_ON])
@@ -158,8 +168,7 @@ console.log(LP_ON)
                     gridRow: 3,
                     gridColumn: 1,
                 }}
-                // setState={setLP_ON}
-                >
+                setState={setLP_ON}>
                 
             </OnOffSwitch>
 
@@ -192,7 +201,12 @@ console.log(LP_ON)
             <Knob id="filter-lpf-resonance" style={{
                 "gridRow": 5,
                 "gridColumn": 1,
-            }} diameter={48} parameter="Resonance"></Knob>
+            }}
+            min={0} max={10}
+            setValue={setResonanceLPF}
+            step={0.1}
+            defaultValue={0}
+             diameter={48} parameter="Resonance"></Knob>
 
 
             <Knob id="filter-hpf-resonance" style={{

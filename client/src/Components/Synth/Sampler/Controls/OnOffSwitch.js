@@ -9,7 +9,7 @@ const OnOffSwitch = (props) => {
     const [onOff, setOnOff] = useState(false);
     const handleOnChange = (value) => {
         setOnOff(value);
-        props.setState(onOff)
+        props.setState(value)
       }
 
     return (
