@@ -5,6 +5,7 @@ import Knob from './Controls/Knob'
 import * as Tone from 'tone'
 import Noise from './Noise';
 import Adsr from './Adsr';
+import { dbToGain } from 'tone';
 
 const envelopeArray = [];
 const samplerArray = [];
@@ -25,7 +26,7 @@ const types = [
     },
 ]
 
-const Sampler = ({ setSampler, selectedInst, polyphony, attack, decay, sustain, release, type, fadeIn, fadeOut, gain, NOISE_ON }) => {
+const Sampler = ({ setSampler, selectedInst, polyphony, type, fadeIn, fadeOut, gain, NOISE_ON }) => {
 
     const polyArray = Array(polyphony).fill(0);
     let stopIndex;
@@ -36,7 +37,7 @@ const Sampler = ({ setSampler, selectedInst, polyphony, attack, decay, sustain, 
     const [samplerGain, setSamplerGain] = useState(0);
     const [envelopeAttack, setEnvelopeAttack] = useState(0);
     const [envelopeDecay, setEnvelopeDecay] = useState(0);
-    const [envelopeSustain, setEnvelopeSustain] = useState(0);
+    const [envelopeSustain, setEnvelopeSustain] = useState(1);
     const [envelopeRelease, setEnvelopeRelease] = useState(0);
 
     //---------------GENERATORS----------------//
@@ -116,9 +117,16 @@ const Sampler = ({ setSampler, selectedInst, polyphony, attack, decay, sustain, 
     // }
     //------------------------------------------//
 
+    //SAMPLER GENERATION
     useEffect(() => {
         for (let i = 0; i < polyphony; i++) {
             samplerArray[i] = createSampler(selectedInst);
+        }
+
+        console.log("envelope generation and connection")
+        for (let i = 0; i < polyphony; i++) {
+            envelopeArray[i] = createEnvelope(envelopeAttack, envelopeDecay, envelopeSustain, envelopeRelease)
+            samplerArray[i].chain(envelopeArray[i],samplerNode)
         }
 
         return () => {
@@ -129,14 +137,11 @@ const Sampler = ({ setSampler, selectedInst, polyphony, attack, decay, sustain, 
 
     }, [selectedInst]);
 
-    //Connections and generation
-    if (samplerArray[polyphony - 1]) {
-        for (let i = 0; i < polyphony; i++) {
-            envelopeArray[i] = createEnvelope(envelopeAttack, envelopeDecay, envelopeSustain, envelopeRelease)
-            samplerArray[i].connect(samplerNode)
-        }
-
-    }
+    //ENVELOPE GENERATION AND CONNECTION
+    // if (samplerArray[polyphony - 1]) {
+ 
+    // }
+    
 
     useEffect(() => {
         if (samplerNode) {
@@ -148,9 +153,24 @@ const Sampler = ({ setSampler, selectedInst, polyphony, attack, decay, sustain, 
         }
     }, [setSampler])
 
+
+    //PARAMETERS UPDATE
     useEffect(() => {
         samplerArray.map(sampler => sampler.volume.value = (20 * Math.log10(samplerGain)));
     }, [samplerGain])
+
+    useEffect(() => {
+        if (envelopeArray[polyphony - 1]){
+        console.log("envelope update", envelopeAttack, envelopeDecay, envelopeSustain,envelopeRelease)
+        for (let i = 0; i < polyphony; i++) {
+            envelopeArray[i].attack=envelopeAttack;
+            envelopeArray[i].decay=envelopeDecay;
+            envelopeArray[i].sustain=envelopeSustain;
+            envelopeArray[i].release=envelopeRelease;
+
+        }
+    }
+    }, [envelopeAttack, envelopeDecay, envelopeSustain,envelopeRelease])
 
     //-----------HANDLERS--------------//
     const handleNoteUp = useCallback((event) => {
@@ -158,7 +178,7 @@ const Sampler = ({ setSampler, selectedInst, polyphony, attack, decay, sustain, 
             console.log("note up: " + event.detail.note);
             polyNumberStop = assignPolyphony(event.detail.note, polyArray, 0);
             console.log("sampler to stop", polyNumberStop);
-            // envelopeArray[polyNumberStop].triggerRelease();
+            envelopeArray[polyNumberStop].triggerRelease();
             samplerArray[polyNumberStop].triggerRelease(event.detail.note, Tone.now() - 0.8);
             // if (NOISE_ON) {
             //     noise.stop(Tone.now() - 0.8)
@@ -175,7 +195,7 @@ const Sampler = ({ setSampler, selectedInst, polyphony, attack, decay, sustain, 
                 console.log("sampler to play", polyNumberPlay);
                 samplerArray[polyNumberPlay].triggerAttack(event.detail.note, Tone.now() - 0.8,
                     event.detail.velocity, 0, envelopeArray[polyNumberPlay].triggerAttack(Tone.now() - 0.1));
-                samplerArray[polyNumberPlay].triggerAttack(event.detail.note, Tone.now() - 0.8, event.detail.velocity);
+                // samplerArray[polyNumberPlay].triggerAttack(event.detail.note, Tone.now() - 0.8, event.detail.velocity);
                 // if (NOISE_ON) {
                 //     noise.start(Tone.now() - 0.8)
                 // }
@@ -209,14 +229,14 @@ const Sampler = ({ setSampler, selectedInst, polyphony, attack, decay, sustain, 
                     </select>
                 </div>
                 <div id="sampler-knobs-row">
-                    <Knob min={0.001} max={1} setValue={setSamplerGain}
+                    <Knob min={dbToGain(-30)} max={dbToGain(3)} setValue={setSamplerGain}
                         id={"sampler-gain"}
                         diameter={64}
                         log={1}
-                        step={0.001}
+                        step={0.01}
                         unit="dB"
                         conv="Math.round(20*Math.log10(x))"
-                        defaultValue={0.5} parameter={"Gain"}>
+                        defaultValue={1} parameter={"Gain"}>
                     </Knob>
                     <Knob diameter={64} id={"sampler-finetune"} defValue={0} parameter={"Fine Tune"}></Knob>
                 </div>

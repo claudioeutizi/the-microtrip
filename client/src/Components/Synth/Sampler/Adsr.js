@@ -7,9 +7,10 @@ const Adsr = (props) => {
             <p className="type">ADSR</p>
 
             <Knob setValue={props.setAttack}
-                min={0.01}
+                min={0}
                 max={2}
                 step={0.01}
+                defaultValue={0}
                 diameter={64} id="envelope-attack"
                 parameter={"Attack"}>
             </Knob>
@@ -18,6 +19,7 @@ const Adsr = (props) => {
                 min={0.01}
                 max={2}
                 step={0.01}
+                defaultValue={0}
                 diameter={64} id="envelope-decay"
                 parameter={"Decay"}>
             </Knob>
@@ -26,6 +28,7 @@ const Adsr = (props) => {
                 min={0}
                 max={1}
                 step={0.01}
+                defaultValue={1}
                 diameter={64} id="envelope-sustain"
                 parameter={"Sustain"}>
             </Knob>
@@ -34,6 +37,7 @@ const Adsr = (props) => {
                 min={0}
                 max={5}
                 step={0.1}
+                defaultValue={0}
                 diameter={64} id="envelope-release"
                 parameter={"Release"}>
             </Knob>
