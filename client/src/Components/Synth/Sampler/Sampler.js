@@ -34,7 +34,7 @@ const Sampler = ({ setSampler, selectedInst, polyphony, type, fadeIn, fadeOut, g
     let polyNumberStop;
     let noise;
 
-    const [samplerGain, setSamplerGain] = useState(0);
+    const [samplerGain, setSamplerGain] = useState(1);
     const [envelopeAttack, setEnvelopeAttack] = useState(0);
     const [envelopeDecay, setEnvelopeDecay] = useState(0);
     const [envelopeSustain, setEnvelopeSustain] = useState(1);
@@ -179,8 +179,10 @@ const Sampler = ({ setSampler, selectedInst, polyphony, type, fadeIn, fadeOut, g
             console.log("note up: " + event.detail.note);
             polyNumberStop = assignPolyphony(event.detail.note, polyArray, 0);
             console.log("sampler to stop", polyNumberStop);
-            samplerArray[polyNumberStop].triggerRelease();
             envelopeArray[polyNumberStop].triggerRelease();
+            samplerArray[polyNumberStop].triggerRelease(event.detail.note, Tone.now() - 0.8);
+            
+            
             
             // if (NOISE_ON) {
             //     noise.stop(Tone.now() - 0.8)
@@ -195,9 +197,8 @@ const Sampler = ({ setSampler, selectedInst, polyphony, type, fadeIn, fadeOut, g
             if (Tone.now() > 0.8) {
                 polyNumberPlay = assignPolyphony(event.detail.note, polyArray, 1);
                 console.log("sampler to play", polyNumberPlay);
-                samplerArray[polyNumberPlay].triggerAttack(event.detail.note, Tone.now() - 0.8,
-                    event.detail.velocity, 0, envelopeArray[polyNumberPlay].triggerAttack(Tone.now() - 0.1));
-                // samplerArray[polyNumberPlay].triggerAttack(event.detail.note, Tone.now() - 0.8, event.detail.velocity);
+                samplerArray[polyNumberPlay].triggerAttack(event.detail.note, Tone.now() - 0.8, event.detail.velocity);
+                envelopeArray[polyNumberPlay].triggerAttack(Tone.now() - 0.1)
                 // if (NOISE_ON) {
                 //     noise.start(Tone.now() - 0.8)
                 // }

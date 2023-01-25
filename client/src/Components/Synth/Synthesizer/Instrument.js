@@ -12,12 +12,13 @@ import { useCallback, useEffect, useState } from 'react';
 import * as Tone from 'tone'
 
 
-//TO DO
+//BUG FIX
 //gain node che controlla tutti i sampler
-//fix del cutoff che accende il filtro
+//se mouse entra in nota suonata la interrompe
 
 
 export default function Instrument({ selectedInstrument }) {
+
 
     const [sampler, setSampler] = useState(null);
     const [filterL, setFilterL] = useState(null);
@@ -31,7 +32,7 @@ export default function Instrument({ selectedInstrument }) {
 
     useEffect(() => {
         console.log("chain creation")
-        let routingArray = [sampler, filterH, filterL, dist, vibrato, delay, reverb]
+        let routingArray = [sampler, filterL, filterH, dist, vibrato, delay, reverb]
 
         console.log(routingArray)
 
@@ -47,7 +48,8 @@ export default function Instrument({ selectedInstrument }) {
                 }
             }
         }
-    }, [sampler, filterL])
+
+    }, [sampler, filterL, filterH])
 
     return (
         <div className='instrument'>
@@ -55,9 +57,9 @@ export default function Instrument({ selectedInstrument }) {
                 <span className="logo">Synth</span>
             </div>
             <Sampler setSampler={setSampler} selectedInst={selectedInstrument} polyphony={7} />
-            <Filter LP_ON={1} setFilterL={setFilterL} rolloff={-24} setFilterH={setFilterH}
+            <Filter setFilterL={setFilterL} rolloff={-24} setFilterH={setFilterH}
                 LFO_H_ON={0} rateH={0} typeH={"sine"} depthH={0}
-                LFO_L_ON={0} rateL={0} typeL={"sine"} depthL={0} />
+                 typeL={"sine"}  />
             <Distortion></Distortion>
             <Vibrato></Vibrato>
             <Delay></Delay>

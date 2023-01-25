@@ -4,16 +4,23 @@ import OnOffSwitch from './Controls/OnOffSwitch'
 import Knob from './Controls/Knob'
 import * as Tone from 'tone'
 
-const Filter = ({ HP_ON, LFO_H_ON, depthH, rateH, typeH, LFO_L_ON, depthL, rateL, typeL, setFilterH, setFilterL, rolloff }) => {
+const Filter = ({ LFO_H_ON, depthH, rateH, typeH, typeL, setFilterH, setFilterL, rolloff }) => {
     const [highCut, setCutoffLPF] = useState(20000);
     const [resonanceL, setResonanceLPF] = useState(0);
-    const [lowCut, setCutoffHPF] = useState(20000);
+    const [lowCut, setCutoffHPF] = useState(20);
     const [resonanceH, setResonanceHPF] = useState(0);
     const [LP_ON, setLP_ON] = useState(false);
-    // const [HP_ON, setHP_ON] = useState(false);
+    const [HP_ON, setHP_ON] = useState(false);
     const [filterNodeH, setFilterNodeH] = useState(null);
     const [filterNodeL, setFilterNodeL] = useState(null);
-    let LPF, HPF, lfoH, minFreq_LFO_H, maxFreq_LFO_H, scaleExpH, lfoL, minFreq_LFO_L, maxFreq_LFO_L, scaleExpL;
+
+    const [LFO_L_ON, setLFO_L_ON] = useState(false);
+    const [lfoL, setlfoL]=useState(null)
+    // const [scaleExpL, setScaleExpL]=useState(null)
+    const [rateL, setRateL]=useState(5)
+    const [depthL, setDepthL]=useState(1)
+    
+    let LPF, HPF, lfoH, minFreq_LFO_H, maxFreq_LFO_H, scaleExpH, scaleExpL;
 
     useEffect(() => {
         if (HP_ON) {
@@ -43,8 +50,12 @@ const Filter = ({ HP_ON, LFO_H_ON, depthH, rateH, typeH, LFO_L_ON, depthL, rateL
             setFilterH(filterNodeH);
         }
         else {
+
             setFilterH(null)
         }
+    }, [HP_ON])
+
+    useEffect(() => {
         if (LP_ON) {
             console.log("LP generation")
             setFilterNodeL(new Tone.Filter({
@@ -54,32 +65,36 @@ const Filter = ({ HP_ON, LFO_H_ON, depthH, rateH, typeH, LFO_L_ON, depthL, rateL
                 frequency: highCut,
             }
             ));
-
-            // if (LFO_L_ON) {
-            //     minFreq_LFO_L = Math.pow(10, Math.log10(highCut) - 1 * depthL);
-            //     maxFreq_LFO_L = Math.pow(10, Math.log10(highCut) + 1 * depthL);
-            //     console.log("depth range LPF", minFreq_LFO_L, maxFreq_LFO_L)
-            //     lfoL = new Tone.LFO(rateL, 0, 1);
-            //     scaleExpL = new Tone.ScaleExp(minFreq_LFO_L, maxFreq_LFO_L, 3);
-            //     lfoL.type = typeL;
-            //     lfoL.chain(scaleExpL, LPF.frequency);
-            //     lfoL.start();
-            // }
-
-            // else if (lfoL) {
-            //     lfoL.disconnect(LPF.frequency);
-            // }
             setFilterL(filterNodeL);
         }
         else {
             setFilterL(null)
         }
-    }, [HP_ON, LP_ON])
+    }, [LP_ON])
 
+
+
+    useEffect(() => {
+        if (LFO_L_ON&&filterNodeL) {
+            console.log("LFO L creation", rateL)
+            setlfoL(new Tone.LFO(rateL, 0, 1));
+            
+            // lfolp.type = typeL;
+            
+            
+            
+            // setFilterL(filterNodeL)
+        }
+    
+        else if (lfoL) {
+            lfoL.disconnect(filterNodeL.frequency);
+        }
+    
+    }, [LFO_L_ON])
 
     //PARAMS UPDATE
     useEffect(() => {
-        if (filterNodeL) {
+        if (filterNodeL && LP_ON) {
             filterNodeL.set({
                 frequency: highCut
             });
@@ -88,7 +103,7 @@ const Filter = ({ HP_ON, LFO_H_ON, depthH, rateH, typeH, LFO_L_ON, depthL, rateL
     }, [highCut])
 
     useEffect(() => {
-        if (filterNodeL) {
+        if (filterNodeL && LP_ON) {
             filterNodeL.set({
                 Q: resonanceL
             });
@@ -97,16 +112,16 @@ const Filter = ({ HP_ON, LFO_H_ON, depthH, rateH, typeH, LFO_L_ON, depthL, rateL
     }, [resonanceL])
 
     useEffect(() => {
-        if (filterNodeL) {
-            filterNodeL.set({
+        if (filterNodeH && HP_ON) {
+            filterNodeH.set({
                 frequency: lowCut
             });
-            setFilterL(filterNodeL);
+            setFilterH(filterNodeH);
         }
     }, [lowCut])
 
     useEffect(() => {
-        if (filterNodeH) {
+        if (filterNodeH && HP_ON) {
             filterNodeH.set({
                 Q: resonanceH
             });
@@ -114,6 +129,21 @@ const Filter = ({ HP_ON, LFO_H_ON, depthH, rateH, typeH, LFO_L_ON, depthL, rateL
         }
     }, [resonanceH])
 
+
+    useEffect(() => {
+        
+        if(lfoL && LFO_L_ON){
+            lfoL.disconnect(scaleExpL);
+            console.log("rate update", rateL)
+            // scaleExpL=new Tone.ScaleExp(Math.pow(10, Math.log10(highCut) - 1 * depthL),Math.pow(10, Math.log10(highCut) + 1 * depthL), 3)
+            lfoL.rate=rateL;
+            scaleExpL=new Tone.ScaleExp(Math.pow(10, Math.log10(highCut) - 1 * depthL), Math.pow(10, Math.log10(highCut) + 1 * depthL));
+            lfoL.chain(scaleExpL, filterNodeL.frequency);
+            lfoL.start();
+            // lfoL.chain(scaleExpL, filterNodeL.frequency);
+        }
+
+    }, [rateL, depthL])
     //GENERATION
     // useEffect(() => {
     //     if (filterNodeH) {
@@ -191,7 +221,8 @@ const Filter = ({ HP_ON, LFO_H_ON, depthH, rateH, typeH, LFO_L_ON, depthL, rateL
                 style={{
                     gridRow: 3,
                     gridColumn: 2,
-                }} id="hpf-on-off">
+                }} id="hpf-on-off"
+                setState={setHP_ON}>
             </OnOffSwitch>
 
             <Knob id="filter-lpf-cutoff"
@@ -215,7 +246,7 @@ const Filter = ({ HP_ON, LFO_H_ON, depthH, rateH, typeH, LFO_L_ON, depthL, rateL
                 setValue={setCutoffHPF}
                 log={1}
                 step={10}
-                defaultValue={20000}
+                defaultValue={20}
                 diameter={64} parameter="Cutoff" unit="Hz"></Knob>
 
             <Knob id="filter-lpf-resonance" style={{
@@ -233,11 +264,11 @@ const Filter = ({ HP_ON, LFO_H_ON, depthH, rateH, typeH, LFO_L_ON, depthL, rateL
                 "gridRow": 5,
                 "gridColumn": 2,
             }}
-            min={0} max={10}
-            setValue={setResonanceHPF}
-            step={0.1}
-            defaultValue={0} 
-            diameter={48} parameter="resonance"></Knob>
+                min={0} max={10}
+                setValue={setResonanceHPF}
+                step={0.1}
+                defaultValue={0}
+                diameter={48} parameter="resonance"></Knob>
 
             {/* LFO title */}
             <p className="type" style={{
@@ -251,7 +282,8 @@ const Filter = ({ HP_ON, LFO_H_ON, depthH, rateH, typeH, LFO_L_ON, depthL, rateL
                 style={{
                     gridRow: 7,
                     gridColumn: 2,
-                }} id="lfo-lpf-on-off">
+                }} id="lfo-lpf-on-off"
+                setState={setLFO_L_ON}>
             </OnOffSwitch>
 
             <OnOffSwitch
@@ -274,13 +306,19 @@ const Filter = ({ HP_ON, LFO_H_ON, depthH, rateH, typeH, LFO_L_ON, depthL, rateL
                     gridRow: 9,
                     gridColumn: 1
                 }}
-                diameter={48} id={"lfo-lpf-rate"} unit="Hz" parameter={"Rate"}></Knob>
+                diameter={48} id={"lfo-lpf-rate"} unit="Hz" parameter={"Rate"}
+                min={0} max={15}
+                setValue={setRateL}
+                step={0.5}
+                defaultValue={0}>
+                </Knob>
 
             <Knob
                 style={{
                     gridRow: 9,
                     gridColumn: 2
                 }}
+
                 diameter={48} id={"lfo-hpf-rate"} unit="Hz" parameter={"Rate"}></Knob>
 
             <Knob
@@ -288,6 +326,10 @@ const Filter = ({ HP_ON, LFO_H_ON, depthH, rateH, typeH, LFO_L_ON, depthL, rateL
                     gridRow: 10,
                     gridColumn: 1
                 }}
+                min={0} max={1}
+                setValue={setDepthL}
+                step={0.05}
+                defaultValue={0}
                 diameter={48} id={"lfo-lpf-depth"} parameter={"Depth"}></Knob>
 
             <Knob
