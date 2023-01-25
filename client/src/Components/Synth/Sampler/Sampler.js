@@ -41,14 +41,15 @@ const Sampler = ({ setSampler, selectedInst, polyphony, type, fadeIn, fadeOut, g
     const [envelopeRelease, setEnvelopeRelease] = useState(0);
 
     //---------------GENERATORS----------------//
-    function createEnvelope(A, D, S, R) {
+    
+    function createEnvelope(attack, decay, sustain, release) {
 
         const envelope = new Tone.AmplitudeEnvelope(
             {
-                attack: A,
-                decay: D,
-                sustain: S,
-                release: R
+                attack: attack,
+                decay: decay,
+                sustain: sustain,
+                release: release,
             });
         return envelope;
     }
