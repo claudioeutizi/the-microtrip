@@ -16,7 +16,7 @@ const Sampler = ({ setSampler, selectedInst, polyphony, attack, decay, sustain, 
     let polyNumberStop;
     let noise;
 
-    const [samplerGain, setSamplerGain] = useState(0);
+    const [samplerGain, setSamplerGain] = useState(1);
 
     //---------------GENERATORS----------------//
     // function createEnvelope(A, D, S, R) {
@@ -188,7 +188,7 @@ const Sampler = ({ setSampler, selectedInst, polyphony, attack, decay, sustain, 
                 <Knob min={0.001} max={1} setValue={setSamplerGain}
                     diameter={64} id={"sampler-gain"} log={1}
                     step = {0.001}
-                    defValue={-6} parameter={"Gain"}>
+                    defaultValue={1} parameter={"Gain"}>
                 </Knob>
                 <Knob diameter={64} id={"sampler-finetune"} defValue={0} parameter={"Fine Tune"}></Knob>
             </div>
