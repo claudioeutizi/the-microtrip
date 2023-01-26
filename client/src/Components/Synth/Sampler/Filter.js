@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback, useMemo } from "react"
 import OnOffSwitch from './Controls/OnOffSwitch'
 import Knob from './Controls/Knob'
 import * as Tone from 'tone'
-
+import { lfoWaveforms } from '../lists'
 
 
 const Filter = ({ LFO_H_ON, depthH, rateH, typeH, typeL, setHPON, setFilterH, setFilterL, rolloff }) => {
@@ -192,27 +192,6 @@ const Filter = ({ LFO_H_ON, depthH, rateH, typeH, typeL, setHPON, setFilterH, se
     //     }
     // }, [filterNodeH, filterNodeL, setFilterH, setFilterL])
 
-
-    const waveforms = [
-        {
-            id: 0,
-            label: "sine"
-        },
-        {
-            id: 1,
-            label: "square"
-        },
-        {
-            id: 2,
-            label: "triangle"
-        },
-        {
-            id: 3,
-            label: "sawtooth"
-        },
-
-    ]
-
     return (
         <div id="filter-container">
             {/* Title */}
@@ -323,7 +302,7 @@ const Filter = ({ LFO_H_ON, depthH, rateH, typeH, typeL, setHPON, setFilterH, se
 
             <div className="screen-container lfo">
                 <select label="Waveform">
-                    {waveforms.map((waveform) => {
+                    {lfoWaveforms.map((waveform) => {
                         return <option value={waveform.value}>{waveform.label}</option>
                     })}
                 </select>

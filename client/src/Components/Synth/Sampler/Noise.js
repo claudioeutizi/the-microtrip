@@ -1,30 +1,16 @@
 
 import React from 'react'
 import Knob from './Controls/Knob'
+import { noiseTypes } from '../lists'
 
 const Noise = () => {
-
-    const types = [
-        {
-            value: 0,
-            label: "white"
-        },
-        {
-            value: 1,
-            label: "pink"
-        },
-        {
-            value: 2,
-            label: "brown"
-        },
-    ]
 
     return (
         <div id="noise-container">
             <p className="type">Noise</p>
             <div className="screen-container noise">
                 <select label="Type">
-                    {types.map((type) => {
+                    {noiseTypes.map((type) => {
                         return <option key={type.value} value={type.value}>{type.label}</option>
                     })}
                 </select>

@@ -11,21 +11,6 @@ const envelopeArray = [];
 const samplerArray = [];
 const samplerNode = new Tone.Gain();
 
-const types = [
-    {
-        value: 0,
-        label: "white"
-    },
-    {
-        value: 1,
-        label: "pink"
-    },
-    {
-        value: 2,
-        label: "brown"
-    },
-]
-
 const Sampler = ({ setSampler, selectedInst, polyphony, type, fadeIn, fadeOut, gain, NOISE_ON }) => {
 
     const polyArray = Array(polyphony).fill(0);

@@ -8,7 +8,7 @@ import Distortion from '../Sampler/Distortion';
 import Reverb from '../Sampler/Reverb';
 import Vibrato from '../Sampler/Vibrato';
 import Delay from '../Sampler/Delay';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as Tone from 'tone'
 
 
@@ -20,7 +20,6 @@ import * as Tone from 'tone'
 
 export default function Instrument({ selectedInstrument }) {
 
-
     const [sampler, setSampler] = useState(null);
     const [filterL, setFilterL] = useState(null);
     const [filterH, setFilterH] = useState(null);
@@ -28,7 +27,6 @@ export default function Instrument({ selectedInstrument }) {
     const [vibrato, setVibrato] = useState(null);
     const [delay, setDelay] = useState(null);
     const [reverb, setReverb] = useState(null);
-
 
 
     useEffect(() => {
@@ -54,6 +52,7 @@ export default function Instrument({ selectedInstrument }) {
     }, [sampler, filterL, filterH, dist, vibrato, delay, reverb])
 
     return (
+
         <div className='instrument'>
             <div id="logo-container">
                 <span className="logo">Synth</span>
@@ -61,12 +60,13 @@ export default function Instrument({ selectedInstrument }) {
             <Sampler setSampler={setSampler} selectedInst={selectedInstrument} polyphony={7} />
             <Filter setFilterL={setFilterL} rolloff={-24} setFilterH={setFilterH}
                 LFO_H_ON={0} rateH={0} typeH={"sine"} depthH={0}
-                 typeL={"sine"}  />
+                 typeL={"sine"}/>
             <Distortion setDist={setDist}/>
             <Vibrato setVibrato={setVibrato}/>
             <Delay setDelay={setDelay}/>
             <Reverb setReverb={setReverb}/>
             <Master></Master>
+
             <div id="instrument-row-3"></div>
             <div id="instrument-row-4"></div>
         </div>
