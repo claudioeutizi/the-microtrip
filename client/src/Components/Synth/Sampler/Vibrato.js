@@ -9,7 +9,7 @@ const Vibrato = ({ setVibrato }) => {
     const [vibratoNode, setVibratoNode] = useState(null);
     const [VIBRATO_ON, setVIBRATO_ON] = useState(false);
     const [vibratoRate, setVibratoRate] = useState(0);
-    const [vibratoDepth, setVibratoDepth] = useState(1);
+    const [vibratoDepth, setVibratoDepth] = useState(0);
     const [vibratoWet, setVibratoWet] = useState(1);
 
     useEffect(() => {
@@ -74,7 +74,7 @@ const Vibrato = ({ setVibrato }) => {
                 min={0} max={1}
                 setValue={setVibratoDepth}
                 step={0.05}
-                defaultValue={1}
+                defaultValue={0}
             ></Knob>
             <Knob diameter={48} id={"vibrato-Rate"} parameter={"Rate"}
                 min={0} max={20}

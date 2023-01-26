@@ -8,7 +8,7 @@ const Distortion = ({setDist}) => {
 
     const [distNode, setDistNode] = useState(null);
     const [distWet, setDistWet] = useState(1);
-    const [distAmount, setDistAmount] = useState(1);
+    const [distAmount, setDistAmount] = useState(0);
     const [DIST_ON, setDIST_ON] = useState(false);
 
     useEffect(() => {
@@ -71,7 +71,7 @@ const Distortion = ({setDist}) => {
             min={0} max={1}
             setValue={setDistAmount}
             step={0.05}
-            defaultValue={1}
+            defaultValue={0}
                 id="distortion-amount" diameter={48} parameter={"Amount"}></Knob>
 
             <Knob style={{

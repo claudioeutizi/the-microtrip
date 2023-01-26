@@ -14,7 +14,6 @@ import * as Tone from 'tone'
 
 //BUG FIX
 //compensare gain distorsione
-//Fix filtri che non si staccano tra di loro
 //gain node che controlla tutti i sampler
 //se mouse entra in nota suonata la interrompe
 
@@ -28,7 +27,7 @@ export default function Instrument({ selectedInstrument }) {
     const [dist, setDist] = useState(null);
     const [vibrato, setVibrato] = useState(null);
     const [delay, setDelay] = useState(null);
-    const [reverb, setreverb] = useState(null);
+    const [reverb, setReverb] = useState(null);
 
 
 
@@ -45,13 +44,14 @@ export default function Instrument({ selectedInstrument }) {
             let length = routingArray.length;
             for (let i = length - 1; i >= 0; i--) {
                 if (routingArray[i]!==null) {
+                    currentNode = routingArray[i].disconnect();
                     currentNode = routingArray[i].connect(nextNode);
                     nextNode = currentNode;
                 }
             }
         }
 
-    }, [sampler, filterL, filterH, dist, vibrato])
+    }, [sampler, filterL, filterH, dist, vibrato, delay, reverb])
 
     return (
         <div className='instrument'>
@@ -64,8 +64,8 @@ export default function Instrument({ selectedInstrument }) {
                  typeL={"sine"}  />
             <Distortion setDist={setDist}/>
             <Vibrato setVibrato={setVibrato}/>
-            <Delay></Delay>
-            <Reverb></Reverb>
+            <Delay setDelay={setDelay}/>
+            <Reverb setReverb={setReverb}/>
             <Master></Master>
             <div id="instrument-row-3"></div>
             <div id="instrument-row-4"></div>
