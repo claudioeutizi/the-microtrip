@@ -10,4 +10,5 @@
     outline-offset: 1px;
     overflow: hidden;
     padding: 1rem;
+    z-index: 0;
 }

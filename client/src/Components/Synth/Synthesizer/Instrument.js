@@ -16,6 +16,8 @@ import * as Tone from 'tone'
 //compensare gain distorsione
 //gain node che controlla tutti i sampler
 //se mouse entra in nota suonata la interrompe
+// curve attack
+// pitch wheel
 
 
 export default function Instrument({ selectedInstrument }) {

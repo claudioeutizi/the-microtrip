@@ -12,21 +12,6 @@ const samplerArray = [];
 const samplerNode = new Tone.Gain();
 let noise;
 
-const types = [
-    {
-        value: 0,
-        label: "white"
-    },
-    {
-        value: 1,
-        label: "pink"
-    },
-    {
-        value: 2,
-        label: "brown"
-    },
-]
-
 const Sampler = ({ setSampler, selectedInst, polyphony }) => {
 
     const polyArray = Array(polyphony).fill(0);
@@ -209,9 +194,9 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
                 polyNumberPlay = assignPolyphony(event.detail.note, polyArray, 1);
                 console.log("sampler to play", polyNumberPlay);
                 samplerArray[polyNumberPlay].triggerAttack(event.detail.note, Tone.now() - 0.8, event.detail.velocity);
-                if(noise){
-                    noise.start(Tone.now() - 0.8)
-                }
+                // if(noise){
+                //     noise.start(Tone.now() - 0.8)
+                // }
                 
                 envelopeArray[polyNumberPlay].triggerAttack(Tone.now() - 0.1)
             }

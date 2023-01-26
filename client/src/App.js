@@ -7,23 +7,36 @@ import { WEATHER_API_KEY, WEATHER_API_URL } from './utility/api';
 import Map from './Components/Map';
 import { useSocket } from './utility/useSocket';
 import moment from 'moment';
-import * as Tone from 'tone'
 import Instrument from './Components/Synth/Synthesizer/Instrument';
-import InstrumentComponent from './audio/InstrumentComponent'
 // fetching the GET route from the Express server which matches the GET route from server.js
 
 function App() {
 
+  //application toggles
+  const [mapVisible, setMapVisible] = useState(true);
+
+  function toggleMapVisibility() {
+    setMapVisible(!mapVisible);
+  }
+
+  const [instrumentVisible, setInstrumentVisible] = useState(true);
+
+  function toggleInstrumentVisibility() {
+    setInstrumentVisible(!instrumentVisible);
+  }
+
   //Socket from where to get real-time data from micro:bit
   const socket = useSocket('http://localhost:9000');
-  const [currentWeather, setCurrentWeather] = useState(null);
-  const [cityData, setCityData] = useState(null);
   const [instrument, setInstrument] = useState(0);
   const [internalHumidity, setInternalHumidity] = useState('-');
   const [internalTemperature, setInternalTemperature] = useState('-');
   const [internalLight, setInternalLight] = useState('-');
-  // const [triggerPlay, setTriggerP] = useState(0);
-  // const [triggerStop, setTriggerS] = useState(0);
+
+  //Weather and city data from current position or chosen city
+  const [currentWeather, setCurrentWeather] = useState(null);
+  const [cityData, setCityData] = useState(null);
+
+  /* ========================================= HANDLERS ========================================== */
 
   const handleOnPositionSwitchChange = async (switchValue) => {
     if (switchValue) {
@@ -69,6 +82,9 @@ function App() {
       })
       .catch((err) => console.log(err));
   }
+
+
+  /* MICRO:BIT MESSAGES */
 
   useEffect(() => {
 
@@ -117,23 +133,23 @@ function App() {
 
   return (
     <div className="App">
-        <div>
-          <Map onCityChange={handleOnSearchChange} />
+      <div className="scrollable-container">
+        <div className="room-container">
+          <button onClick={toggleMapVisibility}>Map</button>
+          {mapVisible && <Map onCityChange={handleOnSearchChange} />}
           {currentWeather && <Display externalData={currentWeather}
             onSwitchChange={handleOnPositionSwitchChange}
             light={internalLight.value} temperature={internalTemperature.value} humidity={internalHumidity.value} />}
         </div>
-        <div>
-          <Instrument selectedInstrument={instrument}></Instrument>
-          {/* <InstrumentComponent selectedInst={instrument}>
-          </InstrumentComponent> */}
+        <div className="synth-container">
+          <button onClick={toggleInstrumentVisibility}>Instrument</button>
+          {instrumentVisible && <Instrument selectedInstrument={instrument}></Instrument>}
         </div>
-        <div>
-          <Piano keyCount={61} keyboardLayout={"C"}/>
-        </div>
-        <div>
-          <Footer />
-        </div>
+      </div>
+      <div className="footer-container">
+        <Piano keyCount={61} keyboardLayout={"C"} />
+        <Footer />
+      </div>
     </div>
   )
 }
