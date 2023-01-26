@@ -4,7 +4,9 @@ import OnOffSwitch from './Controls/OnOffSwitch'
 import Knob from './Controls/Knob'
 import * as Tone from 'tone'
 
-const Filter = ({ LFO_H_ON, depthH, rateH, typeH, typeL, setFilterH, setFilterL, rolloff }) => {
+
+
+const Filter = ({ LFO_H_ON, depthH, rateH, typeH, typeL, setHPON, setFilterH, setFilterL, rolloff }) => {
     const [highCut, setCutoffLPF] = useState(20000);
     const [resonanceL, setResonanceLPF] = useState(0);
     const [lowCut, setCutoffHPF] = useState(20);
@@ -133,7 +135,7 @@ const Filter = ({ LFO_H_ON, depthH, rateH, typeH, typeL, setFilterH, setFilterL,
     useEffect(() => {
         
         if(lfoL && LFO_L_ON){
-            lfoL.disconnect(scaleExpL);
+            lfoL.disconnect(filterNodeL)
             console.log("rate update", rateL)
             // scaleExpL=new Tone.ScaleExp(Math.pow(10, Math.log10(highCut) - 1 * depthL),Math.pow(10, Math.log10(highCut) + 1 * depthL), 3)
             lfoL.rate=rateL;

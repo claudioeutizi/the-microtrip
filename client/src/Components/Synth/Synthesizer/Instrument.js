@@ -13,6 +13,8 @@ import * as Tone from 'tone'
 
 
 //BUG FIX
+//compensare gain distorsione
+//Fix filtri che non si staccano tra di loro
 //gain node che controlla tutti i sampler
 //se mouse entra in nota suonata la interrompe
 
@@ -42,14 +44,14 @@ export default function Instrument({ selectedInstrument }) {
             let nextNode = Tone.Destination;
             let length = routingArray.length;
             for (let i = length - 1; i >= 0; i--) {
-                if (routingArray[i] !== null) {
+                if (routingArray[i]!==null) {
                     currentNode = routingArray[i].connect(nextNode);
                     nextNode = currentNode;
                 }
             }
         }
 
-    }, [sampler, filterL, filterH])
+    }, [sampler, filterL, filterH, dist, vibrato])
 
     return (
         <div className='instrument'>
@@ -60,8 +62,8 @@ export default function Instrument({ selectedInstrument }) {
             <Filter setFilterL={setFilterL} rolloff={-24} setFilterH={setFilterH}
                 LFO_H_ON={0} rateH={0} typeH={"sine"} depthH={0}
                  typeL={"sine"}  />
-            <Distortion></Distortion>
-            <Vibrato></Vibrato>
+            <Distortion setDist={setDist}/>
+            <Vibrato setVibrato={setVibrato}/>
             <Delay></Delay>
             <Reverb></Reverb>
             <Master></Master>
