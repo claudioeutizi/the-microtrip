@@ -8,6 +8,7 @@ import { MAP_TILER } from '../utility/api';
 import cities from '../cities';
 import { Button } from '@mui/material';
 import { GEO_API_URL, geoApiOptions } from '../utility/api';
+import * as Tone from 'tone';
 
 
 const Map = ({ onCityChange }) => {
@@ -32,7 +33,8 @@ const Map = ({ onCityChange }) => {
             .catch(err => console.error(err));
     }, []);
 
-    const handleClick = (cityName, cityId) => {
+    const handleClick = (cityName, cityId, instId) => {
+        Tone.start();
         setCity(cityName);
         fetchCityData(cityId).then(cityData => {
             onCityChange(cityData);
@@ -41,6 +43,7 @@ const Map = ({ onCityChange }) => {
         {
           detail: {
             city: cityName,
+            instrument: instId,
           }
         }))
     }
@@ -51,6 +54,7 @@ const Map = ({ onCityChange }) => {
                 center={position}
                 zoom={ZOOM_LEVEL}
                 scrollWheelZoom={false}
+                worldCopyJump = {true}
                 ref={mapRef}>
                 <TileLayer
                     attribution={MAP_TILER.maptiler.attribution}
@@ -60,7 +64,7 @@ const Map = ({ onCityChange }) => {
                     const popupContent =
                         <div className='popupContent'>
                             <p>{city.name}</p>
-                            <Button onClick={() => handleClick(city.name, city.id)}>Move</Button>
+                            <Button onClick={() => handleClick(city.name, city.id, city.instId)}>Move</Button>
                         </div>
                     return <Marker key={city.name} position={city.position}
                         icon={new Icon({ iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41] })}>

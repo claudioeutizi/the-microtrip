@@ -1,39 +1,50 @@
 import React, { useEffect, useState } from 'react';
 import Piano from './Components/Piano/Piano';
-import "./Components/styles/Piano.css"
-import "./Components/styles/Footer.css"
+import './App.css'
 import Footer from './Components/Footer';
-import Grid from '@mui/material/Unstable_Grid2';
 import Display from './Components/Display';
 import { WEATHER_API_KEY, WEATHER_API_URL } from './utility/api';
 import Map from './Components/Map';
 import { useSocket } from './utility/useSocket';
 import moment from 'moment';
-import Room from './Components/Room';
-import * as Tone from 'tone'
-import SamplerEngine from './audio/Sampler';
-
+import Instrument from './Components/Synth/Synthesizer/Instrument';
+import { Collapse } from 'react-collapse';
 // fetching the GET route from the Express server which matches the GET route from server.js
 
 function App() {
 
+  //application toggles
+  const [mapVisible, setMapVisible] = useState(true);
+
+  function toggleMapVisibility() {
+    setMapVisible(!mapVisible);
+  }
+
+  const [instrumentVisible, setInstrumentVisible] = useState(true);
+
+  function toggleInstrumentVisibility() {
+    setInstrumentVisible(!instrumentVisible);
+  }
+
+  const [pianoVisible, setPianoVisible] = useState(true);
+  const togglePianoVisibility = () => {
+    setPianoVisible(!pianoVisible);
+  }
+
   //Socket from where to get real-time data from micro:bit
   const socket = useSocket('http://localhost:9000');
-  const [currentWeather, setCurrentWeather] = useState(null);
-  const [cityData, setCityData] = useState(null);
+  const [instrument, setInstrument] = useState(0);
   const [internalHumidity, setInternalHumidity] = useState('-');
   const [internalTemperature, setInternalTemperature] = useState('-');
   const [internalLight, setInternalLight] = useState('-');
-  const [noteUp, setNoteUp] = useState(null);
-  const [noteDown, setNoteDown] = useState(null);
-  const [velocity, setVelocity] = useState(null);
-  const [playTime, setPlay] = useState(0);
-  const [stopTime, setStop] = useState(0);
-  // const [triggerPlay, setTriggerP] = useState(0);
-  // const [triggerStop, setTriggerS] = useState(0);
+
+  //Weather and city data from current position or chosen city
+  const [currentWeather, setCurrentWeather] = useState(null);
+  const [cityData, setCityData] = useState(null);
+
+  /* ========================================= HANDLERS ========================================== */
 
   const handleOnPositionSwitchChange = async (switchValue) => {
-    console.log(switchValue)
     if (switchValue) {
       handleOnCoordinatesChange()
     } else {
@@ -76,8 +87,10 @@ function App() {
         setCurrentWeather({ city: cityData.label, ...weatherResponse, timezone: cityData.timezone });
       })
       .catch((err) => console.log(err));
-    console.log(currentWeather)
   }
+
+
+  /* MICRO:BIT MESSAGES */
 
   useEffect(() => {
 
@@ -109,61 +122,48 @@ function App() {
     }
   }, [socket]);
 
-  const handleNoteUp = (event) => {
-    console.log("note up: " + event.detail.note);
-    setNoteUp(event.detail.note);
-    setStop(Tone.now())
-    // setTriggerS(prevStop => prevStop + 1);
-  }
-
-  const handleNoteDown = (event) => {
-    console.log("note down: " + event.detail.note);
-    setVelocity(event.detail.velocity);
-    setNoteDown(event.detail.note);
-    setPlay(Tone.now())
-    // setTriggerP(prevPlay => prevPlay + 1);
-  }
-
   useEffect(() => {
-    /* MESSAGES FROM PIANO KEYBOARD IN ORDER TO PRODUCE SOUND */
-    document.addEventListener("notedown", handleNoteDown);
-    document.addEventListener("noteup", handleNoteUp);
+    const handleMapButtonClick = (event) => {
+      setInstrument(event.detail.instrument)
+    }
+
+    // /* MESSAGES FROM PIANO KEYBOARD IN ORDER TO PRODUCE SOUND */
+    window.addEventListener("mapbuttonclick", handleMapButtonClick);
 
     return () => {
-      document.removeEventListener('notedown', handleNoteDown);
-      document.removeEventListener('noteup', handleNoteUp);
+      window.removeEventListener("mapbuttonclick", handleMapButtonClick);
+
     };
 
-  }, []);
-
+  }, [instrument]);
 
   return (
     <div className="App">
-      <Grid container spacing={4}>
-        <Grid xs={8}>
-          <Map onCityChange={handleOnSearchChange} />
-        </Grid>
-        <Grid xs={8}>
-          <Room />
-        </Grid>
-        <Grid xs={8}>
-          <button onClick={() => Tone.start()}>Start</button>
-        </Grid>
-        <Grid xs={8}>
-          <SamplerEngine noteUp={noteUp} noteDown={noteDown} playTime={playTime} stopTime={stopTime} velocity={velocity} />
-        </Grid>
-        <Grid>
+      <div className="scrollable-container">
+        <div className="room-container">
+          <button onClick={toggleMapVisibility}>Map</button>
+          {mapVisible && <Map onCityChange={handleOnSearchChange} />}
           {currentWeather && <Display externalData={currentWeather}
             onSwitchChange={handleOnPositionSwitchChange}
             light={internalLight.value} temperature={internalTemperature.value} humidity={internalHumidity.value} />}
-        </Grid>
-        <Grid xs={12}>
-          <Piano keyCount={61} keyboardLayout={"C"}/>
-        </Grid>
-        <Grid>
-          <Footer />
-        </Grid>
-      </Grid>
+        </div>
+        <div className="synth-container">
+          <button onClick={toggleInstrumentVisibility}>Instrument</button>
+          {instrumentVisible && <Instrument selectedInstrument={instrument}></Instrument>}
+        </div>
+      </div>
+      <div className="footer-container">
+        <button
+          className={"piano-toggle"}
+          onClick={togglePianoVisibility}
+        >
+          <span>Piano Keyboard</span>
+        </button>
+        <Collapse isOpened = {pianoVisible}>
+          <Piano keyCount={61} keyboardLayout={"C"} />
+        </Collapse>
+        <Footer />
+      </div>
     </div>
   )
 }
