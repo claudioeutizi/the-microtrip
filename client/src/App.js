@@ -9,6 +9,7 @@ import { useSocket } from './utility/useSocket';
 import moment from 'moment';
 import Instrument from './Components/Synth/Synthesizer/Instrument';
 import { Collapse } from 'react-collapse';
+import Room from './Components/Room/Room';
 // fetching the GET route from the Express server which matches the GET route from server.js
 
 function App() {
@@ -146,6 +147,7 @@ function App() {
           {currentWeather && <Display externalData={currentWeather}
             onSwitchChange={handleOnPositionSwitchChange}
             light={internalLight.value} temperature={internalTemperature.value} humidity={internalHumidity.value} />}
+            <Room></Room>
         </div>
         <div className="synth-container">
           <button onClick={toggleInstrumentVisibility}>Instrument</button>

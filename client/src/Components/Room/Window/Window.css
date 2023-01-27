@@ -1,0 +1,39 @@
+#window {
+    position: absolute;
+    width: 70%;
+    top: 10%;
+    right: 15vw;
+    height: auto;
+    /*background-color: black;*/
+    min-width: 100px;
+    max-width: 550px;
+    z-index: 1;
+}
+
+#window img{
+    width: 100%;
+    height: auto;
+}
+
+@media screen and (orientation: landscape) {
+    #window {
+        position: absolute;
+        transform: translateX(-35vw);
+    }
+}
+
+#outdoor {
+    position: absolute;
+    width: 50%;
+    right: 25%;
+    height: 60%;
+    bottom: 15%;
+    /*background-color: aqua;*/
+    z-index: -1;
+}
+
+#outdoor img {
+    width: 100%;
+    height:auto;
+    z-index: 10;
+}

@@ -1,0 +1,42 @@
+.Desk{
+    z-index: 1;
+}
+
+#desk {
+    width: 60%; /* adjust as needed */
+    height: auto; /* maintain aspect ratio */
+    position: absolute;
+    bottom: 15%;
+    right: 20vw;
+    /*background-color: aqua;*/
+}
+
+#desk img {
+    width: 65vw; /* adjust as needed */
+    height: auto; /* maintain aspect ratio */
+    max-width: 550px;
+    -webkit-filter: drop-shadow(5px 5px 5px #222222);
+    filter: drop-shadow(5px 5px 5px #222222);
+}
+
+@media screen and (orientation: landscape) {
+    #desk{
+    position: absolute;
+    transform:translateX(20vw);
+    }
+}
+
+#synth {
+    position: absolute;
+    width: 45%;
+    left: 28%;
+    max-width: 250px;
+    top: 35%;
+    }
+    
+#synth img {
+    width: 100%;
+    height: auto;
+}
+
+    

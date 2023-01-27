@@ -1,0 +1,32 @@
+
+#map {
+    width: fit-content;
+    /* adjust as needed */
+    height: fit-content;
+    /* maintain aspect ratio */
+    position: absolute;
+    right: 27vw;
+    display: flex;
+    /* set the parent div to display as a flex container */
+    align-items: center;
+    /* center the child elements within the div */
+    justify-content: center;
+    /* center the child elements along the horizontal axis */
+    top: 270px;
+    z-index: -1;
+}
+
+#map img {
+    width: 44vw;
+    /* adjust as needed */
+    height: auto;
+    /* maintain aspect ratio */
+    max-width: 350px;
+}
+
+@media screen and (orientation: landscape) {
+    #map{
+    position: absolute;
+    transform:translateY(-11vw) translateX(8vw);
+    }
+}

@@ -1,0 +1,23 @@
+#carpet {
+    width: 75vw; /* adjust as needed */
+    height: 35vh; /* maintain aspect ratio */
+    position: absolute;
+    right: 11vw;
+    background-image: url(/public/images/carpet_original.png);
+    background-position: bottom;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-size: fill;
+    /*background-color: aquamarine;*/
+    max-width: 700px;
+    z-index: -1;
+}
+
+
+@media screen and (orientation: landscape) {
+    #carpet{
+    position: absolute;
+    transform:translateX(3.5vw) translateY(-2.5vh);
+    }
+
+}

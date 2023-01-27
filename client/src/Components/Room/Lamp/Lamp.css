@@ -1,0 +1,47 @@
+#ceiling{
+    position: fixed;
+    height: fit-content;
+    width:100%;
+    top: -2%;
+    z-index: 5;
+}    
+
+#lamp {
+    width: fit-content; /* adjust as needed */
+    height: fit-content; /* maintain aspect ratio */
+    position: absolute;
+    top: -30px;
+    display: flex; /* set the parent div to display as a flex container */
+    align-items: center; /* center the child elements within the div */
+    justify-content: center; /* center the child elements along the horizontal axis */
+    right: 38vw;
+}
+
+#lamp img {
+    width: 20vw; /* adjust as needed */
+    height: auto; /* maintain aspect ratio */
+    max-width: 200px;
+    max-height: 200px;
+    z-index: 0;
+}
+
+@media screen and (orientation: landscape) {
+    #lamp {
+    position: absolute;
+    transform:translateX(15vw);
+    }
+
+}
+
+.bulb {
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 2.5vw;
+    width: 5vw;
+    border-radius: 0 0 150px 150px;
+    background-color: rgb(238, 237, 222);
+    z-index: -2;
+}
+
