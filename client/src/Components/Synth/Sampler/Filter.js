@@ -322,7 +322,13 @@ const Filter = ({ LFO_H_ON, depthH, rateH, typeH, typeL, setHPON, setFilterH, se
             </OnOffSwitch>
 
             <div className="screen-container lfo">
-                <select label="Waveform">
+                <select id = "lpf-lfo-selector" label="Waveform">
+                    {waveforms.map((waveform) => {
+                        return <option value={waveform.value}>{waveform.label}</option>
+                    })}
+                </select>
+
+                <select id = "hpf-lfo-selector" label="Waveform">
                     {waveforms.map((waveform) => {
                         return <option value={waveform.value}>{waveform.label}</option>
                     })}

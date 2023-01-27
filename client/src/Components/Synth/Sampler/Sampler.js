@@ -19,6 +19,7 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
     let polyNumberPlay;
     let polyNumberStop;
 
+    const [instrument, setInstrument] = useState(selectedInst);
 
     const [samplerGain, setSamplerGain] = useState(1);
     const [envelopeAttack, setEnvelopeAttack] = useState(0);
@@ -31,8 +32,8 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
     const [fadeIn, setFadeIn] = useState(0);
     const [fadeOut, setFadeOut] = useState(0);
     const [noiseType, setNoiseType] = useState("white");
-    //---------------GENERATORS----------------//
 
+    //---------------GENERATORS----------------//
     function createEnvelope(attack, decay, sustain, release) {
 
         const envelope = new Tone.AmplitudeEnvelope(
@@ -217,17 +218,23 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
         }
     }, [handleNoteDown, handleNoteUp]);
 
+
+    const handleInstrumentSelection = (event) => {
+        setInstrument(event.value)
+    }
+
     return (
         <div id="sampler-group">
             <div id="sampler-container">
                 <p className="type">Sampler</p>
                 <div className="screen-container sampler">
-                    <select label="Instrument">
+                    <select label="Instrument" onChange={handleInstrumentSelection}>
                         {instruments.map((instrument) => {
                             return <option key={instrument.id} value={instrument.id}>{instrument.name}</option>
                         })}
                     </select>
                 </div>
+
                 <div id="sampler-knobs-row">
                     <Knob min={dbToGain(-30)} max={dbToGain(3)} setValue={setSamplerGain}
                         id={"sampler-gain"}
@@ -235,7 +242,7 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
                         log={1}
                         step={0.001}
                         unit="dB"
-                        conv="Math.round(20*Math.log10(x))"
+                        conv="(20*Math.log10(x)).toFixed(2)"
                         defaultValue={1} parameter={"Gain"}>
                     </Knob>
                     <Knob diameter={64} id={"sampler-finetune"} defValue={0} parameter={"Fine Tune"}></Knob>

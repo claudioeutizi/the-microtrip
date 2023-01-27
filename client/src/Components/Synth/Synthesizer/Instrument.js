@@ -1,14 +1,12 @@
 import Sampler from '../Sampler/Sampler';
-import Adsr from '../Sampler/Adsr';
 import '../Synthesizer.css'
-import Noise from '../Sampler/Noise';
 import Filter from '../Sampler/Filter';
 import Master from '../Sampler/Master';
 import Distortion from '../Sampler/Distortion';
 import Reverb from '../Sampler/Reverb';
 import Vibrato from '../Sampler/Vibrato';
 import Delay from '../Sampler/Delay';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as Tone from 'tone'
 
 
@@ -18,6 +16,7 @@ import * as Tone from 'tone'
 //se mouse entra in nota suonata la interrompe
 // curve attack
 // pitch wheel
+// tastiera a scomparsa
 
 
 export default function Instrument({ selectedInstrument }) {

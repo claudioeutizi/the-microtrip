@@ -40,3 +40,23 @@
     height: 100%;
     width: 100%;
 }
+
+.piano-toggle {
+    width: 100%;
+    border: 1px solid transparent;
+    text-transform: uppercase;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 2px;
+    box-shadow: 0 2px 4px #888;
+    background-color: #fff;
+    transition: background-color 300ms;
+}
+
+.piano-toggle.active {
+      background-color: #fafafa;
+}
+
+.ReactCollapse--collapse {
+    transition: height 500ms;
+  }

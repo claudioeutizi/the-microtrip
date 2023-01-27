@@ -54,6 +54,7 @@ const Map = ({ onCityChange }) => {
                 center={position}
                 zoom={ZOOM_LEVEL}
                 scrollWheelZoom={false}
+                worldCopyJump = {true}
                 ref={mapRef}>
                 <TileLayer
                     attribution={MAP_TILER.maptiler.attribution}

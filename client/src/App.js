@@ -8,6 +8,7 @@ import Map from './Components/Map';
 import { useSocket } from './utility/useSocket';
 import moment from 'moment';
 import Instrument from './Components/Synth/Synthesizer/Instrument';
+import { Collapse } from 'react-collapse';
 // fetching the GET route from the Express server which matches the GET route from server.js
 
 function App() {
@@ -23,6 +24,11 @@ function App() {
 
   function toggleInstrumentVisibility() {
     setInstrumentVisible(!instrumentVisible);
+  }
+
+  const [pianoVisible, setPianoVisible] = useState(true);
+  const togglePianoVisibility = () => {
+    setPianoVisible(!pianoVisible);
   }
 
   //Socket from where to get real-time data from micro:bit
@@ -147,7 +153,15 @@ function App() {
         </div>
       </div>
       <div className="footer-container">
-        <Piano keyCount={61} keyboardLayout={"C"} />
+        <button
+          className={"piano-toggle"}
+          onClick={togglePianoVisibility}
+        >
+          <span>Piano Keyboard</span>
+        </button>
+        <Collapse isOpened = {pianoVisible}>
+          <Piano keyCount={61} keyboardLayout={"C"} />
+        </Collapse>
         <Footer />
       </div>
     </div>

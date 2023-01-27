@@ -18,8 +18,6 @@ const Knob = (props) => {
     <div className="knob">
       <p className="type-module">{props.parameter}</p>
       <div>
-        <div className="indicator half"></div>
-
         <WebAudioKnob
           defvalue={props.defaultValue}
           value={knobValue}
@@ -35,14 +33,10 @@ const Knob = (props) => {
           min={props.min} max={props.max}>
 
         </WebAudioKnob>
-
-        <div className="indicator left"></div>
-        <div className="indicator right"></div>
         <div style={{ display: "grid", gridTemplateRows: "50% 50%", alignItems: "center", justifyContent: "center" }}>
+          <WebAudioParam colors={"#D6D8DD"} width={30} height={10} link={props.id} src=""></WebAudioParam>
+          <span className="unit">{props.unit}</span>
 
-          <WebAudioParam colors={"#D6D8DD"} width={20} height={10} link={props.id} src=""></WebAudioParam>
-
-          {props.unit}
         </div>
       </div>
     </div>

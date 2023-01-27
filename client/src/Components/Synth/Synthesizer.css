@@ -74,10 +74,12 @@
 .screen-container.lfo {
     grid-column-start: 1;
     grid-column-end: span 2;
-    margin-right: 20px;
+    margin-right: 10px;
     top: 0px;
     width: 90%;
     height: 40px;
+    display: grid;
+    grid-template-columns: 48% 48%;
 }
 
 .screen-display {
@@ -518,12 +520,15 @@ option {
     font-family: "Source Code Pro", monospace;
     font-weight: 500;
     color: #D6D8DD;
-    text-transform: uppercase;
     text-shadow: 0 0 0.5px #7F7573,
         0 0 1px #7F7573,
         0 0 5px #7F7573,
         0 0 1px #DED6D3;
     position: relative;
+}
+
+.knob p {
+    text-transform: uppercase;
 }
 
 .onoff {
@@ -626,5 +631,9 @@ option {
 .medium-knob {
     position: relative;
     left: 50px;
+}
+
+.unit {
+
 }
 
