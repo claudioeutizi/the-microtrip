@@ -5,7 +5,7 @@ import Knob from './Controls/Knob'
 import * as Tone from 'tone'
 import Noise from './Noise';
 import Adsr from './Adsr';
-import { dbToGain } from 'tone';
+import { dbToGain, gainToDb } from 'tone';
 
 const envelopeArray = [];
 const samplerArray = [];
@@ -27,8 +27,7 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
     const [envelopeSustain, setEnvelopeSustain] = useState(1);
     const [envelopeRelease, setEnvelopeRelease] = useState(0);
 
-    // const [noise, setNoise] = useState(null)
-    const [noiseGain, setNoiseGain] = useState(1);
+    const [noiseGain, setNoiseGain] = useState(0.001);
     const [fadeIn, setFadeIn] = useState(0);
     const [fadeOut, setFadeOut] = useState(0);
     const [noiseType, setNoiseType] = useState("white");
@@ -96,18 +95,21 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
 
     // NOISE
 
-
-    //------------------------------------------//
-
-    //SAMPLER GENERATION
-    useEffect(() => {
-
-        noise = (new Tone.Noise({
+    useState(() => {
+        noise = new Tone.Noise({
             volume: noiseGain,
             fadeIn: fadeIn,
             fadeOut: fadeOut,
             type: noiseType
-        }))
+        });
+    }, [])
+
+
+    //------------------------------------------//
+
+
+    //SAMPLER GENERATION
+    useEffect(() => {
 
         for (let i = 0; i < polyphony; i++) {
             samplerArray[i] = createSampler(selectedInst);
@@ -118,7 +120,8 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
             envelopeArray[i] = createEnvelope(envelopeAttack, envelopeDecay, envelopeSustain, envelopeRelease)
             samplerArray[i].chain(envelopeArray[i], samplerNode)
         }
-        if(noise){
+        if (noise) {
+            noise.disconnect();
             console.log("noise connected")
             noise.chain(envelopeArray[0], samplerNode)
         }
@@ -128,7 +131,6 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
             for (let i = 0; i < polyphony; i++) {
                 samplerArray[i] = null;
             }
-            noise.dispose();
         }
 
     }, [selectedInst]);
@@ -145,7 +147,7 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
     }, [setSampler])
 
 
-    //PARAMETERS UPDATE
+    //---------------------PARAMETERS UPDATE-------------------------//
     useEffect(() => {
         samplerArray.map(sampler => sampler.volume.value = (20 * Math.log10(samplerGain)));
     }, [samplerGain])
@@ -158,24 +160,30 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
                 envelopeArray[i].decay = envelopeDecay;
                 envelopeArray[i].sustain = envelopeSustain;
                 envelopeArray[i].release = envelopeRelease;
-
             }
         }
     }, [envelopeAttack, envelopeDecay, envelopeSustain, envelopeRelease])
 
 
-
-
     useEffect(() => {
-        if (noise){
-            console.log(noiseGain)
+        if (noise) {
             noise.set({
-                volume: noiseGain
+                volume: gainToDb(noiseGain)
             });
         }
     }, [noiseGain])
 
-    //-----------HANDLERS--------------//
+
+    useEffect(() => {
+        if (noise) {
+            noise.set({
+                fadeIn: fadeIn,
+                fadeOut: fadeOut
+            });
+        }
+    }, [fadeIn, fadeOut])
+
+    //-----------------------HANDLERS-----------------------------//
     const handleNoteUp = useCallback((event) => {
         if (samplerArray) {
             console.log("note up: " + event.detail.note);
@@ -195,10 +203,10 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
                 polyNumberPlay = assignPolyphony(event.detail.note, polyArray, 1);
                 console.log("sampler to play", polyNumberPlay);
                 samplerArray[polyNumberPlay].triggerAttack(event.detail.note, Tone.now() - 0.8, event.detail.velocity);
-                // if(noise){
-                //     noise.start(Tone.now() - 0.8)
-                // }
-                
+
+                noise.start(Tone.now() - 0.8)
+
+
                 envelopeArray[polyNumberPlay].triggerAttack(Tone.now() - 0.1)
             }
         }
@@ -258,6 +266,7 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
                 setFadeOut={setFadeOut}
                 setFadeIn={setFadeIn}
                 setNoiseType={setNoiseType}>
+                
             </Noise>
         </div>
     )

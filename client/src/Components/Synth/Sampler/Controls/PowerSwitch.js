@@ -5,6 +5,10 @@ import "../../Synthesizer.css"
 const PowerSwitch = (props) => {
 
     const [onOff, setOnOff] = useState(false);
+    const handleOnChange = (value) => {
+        setOnOff(value);
+        props.setState(value)
+      }
 
     return (
         <div className="onoff">
@@ -16,6 +20,7 @@ const PowerSwitch = (props) => {
                 id={props.id}
                 style={{ "top": "5px" }}
                 src={"/images/knobs/Power_switch_mod.png"}>
+                onSwitchChange={(value) => handleOnChange(value)}
             </WebAudioSwitch>
 
             <WebAudioSwitch style={{

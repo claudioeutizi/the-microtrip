@@ -37,7 +37,7 @@ const Noise = (props) => {
                     step={0.001}
                     setValue={props.setNoiseGain}
                     unit="dB"
-                    conv="Math.round(20*Math.log10(x))"
+                    conv="Math.round(20*Math.log10(x)).toFixed(2)"
                     defaultValue={Tone.dbToGain(-60)}
                 ></Knob>
                 <Knob id="noise-fadein" diameter={48} parameter={"Fadein"}
