@@ -3,6 +3,7 @@ const cities = [
         name: 'Madrid',
         //classic guitar
         instId: 2,
+        img: "/images/cities/madrid.png",
         id: 'Q2807',
         position: {
             lat: 40.416775,
@@ -11,6 +12,7 @@ const cities = [
     },
     {
         name: 'Kinshasa',
+        img: "/images/cities/kinshasa.png",
         //kalimba
         id: 'Q3838',
         position: {
@@ -20,6 +22,7 @@ const cities = [
     },
     {
         name: 'Cape Town',
+        img: "/images/cities/cape_town.png",
         //vuvuzela
         id: 'Q5465',
         position: {
@@ -29,6 +32,7 @@ const cities = [
     },
     {
         name: 'Paris',
+        img: "/images/cities/paris.png",
         //harp
         id: 'Q90',
         position: {
@@ -38,6 +42,7 @@ const cities = [
     },
     {
         name: 'Buenos Aires',
+        img: "/images/cities/buenos_aires.png",
         //bandoneon
         id: 'Q1486',
         position: {
@@ -47,6 +52,7 @@ const cities = [
     },
     {
         name: 'Moscow',
+        img: "/images/cities/moscow.png",
         //balalaika
         id: 'Q649',
         position: {
@@ -56,6 +62,7 @@ const cities = [
     },
     {
         name: 'Mexico City',
+        img: "/images/cities/mexico_city.png",
         //marimba
         instId: 3,
         id: 'Q1489',
@@ -66,6 +73,7 @@ const cities = [
     },
     {
         name: 'Athens',
+        img: "/images/cities/athens.png",
         //buzuki
         id: 'Q1524',
         position: {
@@ -75,6 +83,7 @@ const cities = [
     },
     {
         name: 'Edimburgh',
+        img: "/images/cities/edimburgh.png",
         //bagpipe
         id: 'Q23436',
         position: {
@@ -84,6 +93,7 @@ const cities = [
     },
     {
         name: 'Cairo',
+        img: "/images/cities/cairo.png",
         //Oud
         id: 'Q85',
         position: {
@@ -93,6 +103,7 @@ const cities = [
     },
     {
         name: 'New Delhi',
+        img: "/images/cities/new_delhi.png",
         //sitar
         instId: 1,
         id: 'Q987',
@@ -103,6 +114,7 @@ const cities = [
     },
     {
         name: 'Tokyo',
+        img: "/images/cities/tokyo.png",
         //koto
         id: 'Q1490',
         position: {
@@ -112,6 +124,7 @@ const cities = [
     },
     {
         name: 'Beijing',
+        img: "/images/cities/beijing.png",
         //Guzheng
         id: 'Q956',
         position: {
@@ -121,6 +134,7 @@ const cities = [
     },
     {
         name: 'Cremona',
+        img: "/images/cities/cremona.png",
         //violin
         instId: 4,
         id: 'Q6231',
@@ -132,6 +146,7 @@ const cities = [
 
     {
         name: 'New York',
+        img: "/images/cities/new_york.png",
         //brass
         id: 'Q60',
         position: {
@@ -142,6 +157,7 @@ const cities = [
 
     {
         name: 'London',
+        img: "/images/cities/london.png",
         //mello
         instId: 0,
         id: 'Q84',
@@ -152,6 +168,7 @@ const cities = [
     },
     {
         name: 'Sydney',
+        img: "/images/cities/sydney.png",
         //Didgeridoo
         id: 'Q3130',
         position: {
@@ -162,6 +179,7 @@ const cities = [
 
     {
         name: 'Los Angeles',
+        img: "/images/cities/los_angeles.png",
         //?
         id: 'Q65',
         position: {

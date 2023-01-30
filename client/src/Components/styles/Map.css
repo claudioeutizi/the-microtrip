@@ -1,14 +1,16 @@
 .leaflet-container {
-    border: 10px solid #B27F46;
+	border:20px solid transparent;
+    grid-column: 2;
+    width: auto;
+    border-image: url(../../../public/images/mapBorder.png) 30 30 round;
     border-radius: 0.5%;
     height: 400px;
     position: relative;
     -webkit-tap-highlight-color: transparent;
     font-size: 0.75rem;
     line-height: 1.5;
-    background: #ddd;
+    background: solid transparent;
     outline-offset: 1px;
     overflow: hidden;
-    padding: 1rem;
     z-index: 0;
 }

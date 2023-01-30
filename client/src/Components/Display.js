@@ -1,5 +1,5 @@
-import { Box, Card, CardActions, Switch } from '@mui/material'
-import React, { useEffect, useRef, useState } from 'react'
+import { Card, CardActions, Switch } from '@mui/material'
+import React, { useEffect, useState } from 'react'
 import "./styles/Display.css"
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import moment from 'moment-timezone';
@@ -8,9 +8,8 @@ const Display = ({ onSwitchChange, externalData, light, temperature, humidity })
 
     const [positionSwitch, setPositionSwitch] = useState(false);
     const [currentDateTime, setCurrentDateTime] = useState(
-        externalData ? (externalData.timezone && !externalData.dateTime ?
-             moment().tz(externalData.timezone.replace(/__/g, '/')).format("MMMM Do YYYY, h:mm:ss A"): externalData.dateTime): null);
-
+        externalData ? (externalData.timezoneString && !externalData.dateTime ?
+             moment().tz(externalData.timezoneString.replace(/__/g, '/')).format("MMMM Do YYYY, h:mm:ss A"): externalData.dateTime): null);
 
     const handleOnPositionChange = (event, value) => {
         onSwitchChange(value);
@@ -33,7 +32,7 @@ const Display = ({ onSwitchChange, externalData, light, temperature, humidity })
         if (externalData) {
             const intervalId = setInterval(() => {
                 if(!positionSwitch)
-                    setCurrentDateTime(moment().tz(externalData.timezone.replace(/__/g, '/')).format("MMMM Do YYYY, h:mm:ss A"));
+                    setCurrentDateTime(moment().tz(externalData.timezoneString.replace(/__/g, '/')).format("MMMM Do YYYY, h:mm:ss A"));
                 else setCurrentDateTime(moment().format("MMMM Do YYYY, h:mm:ss A"));
             }, 1000);
             return () => clearInterval(intervalId);

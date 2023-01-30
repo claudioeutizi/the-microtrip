@@ -1,3 +1,6 @@
+@import url("https://fonts.googleapis.com/css2?family=Audiowide&family=Aldrich&&family=Epilogue:wght@500&family=Source+Code+Pro:wght@400&family=VT323&display=swap");
+
+
 .device-container {
     width: fit-content;
     height: fit-content;
@@ -5,29 +8,22 @@
 }
 
 .device {
-    font-family: 'roboto';
+    font-family: "Source Code Pro";
     width: fit-content;
-    max-width: 230px;
+    letter-spacing: -1;
+    max-width: 200px;
     display: block;
-    margin:0px;
-    background-image: linear-gradient(
-        #FFE1D6,
-        #FEF4E8 7.1%,
-        #F7E9DC 7.25%,
-        #F7ECE8  7.35%,
-        #E8DACF 7.4% 9.5%,
-        #E3D6CE 7.6%,
-        #D9CBC6 39%,
-        transparent 39.02%,
-        transparent 55%,
-        #D5C5C0 55.02%,
-        #CDC4BD,
-        #CBC2BD,
-        #CBBEB6 96%,
-        #C5BCB3 96.15%,
-        #797069 97.25%,
-        #544F4C
-    ), linear-gradient(170deg, #CDC4BD, #C6BDB6);
+    margin: 0px;
+    text-shadow: 0 0 0.5px #7F7573,
+        0 0 1px #7F7573,
+        0 0 5px #7F7573,
+        0 0 1px #DED6D3;
+    background: #ADA996;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(to bottom, #EAEAEA, #DBDBDB, #F2F2F2, #ADA996);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to bottom, #EAEAEA, #DBDBDB, #F2F2F2, #ADA996);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     background-size: 100% 100%, 100% 100%;
     background-position: 0 0, 0 0;
     box-shadow: 0 2px 1px -1px #FFF inset,
@@ -36,18 +32,22 @@
         4px 0 2px -2px rgba(227, 222, 224, 0.25) inset,
         -4px 0 2px -2px rgba(227, 222, 224, 0.35) inset,
         0 -4px 3px -3px #353439 inset,
-        30px 40px 50px  rgba(0,0,0,0.5),
-        0px 30px 70px  rgba(0,0,0,0.25);
+        30px 40px 50px rgba(0, 0, 0, 0.5),
+        0px 30px 70px rgba(0, 0, 0, 0.25);
 }
 
 .display {
+    display:grid;
+    max-width: 100%;
+    grid-template-rows: 35% 40% 25%;
+    grid-template-columns: 50% 50%;
     margin: 10px;
     border: 10px;
     height: fit-content;
     border-radius: 2px;
     background-image: linear-gradient(90deg, transparent 15%, rgba(134, 135, 129, 0.05), transparent 85%),
-    radial-gradient(rgba(92, 93, 87, 0.75), transparent 70%),
-    linear-gradient(#a2a39a, #727469, #6E746A);
+        radial-gradient(rgba(92, 93, 87, 0.75), transparent 70%),
+        linear-gradient(#a2a39a, #727469, #6E746A);
     background-size: 10px 100%, 200px 200px, 100% 100%;
     background-position: 0 0, center center, 0 0;
     background-repeat: repeat, no-repeat, no-repeat;
@@ -58,23 +58,33 @@
         0 0 5px #484848 inset,
         9px 0 7px -4px #605A5C inset,
         0 -2px 1px #7A7772 inset;
+    align-content: center;
+    align-items: center;
+    justify-items: stretch;
+    justify-content: center;
 }
 
 .top {
-    display: block;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-column-start: 1;
+    grid-column-end: span 2;
     align-items: center;
-    overflow: auto;
+    align-content: center;
 }
 
 .city {
     font-weight: 600;
-    font-size: 18px;
-    text-align:center;
+    text-transform: uppercase;
+    font-size: 16px;
+    text-align: center;
     margin: 5px;
     letter-spacing: 1px;
 }
 
 .weather-description {
+    text-transform: uppercase;
     text-align: center;
     font-weight: 400;
     font-size: 14px;
@@ -83,16 +93,23 @@
 
 .date-time {
     text-align: center;
-    font-weight: 400;
-    font-size: 14px;
+    font-weight: 500;
+    font-size: 11px;
     margin: 5px;
 }
 
 .data-container {
-    max-width: 180px;
-    display: flex;
-    justify-content: space-between;
+    width: 100%;
+    display: grid;
+    height: 100%;
+    justify-content: space-around;
+    grid-template-columns: 50% 50%;
     align-items: center;
+    align-content: center;
+    justify-items: stretch;
+    grid-row: 2;
+    grid-column-start: 1;
+    grid-column-end: span 2;
 }
 
 .data {
@@ -103,7 +120,7 @@
 
 .data.internal {
     text-align: right;
-    margin-right: 5px;
+    padding-right: 10px;
     border: 1px solid;
 }
 
@@ -122,13 +139,16 @@
 }
 
 .data-label {
-    text-align:left;
+    text-align: left;
     margin: 10px;
     font-size: 12px;
     font-weight: 600;
 }
 
 .details {
+    grid-row: 3;
+    grid-column-start: 1;
+    grid-column-end: span 2;
     margin: 10px;
     height: fit-content;
     overflow: auto;
@@ -159,4 +179,3 @@
     font-weight: 600;
     border-bottom: 1px solid;
 }
-

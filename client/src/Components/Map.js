@@ -33,7 +33,7 @@ const Map = ({ onCityChange }) => {
             .catch(err => console.error(err));
     }, []);
 
-    const handleClick = (cityName, cityId, instId) => {
+    const handleClick = (cityName, cityId, instId, img) => {
         Tone.start();
         setCity(cityName);
         fetchCityData(cityId).then(cityData => {
@@ -44,6 +44,7 @@ const Map = ({ onCityChange }) => {
           detail: {
             city: cityName,
             instrument: instId,
+            img: img,
           }
         }))
     }
@@ -64,7 +65,7 @@ const Map = ({ onCityChange }) => {
                     const popupContent =
                         <div className='popupContent'>
                             <p>{city.name}</p>
-                            <Button onClick={() => handleClick(city.name, city.id, city.instId)}>Move</Button>
+                            <Button onClick={() => handleClick(city.name, city.id, city.instId, city.img)}>Move</Button>
                         </div>
                     return <Marker key={city.name} position={city.position}
                         icon={new Icon({ iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41] })}>

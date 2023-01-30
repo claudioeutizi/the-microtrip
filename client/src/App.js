@@ -4,22 +4,17 @@ import './App.css'
 import Footer from './Components/Footer';
 import Display from './Components/Display';
 import { WEATHER_API_KEY, WEATHER_API_URL } from './utility/api';
-import Map from './Components/Map';
 import { useSocket } from './utility/useSocket';
 import moment from 'moment';
 import Instrument from './Components/Synth/Synthesizer/Instrument';
 import { Collapse } from 'react-collapse';
 import Room from './Components/Room/Room';
+import Map from './Components/Map';
 // fetching the GET route from the Express server which matches the GET route from server.js
 
 function App() {
 
   //application toggles
-  const [mapVisible, setMapVisible] = useState(true);
-
-  function toggleMapVisibility() {
-    setMapVisible(!mapVisible);
-  }
 
   const [instrumentVisible, setInstrumentVisible] = useState(true);
 
@@ -42,12 +37,19 @@ function App() {
   //Weather and city data from current position or chosen city
   const [currentWeather, setCurrentWeather] = useState(null);
   const [cityData, setCityData] = useState(null);
+  const [city, setCity] = useState(null);
+
+  const [mapVisible, setMapVisible] = useState(true);
+
+  function toggleMapVisibility() {
+    setMapVisible(!mapVisible);
+  }
 
   /* ========================================= HANDLERS ========================================== */
 
   const handleOnPositionSwitchChange = async (switchValue) => {
     if (switchValue) {
-      handleOnCoordinatesChange()
+      handleOnCoordinatesChange();
     } else {
       try {
         handleOnSearchChange(cityData);
@@ -65,7 +67,7 @@ function App() {
       });
       const [lat, lon] = [locationData.coords.latitude, locationData.coords.longitude];
       const weatherFetch = fetch(`${WEATHER_API_URL}/weather/?lat=${lat}&lon=${lon}&units=metric&appid=${WEATHER_API_KEY}`)
-      const dateTime = moment().format();
+      const dateTime = moment().format("h:mm:ss A");
       Promise.all([weatherFetch])
         .then(async (response) => {
           const weatherResponse = await response[0].json();
@@ -78,18 +80,16 @@ function App() {
   }
 
   const handleOnSearchChange = async (cityData) => {
-
     setCityData(cityData);
     const [lat, lon] = cityData.value.split(" ");
     const weatherFetch = fetch(`${WEATHER_API_URL}/weather/?lat=${lat}&lon=${lon}&units=metric&appid=${WEATHER_API_KEY}`)
     Promise.all([weatherFetch])
       .then(async (response) => {
         const weatherResponse = await response[0].json();
-        setCurrentWeather({ city: cityData.label, ...weatherResponse, timezone: cityData.timezone });
+        setCurrentWeather({ city: cityData.label, ...weatherResponse, timezoneString: cityData.timezone });
       })
       .catch((err) => console.log(err));
   }
-
 
   /* MICRO:BIT MESSAGES */
 
@@ -125,40 +125,42 @@ function App() {
 
   useEffect(() => {
     const handleMapButtonClick = (event) => {
-      setInstrument(event.detail.instrument)
+      setInstrument(event.detail.instrument);
+      setCity(event.detail.img);
     }
 
-    // /* MESSAGES FROM PIANO KEYBOARD IN ORDER TO PRODUCE SOUND */
+    // /* MESSAGES FROM THE MAP IN ORDER TO COMMUNICATE THE CITY */
     window.addEventListener("mapbuttonclick", handleMapButtonClick);
 
     return () => {
       window.removeEventListener("mapbuttonclick", handleMapButtonClick);
-
     };
 
-  }, [instrument]);
+  }, [instrument, city]);
 
   return (
     <div className="App">
-      <div className="scrollable-container">
+      <div className="body">
+
         <div className="room-container">
-          <button onClick={toggleMapVisibility}>Map</button>
-          {mapVisible && <Map onCityChange={handleOnSearchChange} />}
           {currentWeather && <Display externalData={currentWeather}
             onSwitchChange={handleOnPositionSwitchChange}
             light={internalLight.value} temperature={internalTemperature.value} humidity={internalHumidity.value} />}
-            <Room></Room>
+            <Room onMapClicked = {toggleMapVisibility} city = {city} weatherData = {currentWeather ? currentWeather : null}>
+            </Room>
+            {mapVisible && <Map onCityChange={handleOnSearchChange}/>}
         </div>
+
         <div className="synth-container">
           <button onClick={toggleInstrumentVisibility}>Instrument</button>
           {instrumentVisible && <Instrument selectedInstrument={instrument}></Instrument>}
         </div>
       </div>
+
       <div className="footer-container">
         <button
           className={"piano-toggle"}
-          onClick={togglePianoVisibility}
-        >
+          onClick={togglePianoVisibility}>
           <span>Piano Keyboard</span>
         </button>
         <Collapse isOpened = {pianoVisible}>

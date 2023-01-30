@@ -12,7 +12,7 @@
 
 #window img{
     width: 100%;
-    height: auto;
+    height: 100%;
 }
 
 @media screen and (orientation: landscape) {
@@ -27,13 +27,13 @@
     width: 50%;
     right: 25%;
     height: 60%;
-    bottom: 15%;
+    bottom: 16%;
     /*background-color: aqua;*/
     z-index: -1;
 }
 
 #outdoor img {
     width: 100%;
-    height:auto;
-    z-index: 10;
+    height: auto;
+    z-index: 0;
 }

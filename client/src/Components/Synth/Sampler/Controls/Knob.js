@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { WebAudioKnob, WebAudioParam } from 'webaudio-controls-react-typescript'
-import knobImg from 'webaudio-controls-react-typescript/dist/images/images/MS20_def.png'
 import "../../Synthesizer.css"
 
 const Knob = (props) => {
@@ -26,7 +25,7 @@ const Knob = (props) => {
           diameter={props.diameter}
           id={props.id}
           step={props.step}
-          src={knobImg}
+          src={"/images/knobs/MS20_def.png"}
           conv={props.conv}
           log={props.log}
           onKnobEvent={(event) => handleKnobValueChange(event)}
