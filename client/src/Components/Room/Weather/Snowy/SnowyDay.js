@@ -20,8 +20,7 @@ const SnowyDay = () => {
         background: 'linear-gradient(to bottom, rgb(58, 104, 132),  rgb(160, 176, 176),  rgb(244, 255, 255)) ',
         position: 'absolute',
         width: '100%',
-        top: '-15%',
-        height: '120%',
+        height: '100%',
         zIndex: '-3'
       }}
       // Controls the number of snowflakes that are created (default 150)

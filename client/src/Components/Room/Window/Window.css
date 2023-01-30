@@ -24,10 +24,10 @@
 
 #outdoor {
     position: absolute;
+    top: 17%;
     width: 50%;
     right: 25%;
-    height: 60%;
-    bottom: 16%;
+    height: 61%;
     /*background-color: aqua;*/
     z-index: -1;
 }

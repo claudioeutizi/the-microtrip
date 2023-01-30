@@ -4,8 +4,7 @@
   width: 100%;
   overflow: hidden;
   z-index: -3;
-  height: 120%;
-  top: -15%;
+  height: 100%;
   background: linear-gradient(to bottom, rgb(58, 104, 132), rgb(160, 176, 176), rgb(244, 255, 255));
 }
 

@@ -4,8 +4,7 @@
   width: 100%;
   overflow: hidden;
   z-index: -3;
-  height: 120%;
-  top: -15%;
+  height: 100%;
 }
 .drop {
   /* background:-webkit-gradient(linear,0% 0%,0% 100%, from(rgba(13,52,58,1) ), to(rgba(255,255,255,0.5))  ); 

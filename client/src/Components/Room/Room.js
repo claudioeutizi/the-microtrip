@@ -15,28 +15,39 @@ const Room = ({ onMapClicked, weatherData, city }) => {
 
   useEffect(() => {
     if (weatherData) {
-      const time = moment().tz(weatherData.timezoneString.replace(/__/g, '/'));
+      let time = moment().tz(weatherData.timezoneString.replace(/__/g, '/'));
       setWeather(weatherData.weather[0].id);
+      let sunrise = moment.unix(weatherData.sys.sunrise).tz(weatherData.timezoneString.replace(/__/g, '/'));
+      let sunset = moment.unix(weatherData.sys.sunset).tz(weatherData.timezoneString.replace(/__/g, '/'));
+      console.log("time: ", time.format());
+      console.log("sunset: ", sunset.format());
+      console.log("sunrise: ", sunrise.format());
 
-      const timezone = weatherData.timezone / 3600;
-
-      let sunrise = moment.unix(weatherData.sys.sunrise).format("HH:mm:ss");
-      let sunset = moment.unix(weatherData.sys.sunset).format("HH:mm:ss");
-      let sunsetTime = moment(sunset, "HH:mm:ss").add(timezone, 'hours');
-      let sunriseTime = moment(sunrise, "HH:mm:ss").add(timezone, 'hours');
-
-      console.log(sunsetTime.format("HH:mm:ss"));
-
-      if (time.isBetween(sunsetTime.clone().subtract(30, "minutes"), sunsetTime.clone().add(30, 'minutes')))
+      if (time.isBetween(sunset.clone().subtract(30, "minutes"),
+        sunset.clone().add(30, 'minutes'))) {
         setDayMoment("sunset");
-      else if (time.isBetween(sunriseTime.clone().subtract(30, "minutes"), sunriseTime.clone().add(30, 'minutes')))
+        console.log("sunset")
+      }
+
+      else if (time.isBetween(sunrise.clone().subtract(30, "minutes"),
+        sunrise.clone().add(30, 'minutes'))) {
         setDayMoment("sunrise");
-      else if (time.isBetween(sunriseTime.clone().add(30, 'minutes'), sunsetTime.clone().subtract(30, "minutes")))
+        console.log("sunrise")
+      }
+
+      else if (time.isBetween(sunrise.clone().add(30, 'minutes'),
+        sunset.clone().subtract(30, "minutes"))) {
         setDayMoment("day");
-      else if (time.isBetween(sunsetTime.clone().add(30, 'minutes'), sunriseTime.clone().subtract(30, "minutes")))
+        console.log("day")
+      }
+
+      else if (time.isBetween(sunset.clone().add(30, 'minutes'),
+        sunrise.clone().subtract(30, "minutes"))) {
         setDayMoment("night");
+        console.log("night")
+      }
+      else console.log("undefined!");
     }
-    return () => {}
   }, [weatherData])
 
   return (
@@ -46,7 +57,7 @@ const Room = ({ onMapClicked, weatherData, city }) => {
         <Carpet />
       </div>
       <div className="wall">
-        <WallMap setMapOpened={onMapClicked}/>
+        <WallMap setMapOpened={onMapClicked} />
         <Window weather={weather} dayMoment={dayMoment} city={city} />
       </div>
       <div className="illumination">

@@ -12,6 +12,7 @@ import Sun from '../Weather/Sun/Sun'
 import Clouds from '../Weather/Clouds/Clouds'
 
 import './Window.css';
+import Fog from '../Weather/Fog/Fog';
 
 const Window = ({ city, weather, dayMoment }) => {
 
@@ -71,10 +72,32 @@ const Window = ({ city, weather, dayMoment }) => {
                 {weather >= 500
                     && weather <= 531
                     && dayMoment === "night" ? <RainyNight></RainyNight> : null}
+
+                {/* Fog */}
+
+                {weather >= 700
+                    && weather <= 741
+                    && dayMoment === "day" ? <div> <Sun></Sun> <Fog></Fog> </div> : null}
+
+                {weather >= 700
+                    && weather <= 741
+                    && dayMoment === "night" ? <div> <StarryNight></StarryNight> <Fog></Fog> </div> : null}
+
+                {weather >= 700
+                    && weather <= 741
+                    && dayMoment === "sunset" ? <div> <SunSunset></SunSunset> <Fog></Fog> </div> : null}
+
+                {weather >= 700
+                    && weather <= 741
+                    && dayMoment === "sunrise" ? <div> <SunSunrise></SunSunrise> <Fog></Fog> </div> : null}
+
                 <img style={{
-                    position: "relative",
-                    top: "25%"
+                    position: "absolute",
+                    bottom: "0%",
+                    left: "2%",
                 }} src={city} alt="" />
+                {weather}
+                {" "+dayMoment}
             </div>
         </div>
     );

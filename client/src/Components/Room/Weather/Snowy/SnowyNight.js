@@ -20,8 +20,7 @@ const SnowyNight = () => {
         background: 'linear-gradient(to bottom, rgb(0, 22, 34),  rgb(11, 36, 82),  rgb(100, 100, 100)) ',
         position: 'absolute',
         width: '100%',
-        top: '-15%',
-        height: '120%',
+        height: '100%',
         zIndex: '-3'
       }}
       // Controls the number of snowflakes that are created (default 150)
