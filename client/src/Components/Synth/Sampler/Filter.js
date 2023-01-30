@@ -4,9 +4,11 @@ import OnOffSwitch from './Controls/OnOffSwitch'
 import Knob from './Controls/Knob'
 import * as Tone from 'tone'
 
-
+let lpfLfoScale, hpfLfoScale;
 
 const Filter = ({ LFO_H_ON, depthH, rateH, typeH, typeL, setHPON, setFilterH, setFilterL, rolloff }) => {
+
+
 
     /* LPF */
     const [lpfOnOff, setLpfOnOff] = useState(false);
@@ -26,17 +28,17 @@ const Filter = ({ LFO_H_ON, depthH, rateH, typeH, typeL, setHPON, setFilterH, se
 
     const [lpfLfo, setLpfLfo] = useState(null);
     const [lpfLfoOnOff, setLpfLfoOnOff] = useState(false);
-    const [lpfLfoRate, setLpfLfoRate] = useState(5);
-    const [lpfLfoDepth, setLpfLfoDepth] = useState(1);
-    const [lpfLfoScale, setLpfLfoScale] = useState(null);
+    const [lpfLfoRate, setLpfLfoRate] = useState(0);
+    const [lpfLfoDepth, setLpfLfoDepth] = useState(0);
+
 
     /* LFO HPF */
 
     const [hpfLfo, setHpfLfo] = useState(null)
     const [hpfLfoOnOff, setHpfLfoOnOff] = useState(false);
-    const [hpfLfoRate, setHpfLfoRate] = useState(5);
-    const [hpfLfoDepth, setHpfLfoDepth] = useState(1);
-    const [hpfLfoScale, setHpfLfoScale] = useState(null);
+    const [hpfLfoRate, setHpfLfoRate] = useState(0);
+    const [hpfLfoDepth, setHpfLfoDepth] = useState(0);
+
 
 
     /* HPF Generation */
@@ -51,21 +53,6 @@ const Filter = ({ LFO_H_ON, depthH, rateH, typeH, typeL, setHPON, setFilterH, se
                 frequency: hpfCutoff,
             }
             ));
-
-            // if (LFO_H_ON) {
-            //     minFreq_LFO_H = Math.pow(10, Math.log10(lowCut) - 1 * depthH);
-            //     maxFreq_LFO_H = Math.pow(10, Math.log10(lowCut) + 1 * depthH);
-
-            //     console.log("depth range HPF", minFreq_LFO_H, maxFreq_LFO_H)
-            //     lfoH = new Tone.LFO(rateH, 0, 1);
-            //     scaleExpH = new Tone.ScaleExp(minFreq_LFO_H, maxFreq_LFO_H, 3);
-            //     lfoH.type = typeH;
-            //     lfoH.chain(scaleExpH, HPF.frequency);
-            //     lfoH.start();
-            // }
-            // else if (lfoH) {
-            //     lfoH.disconnect(HPF.frequency);
-            // }
             setFilterH(hpfNode);
         }
         else {
@@ -94,30 +81,22 @@ const Filter = ({ LFO_H_ON, depthH, rateH, typeH, typeL, setHPON, setFilterH, se
     }, [lpfOnOff])
 
 
-    
-    useEffect(() => {
-        if (lpfLfoOnOff && lpfNode) {
-            console.log("LFO L creation", lpfLfoRate)
-            setLpfLfo(new Tone.LFO(lpfLfoRate, 0, 1));
 
-            // lfolp.type = typeL;
+    useState(() => {
+        console.log("LFO L creation")
+        setLpfLfo(new Tone.LFO(lpfLfoRate, 0, 1));
+        setHpfLfo(new Tone.LFO(hpfLfoRate, 0, 1));
+        lpfLfoScale = new Tone.ScaleExp(Math.pow(10, Math.log10(lpfCutoff) - 1 * lpfLfoDepth), Math.pow(10, Math.log10(lpfCutoff) + 1 * lpfLfoDepth), 3);
+        hpfLfoScale = new Tone.ScaleExp(Math.pow(10, Math.log10(hpfCutoff) - 1 * hpfLfoDepth), Math.pow(10, Math.log10(hpfCutoff) + 1 * hpfLfoDepth), 3);
 
-
-
-            // setFilterL(filterNodeL)
-        }
-
-        else if (lpfLfo) {
-            lpfLfo.disconnect(lpfNode.frequency);
-        }
-
-    }, [lpfLfoOnOff])
+    }, [])
 
     /* =================================================== PARAMS UPDATE ============================================== */
 
     //lpf cutoff
     useEffect(() => {
         if (lpfNode && lpfOnOff) {
+
             lpfNode.set({
                 frequency: lpfCutoff
             });
@@ -135,7 +114,6 @@ const Filter = ({ LFO_H_ON, depthH, rateH, typeH, typeL, setHPON, setFilterH, se
         }
     }, [lpfResonance])
 
-
     //hpf cutoff
     useEffect(() => {
         if (hpfNode && hpfOnOff) {
@@ -145,7 +123,6 @@ const Filter = ({ LFO_H_ON, depthH, rateH, typeH, typeL, setHPON, setFilterH, se
             setFilterH(hpfNode);
         }
     }, [hpfCutoff])
-
 
     //hpf resonance
     useEffect(() => {
@@ -157,40 +134,73 @@ const Filter = ({ LFO_H_ON, depthH, rateH, typeH, typeL, setHPON, setFilterH, se
         }
     }, [hpfResonance])
 
-
+    //LFO LPF onoff
     useEffect(() => {
-
-        if (lpfLfo && lpfLfoOnOff) {
-            lpfLfo.disconnect(lpfNode)
-            console.log("rate update", lpfLfoRate)
-            // scaleExpL=new Tone.ScaleExp(Math.pow(10, Math.log10(highCut) - 1 * depthL),Math.pow(10, Math.log10(highCut) + 1 * depthL), 3)
-            lpfLfo.rate = lpfLfoRate;
-            lpfLfoScale = new Tone.ScaleExp(Math.pow(10, Math.log10(lpfCutoff) - 1 * lpfLfoDepth), Math.pow(10, Math.log10(lpfCutoff) + 1 * lpfLfoDepth));
+        if (lpfLfoOnOff && lpfLfo && lpfLfoScale) {
+            lpfLfo.disconnect();
             lpfLfo.chain(lpfLfoScale, lpfNode.frequency);
             lpfLfo.start();
-            // lfoL.chain(scaleExpL, filterNodeL.frequency);
         }
+        else if (!lpfLfoOnOff) {
+            console.log("disconnettiti cazzo")
+            lpfLfo.stop();
+        }
+    }, [lpfLfoOnOff])
 
-    }, [lpfLfoRate, lpfLfoDepth])
-    //GENERATION
-    // useEffect(() => {
-    //     if (filterNodeH) {
-    //         setFilterH(filterNodeH);
-    //     }
-    //     if (filterNodeL) {
-    //         setFilterL(filterNodeL);
-    //     }
+    //LFO HPF onoff
+    useEffect(() => {
+        if (hpfLfoOnOff && hpfLfo && hpfLfoScale) {
+            hpfLfo.disconnect();
+            hpfLfo.chain(lpfLfoScale, hpfNode.frequency);
+            hpfLfo.start();
+        }
+        else if (!hpfLfoOnOff) {
+            hpfLfo.stop();
+        }
+    }, [hpfLfoOnOff])
 
-    //     return () => {
-    //         if (filterNodeH) {
-    //             filterNodeH.dispose();
-    //         }
-    //         if (filterNodeL) {
-    //             filterNodeL.dispose();
-    //         }
+    //LFO LPF RATE
+    useEffect(() => {
 
-    //     }
-    // }, [filterNodeH, filterNodeL, setFilterH, setFilterL])
+        if (lpfLfo) {
+            console.log("rate", lpfLfoRate)
+
+            lpfLfo.set({
+                frequency: lpfLfoRate
+            })
+        }
+    }, [lpfLfoRate])
+
+    //LFO HPF RATE
+    useEffect(() => {
+
+        if (hpfLfo) {
+            console.log("rate", hpfLfoRate)
+
+            hpfLfo.set({
+                frequency: hpfLfoRate
+            })
+        }
+    }, [hpfLfoRate])
+
+    useEffect(() => {
+        if (lpfLfo && lpfLfoOnOff && lpfNode) {
+            lpfLfoScale.disconnect();
+            console.log("lfo range LPF", Math.pow(10, Math.log10(lpfCutoff) - 1 * lpfLfoDepth), Math.pow(10, Math.log10(lpfCutoff) + 1 * lpfLfoDepth))
+            lpfLfoScale = new Tone.ScaleExp(Math.pow(10, Math.log10(lpfCutoff) - 1 * lpfLfoDepth), Math.pow(10, Math.log10(lpfCutoff) + 1 * lpfLfoDepth), 3);
+            lpfLfo.chain(lpfLfoScale, lpfNode.frequency);
+        }
+    }, [lpfLfoDepth, lpfCutoff])
+
+    useEffect(() => {
+        if (hpfLfo && hpfLfoOnOff && hpfNode) {
+            hpfLfoScale.disconnect();
+            console.log("lfo range HPF", Math.pow(10, Math.log10(hpfCutoff) - 1 * hpfLfoDepth), Math.pow(10, Math.log10(hpfCutoff) + 1 * hpfLfoDepth))
+            hpfLfoScale = new Tone.ScaleExp(Math.pow(10, Math.log10(hpfCutoff) - 1 * hpfLfoDepth), Math.pow(10, Math.log10(hpfCutoff) + 1 * hpfLfoDepth), 3);
+            hpfLfo.chain(hpfLfoScale, hpfNode.frequency);
+        }
+    }, [hpfLfoDepth, hpfCutoff])
+
 
 
     const waveforms = [
@@ -318,17 +328,18 @@ const Filter = ({ LFO_H_ON, depthH, rateH, typeH, typeL, setHPON, setFilterH, se
                 style={{
                     gridRow: 7,
                     gridColumn: 2,
-                }} id="lfo-hpf-on-off">
+                }} id="lfo-hpf-on-off"
+                    setState={setHpfLfoOnOff}>
             </OnOffSwitch>
 
             <div className="screen-container lfo">
-                <select id = "lpf-lfo-selector" label="Waveform">
+                <select id="lpf-lfo-selector" label="Waveform">
                     {waveforms.map((waveform) => {
                         return <option value={waveform.value}>{waveform.label}</option>
                     })}
                 </select>
 
-                <select id = "hpf-lfo-selector" label="Waveform">
+                <select id="hpf-lfo-selector" label="Waveform">
                     {waveforms.map((waveform) => {
                         return <option value={waveform.value}>{waveform.label}</option>
                     })}
@@ -352,8 +363,11 @@ const Filter = ({ LFO_H_ON, depthH, rateH, typeH, typeL, setHPON, setFilterH, se
                     gridRow: 9,
                     gridColumn: 2
                 }}
-
-                diameter={48} id={"lfo-hpf-rate"} unit="Hz" parameter={"Rate"}></Knob>
+                diameter={48} id={"lfo-hpf-rate"} unit="Hz" parameter={"Rate"}
+                min={0} max={15}
+                setValue={setHpfLfoRate}
+                step={0.5}
+                defaultValue={0}></Knob>
 
             <Knob
                 style={{
@@ -371,7 +385,11 @@ const Filter = ({ LFO_H_ON, depthH, rateH, typeH, typeL, setHPON, setFilterH, se
                     gridRow: 10,
                     gridColumn: 2
                 }}
-                diameter={48} id={"lfo-hpf-depth"} parameter={"Depth"}></Knob>
+                diameter={48} id={"lfo-hpf-depth"} parameter={"Depth"}
+                min={0} max={1}
+                setValue={setHpfLfoDepth}
+                step={0.05}
+                defaultValue={0}></Knob>
         </div>
     )
 }

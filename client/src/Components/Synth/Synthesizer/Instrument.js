@@ -11,12 +11,14 @@ import * as Tone from 'tone'
 
 
 //BUG FIX
-//compensare gain distorsione
 //gain node che controlla tutti i sampler
 //se mouse entra in nota suonata la interrompe
 // curve attack
 // pitch wheel
 // tastiera a scomparsa
+//meter
+//limiter o anti clip
+//i have a dream:knob del cutoff che si muove con lfo
 
 
 export default function Instrument({ selectedInstrument }) {
@@ -29,12 +31,13 @@ export default function Instrument({ selectedInstrument }) {
     const [vibrato, setVibrato] = useState(null);
     const [delay, setDelay] = useState(null);
     const [reverb, setReverb] = useState(null);
+    const [master, setMaster] = useState(null)
 
 
 
     useEffect(() => {
         console.log("chain creation")
-        let routingArray = [sampler, filterL, filterH, dist, vibrato, delay, reverb]
+        let routingArray = [sampler, filterL, filterH, dist, vibrato, delay, reverb, master]
 
         console.log(routingArray)
 
@@ -52,7 +55,7 @@ export default function Instrument({ selectedInstrument }) {
             }
         }
 
-    }, [sampler, filterL, filterH, dist, vibrato, delay, reverb])
+    }, [sampler, filterL, filterH, dist, vibrato, delay, reverb, master])
 
     return (
         <div className='instrument'>
@@ -67,7 +70,7 @@ export default function Instrument({ selectedInstrument }) {
             <Vibrato setVibrato={setVibrato}/>
             <Delay setDelay={setDelay}/>
             <Reverb setReverb={setReverb}/>
-            <Master></Master>
+            <Master setMaster={setMaster}/>
             <div id="instrument-row-3"></div>
             <div id="instrument-row-4"></div>
         </div>
