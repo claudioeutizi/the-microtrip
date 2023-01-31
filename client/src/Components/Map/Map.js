@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet'
+import React, { useCallback, useRef, useState } from 'react'
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import { Icon } from 'leaflet';
 import markerIconPng from "leaflet/dist/images/marker-icon.png"
 import "leaflet/dist/leaflet.css"
 import "./Map.css"
 import { MAP_TILER } from '../../utility/api';
-import cities from '../../cities';
+import cities from '../../utility/cities';
 import { Button, IconButton } from '@mui/material';
 import { GEO_API_URL, geoApiOptions } from '../../utility/api';
 import * as Tone from 'tone';

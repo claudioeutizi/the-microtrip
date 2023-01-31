@@ -86,9 +86,9 @@ const Display = ({ onSwitchChange, externalData, light, temperature, humidity })
                         </div>
                     </div>
                 </div>
-                <CardActions>
-                    <Switch defaultValue={false} onChange = {handleOnPositionChange} icon={<LocationOnIcon/>} checkedIcon={<LocationOnIcon />}>
-                        <LocationOnIcon />
+                <CardActions sx = {{padding: "10px 5px"}}>
+                    <Switch size="small" defaultValue={false} onChange = {handleOnPositionChange} icon={<LocationOnIcon/>} checkedIcon={<LocationOnIcon />}>
+                        <LocationOnIcon size = "small"/>
                     </Switch>
                 </CardActions>
             </Card>
