@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { WebAudioKnob, WebAudioParam } from 'webaudio-controls-react-typescript'
-import "../../Synthesizer.css"
+import "../../Instrument/Instrument.css"
 
 const Knob = (props) => {
 

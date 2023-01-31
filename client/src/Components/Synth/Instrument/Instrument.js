@@ -1,5 +1,5 @@
 import Sampler from '../Sampler/Sampler';
-import '../Synthesizer.css'
+import './Instrument.css'
 import Filter from '../Sampler/Filter';
 import Master from '../Sampler/Master';
 import Distortion from '../Sampler/Distortion';

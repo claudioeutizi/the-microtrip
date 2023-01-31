@@ -1,12 +1,12 @@
 import React from 'react'
-import { useState, useEffect, useCallback, useMemo } from "react"
+import { useState, useEffect } from "react"
 import OnOffSwitch from './Controls/OnOffSwitch'
 import Knob from './Controls/Knob'
 import * as Tone from 'tone'
 
 let lpfLfoScale, hpfLfoScale;
 
-const Filter = ({ LFO_H_ON, depthH, rateH, typeH, typeL, setHPON, setFilterH, setFilterL, rolloff }) => {
+const Filter = ({ setFilterH, setFilterL, rolloff }) => {
 
 
 
@@ -81,9 +81,9 @@ const Filter = ({ LFO_H_ON, depthH, rateH, typeH, typeL, setHPON, setFilterH, se
     }, [lpfOnOff])
 
 
-
+    /* LFO generation */
     useState(() => {
-        console.log("LFO L creation")
+        console.log("LFO creation")
         setLpfLfo(new Tone.LFO(lpfLfoRate, 0, 1));
         setHpfLfo(new Tone.LFO(hpfLfoRate, 0, 1));
         lpfLfoScale = new Tone.ScaleExp(Math.pow(10, Math.log10(lpfCutoff) - 1 * lpfLfoDepth), Math.pow(10, Math.log10(lpfCutoff) + 1 * lpfLfoDepth), 3);
@@ -142,7 +142,6 @@ const Filter = ({ LFO_H_ON, depthH, rateH, typeH, typeL, setHPON, setFilterH, se
             lpfLfo.start();
         }
         else if (!lpfLfoOnOff) {
-            console.log("disconnettiti cazzo")
             lpfLfo.stop();
         }
     }, [lpfLfoOnOff])
@@ -151,7 +150,8 @@ const Filter = ({ LFO_H_ON, depthH, rateH, typeH, typeL, setHPON, setFilterH, se
     useEffect(() => {
         if (hpfLfoOnOff && hpfLfo && hpfLfoScale) {
             hpfLfo.disconnect();
-            hpfLfo.chain(lpfLfoScale, hpfNode.frequency);
+            hpfLfo.chain(hpfLfoScale, hpfNode.frequency);
+
             hpfLfo.start();
         }
         else if (!hpfLfoOnOff) {

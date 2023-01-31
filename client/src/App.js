@@ -6,7 +6,7 @@ import Display from './Components/Display/Display';
 import { WEATHER_API_KEY, WEATHER_API_URL } from './utility/api';
 import { useSocket } from './utility/useSocket';
 import moment from 'moment';
-import Instrument from './Components/Synth/Synthesizer/Instrument';
+import Instrument from './Components/Synth/Instrument/Instrument';
 import { Collapse } from 'react-collapse';
 import Room from './Components/Room/Room';
 import Map from './Components/Map/Map';
