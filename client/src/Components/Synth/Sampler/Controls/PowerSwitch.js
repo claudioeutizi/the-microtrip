@@ -16,11 +16,10 @@ const PowerSwitch = (props) => {
 
             <WebAudioSwitch className="medium-knob"
                 defvalue={0}
-                onSwitchChange={setOnOff}
                 id={props.id}
                 style={{ "top": "5px" }}
-                src={"/images/knobs/Power_switch_mod.png"}>
-                onSwitchChange={(value) => handleOnChange(value)}
+                src={"/images/knobs/Power_switch_mod.png"}
+                onSwitchChange={(value) => handleOnChange(value)}>
             </WebAudioSwitch>
 
             <WebAudioSwitch style={{

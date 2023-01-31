@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import { useRef, useEffect } from "react";
 import NaturalKey from "./NaturalKey";
 import SharpKey from "./SharpKey";
-import '../styles/Piano.css'
+import './Piano.css'
 import { WebAudioKnob } from "webaudio-controls-react-typescript";
 import $ from 'jquery';
 function Piano(props) {

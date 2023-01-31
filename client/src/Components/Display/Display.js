@@ -1,11 +1,12 @@
 import { Card, CardActions, Switch } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import "./styles/Display.css"
+import "./Display.css"
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import moment from 'moment-timezone';
 
 const Display = ({ onSwitchChange, externalData, light, temperature, humidity }) => {
 
+    const [zoom, setZoom] = useState(false);
     const [positionSwitch, setPositionSwitch] = useState(false);
     const [currentDateTime, setCurrentDateTime] = useState(
         externalData ? (externalData.timezoneString && !externalData.dateTime ?
@@ -42,7 +43,7 @@ const Display = ({ onSwitchChange, externalData, light, temperature, humidity })
 
 
     return (
-            <Card className='device' raised={true}>
+            <Card className='device' raised={true} onClick={() => setZoom(!zoom)} style={{ transform: `scale(${zoom ? 1.5 : 1})` }}>
                 <div className='display'>
                     <div className='top'>
                         <p className="city">

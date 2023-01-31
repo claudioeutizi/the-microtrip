@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import Piano from './Components/Piano/Piano';
 import './App.css'
-import Footer from './Components/Footer';
-import Display from './Components/Display';
+import Footer from './Components/Footer/Footer';
+import Display from './Components/Display/Display';
 import { WEATHER_API_KEY, WEATHER_API_URL } from './utility/api';
 import { useSocket } from './utility/useSocket';
 import moment from 'moment';
 import Instrument from './Components/Synth/Synthesizer/Instrument';
 import { Collapse } from 'react-collapse';
 import Room from './Components/Room/Room';
-import Map from './Components/Map';
+import Map from './Components/Map/Map';
 // fetching the GET route from the Express server which matches the GET route from server.js
 
 function App() {
@@ -147,13 +147,12 @@ function App() {
           {currentWeather && <Display externalData={currentWeather}
             onSwitchChange={handleOnPositionSwitchChange}
             light={internalLight.value} temperature={internalTemperature.value} humidity={internalHumidity.value} />}
-            <Room onMapClicked = {toggleMapVisibility} city = {city} weatherData = {currentWeather ? currentWeather : null}>
+            <Room onInstrumentClicked = {toggleInstrumentVisibility} onMapClicked = {toggleMapVisibility} city = {city} weatherData = {currentWeather ? currentWeather : null}>
             </Room>
-            {mapVisible && <Map onCityChange={handleOnSearchChange}/>}
+            {mapVisible && <Map onCityChange={handleOnSearchChange} onMapClosing={() => setMapVisible(false)}/>}
         </div>
 
         <div className="synth-container">
-          <button onClick={toggleInstrumentVisibility}>Instrument</button>
           {instrumentVisible && <Instrument selectedInstrument={instrument}></Instrument>}
         </div>
       </div>

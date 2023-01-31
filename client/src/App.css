@@ -1,45 +1,51 @@
 .App {
     background: #B79891;
-    /* fallback for old browsers /
-    background: -webkit-linear-gradient(to right, #94716B, #B79891);
-    / Chrome 10-25, Safari 5.1-6 /
-    background: linear-gradient(to right, #94716B, #B79891);
-    / W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     position: relative;
+    width: 100vw;
+    height: 100%;
+    min-height: 100vh;
+}
+
+.body {
+    height: auto;
+    width: 100%;
+    overflow: scroll;
     display: flex;
     width: 100%;
     height: 100%;
-    flex-direction: row;
-    min-height: 100vh;
-    }
-    
-    .body {
-        height: auto;
-        width: 100%;
-        overflow: scroll;
-    }
-    
-    .room-container, .synth-container {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.room-container,
+.synth-container {
     width: 100%;
     height: auto;
-    margin-bottom: 250px;
     z-index: 0;
-    }
+}
 
-    .room-container {
-        display: grid;
-        grid-template-columns: 50% 50%;
-    }
-    
-    .footer-container {
+.synth-container {
+    margin-bottom: 250px;
+}
+
+.room-container {
+    min-height: 700px;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.footer-container {
     width: 100%;
     position: fixed;
     bottom: 0;
     z-index: 1;
     background-color: #fff;
-    }
-    
-    .piano-toggle {
+}
+
+.piano-toggle {
     width: 100%;
     border: 1px solid transparent;
     text-transform: uppercase;
@@ -49,12 +55,12 @@
     box-shadow: 0 2px 4px #888;
     background-color: #fff;
     transition: background-color 300ms;
-    }
-    
-    .piano-toggle.active {
+}
+
+.piano-toggle.active {
     background-color: #fafafa;
-    }
-    
-    .ReactCollapse--collapse {
+}
+
+.ReactCollapse--collapse {
     transition: height 500ms;
-    }
+}

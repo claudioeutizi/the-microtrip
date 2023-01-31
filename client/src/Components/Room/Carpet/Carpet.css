@@ -2,7 +2,7 @@
     width: 75vw; /* adjust as needed */
     height: 35vh; /* maintain aspect ratio */
     position: absolute;
-    right: 11vw;
+    right: 5vw;
     background-image: url(/public/images/carpet_original.png);
     background-position: bottom;
     background-size: 100% 100%;

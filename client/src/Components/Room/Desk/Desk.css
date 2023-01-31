@@ -1,10 +1,12 @@
-.Desk{
+.Desk {
     z-index: 1;
 }
 
 #desk {
-    width: 60%; /* adjust as needed */
-    height: auto; /* maintain aspect ratio */
+    width: 60%;
+    /* adjust as needed */
+    height: auto;
+    /* maintain aspect ratio */
     position: absolute;
     bottom: 15%;
     right: 20vw;
@@ -12,17 +14,19 @@
 }
 
 #desk img {
-    width: 65vw; /* adjust as needed */
-    height: auto; /* maintain aspect ratio */
+    width: 65vw;
+    /* adjust as needed */
+    height: auto;
+    /* maintain aspect ratio */
     max-width: 550px;
     -webkit-filter: drop-shadow(5px 5px 5px #222222);
     filter: drop-shadow(5px 5px 5px #222222);
 }
 
 @media screen and (orientation: landscape) {
-    #desk{
-    position: absolute;
-    transform:translateX(20vw);
+    #desk {
+        position: absolute;
+        transform: translateX(20vw);
     }
 }
 
@@ -32,11 +36,14 @@
     left: 28%;
     max-width: 250px;
     top: 35%;
-    }
-    
+}
+
 #synth img {
     width: 100%;
     height: auto;
 }
 
-    
+#synth img:hover {
+    filter: drop-shadow(16px 16px 20px red) invert(75%);
+    filter: brightness(0.6);
+}
