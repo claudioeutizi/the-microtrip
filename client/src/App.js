@@ -39,7 +39,15 @@ function App() {
   const [cityData, setCityData] = useState(null);
   const [city, setCity] = useState(null);
 
+
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [mapVisible, setMapVisible] = useState(true);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   function toggleMapVisibility() {
     setMapVisible(!mapVisible);
@@ -149,7 +157,7 @@ function App() {
             light={internalLight.value} temperature={internalTemperature.value} humidity={internalHumidity.value} />}
             <Room onInstrumentClicked = {toggleInstrumentVisibility} onMapClicked = {toggleMapVisibility} city = {city} weatherData = {currentWeather ? currentWeather : null}>
             </Room>
-            {mapVisible && <Map onCityChange={handleOnSearchChange} onMapClosing={() => setMapVisible(false)}/>}
+            {windowWidth > 650 && mapVisible && <Map onCityChange={handleOnSearchChange} onMapClosing={() => setMapVisible(false)}/>}
         </div>
 
         <div className="synth-container">

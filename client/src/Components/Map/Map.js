@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import { Icon } from 'leaflet';
 import markerIconPng from "leaflet/dist/images/marker-icon.png"
@@ -13,7 +13,6 @@ import CloseIcon from '@mui/icons-material/Close';
 
 
 const Map = ({ onCityChange, onMapClosing }) => {
-
 
     const [position, setPosition] = useState({ lat: 42.092422, lon: 11.795413 });
     const [city, setCity] = useState(null);

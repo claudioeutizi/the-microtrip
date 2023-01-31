@@ -3,7 +3,7 @@ import './Room.css';
 import Desk from './Desk/Desk';
 import Window from './Window/Window';
 import Lamp from './Lamp/Lamp';
-import WallMap from './Map/WallMap';
+import WallMap from './WallMap/WallMap';
 import Carpet from './Carpet/Carpet';
 import Light from './Light/Light';
 import LightSwitch from './LightSwitch/LightSwitch';
@@ -57,7 +57,7 @@ const Room = ({ onMapClicked, onInstrumentClicked, weatherData, city }) => {
         <Carpet />
       </div>
       <div className="wall">
-        <WallMap setMapOpened={onMapClicked} />
+        <WallMap setMapOpened={onMapClicked}/>
         <Window weather={weather} dayMoment={dayMoment} city={city} />
       </div>
       <div className="illumination">

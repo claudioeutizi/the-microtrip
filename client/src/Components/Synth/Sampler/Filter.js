@@ -8,8 +8,6 @@ let lpfLfoScale, hpfLfoScale;
 
 const Filter = ({ setFilterH, setFilterL, rolloff }) => {
 
-
-
     /* LPF */
     const [lpfOnOff, setLpfOnOff] = useState(false);
     const [lpfCutoff, setLpfCutoff] = useState(20000);
