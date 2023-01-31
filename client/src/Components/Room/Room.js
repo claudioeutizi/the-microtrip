@@ -60,11 +60,11 @@ const Room = ({ onMapClicked, onInstrumentClicked, weatherData, city }) => {
         <WallMap setMapOpened={onMapClicked}/>
         <Window weather={weather} dayMoment={dayMoment} city={city} />
       </div>
-      <div className="illumination">
+      {/* <div className="illumination">
         <Lamp />
         <Light />
         <LightSwitch />
-      </div>
+      </div> */}
     </div>
   )
 }

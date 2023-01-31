@@ -10,7 +10,7 @@ const Display = ({ onSwitchChange, externalData, light, temperature, humidity })
     const [positionSwitch, setPositionSwitch] = useState(false);
     const [currentDateTime, setCurrentDateTime] = useState(
         externalData ? (externalData.timezoneString && !externalData.dateTime ?
-             moment().tz(externalData.timezoneString.replace(/__/g, '/')).format("MMMM Do YYYY, h:mm:ss A"): externalData.dateTime): null);
+             moment().tz(externalData.timezoneString.replace(/__/g, '/')) : externalData.dateTime): null);
 
     const handleOnPositionChange = (event, value) => {
         onSwitchChange(value);
@@ -33,8 +33,8 @@ const Display = ({ onSwitchChange, externalData, light, temperature, humidity })
         if (externalData) {
             const intervalId = setInterval(() => {
                 if(!positionSwitch)
-                    setCurrentDateTime(moment().tz(externalData.timezoneString.replace(/__/g, '/')).format("MMMM Do YYYY, h:mm:ss A"));
-                else setCurrentDateTime(moment().format("MMMM Do YYYY, h:mm:ss A"));
+                    setCurrentDateTime(moment().tz(externalData.timezoneString.replace(/__/g, '/')));
+                else setCurrentDateTime(moment());
             }, 1000);
             return () => clearInterval(intervalId);
         }
@@ -43,7 +43,7 @@ const Display = ({ onSwitchChange, externalData, light, temperature, humidity })
 
 
     return (
-            <Card className='device' raised={true} onClick={() => setZoom(!zoom)} style={{ transform: `scale(${zoom ? 1.5 : 1})` }}>
+            <div className='device' onClick={() => setZoom(!zoom)} style={{ transform: `scale(${zoom ? 3 : 1})`, left:`${zoom ? "800px" : "940px"}`}}>
                 <div className='display'>
                     <div className='top'>
                         <p className="city">
@@ -52,8 +52,11 @@ const Display = ({ onSwitchChange, externalData, light, temperature, humidity })
                         <p className="weather-description">
                             {externalData.weather[0].description}
                         </p>
-                        {currentDateTime && <p className="date-time">
-                            {currentDateTime}
+                        {currentDateTime && <p className="date">
+                            {currentDateTime.format("MMMM Do YYYY")}
+                        </p>}
+                        {currentDateTime && <p className="time" style = {{marginTop: 0}}>
+                            {currentDateTime.format("hh:mm:ss A")}
                         </p>}
                     </div>
                     <div className="data-container">
@@ -86,12 +89,12 @@ const Display = ({ onSwitchChange, externalData, light, temperature, humidity })
                         </div>
                     </div>
                 </div>
-                <CardActions sx = {{padding: "10px 5px"}}>
+                <div className = "display-button" style = {{padding: "5px 2px"}}>
                     <Switch size="small" defaultValue={false} onChange = {handleOnPositionChange} icon={<LocationOnIcon/>} checkedIcon={<LocationOnIcon />}>
                         <LocationOnIcon size = "small"/>
                     </Switch>
-                </CardActions>
-            </Card>
+                </div>
+            </div>
     )
 }
 

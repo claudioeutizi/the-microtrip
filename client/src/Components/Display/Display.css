@@ -11,7 +11,7 @@
     font-family: "Source Code Pro";
     width: fit-content;
     letter-spacing: -1;
-    max-width: 200px;
+    max-width: 100px;
     height: fit-content;
     display: block;
     margin: 0px;
@@ -37,8 +37,11 @@
         0px 30px 70px rgba(0, 0, 0, 0.25);
     position: absolute;
     z-index: 1;
-    top: 350px;
-    left: 150px;
+    top: 200px;
+    left: 940px;
+    transform: translateY(-50%) rotateY(45deg);
+    transform-style: preserve-3d;
+    perspective: 500px;
 }
 
 .display {
@@ -46,8 +49,8 @@
     max-width: 100%;
     grid-template-rows: 35% 40% 25%;
     grid-template-columns: 50% 50%;
-    margin: 10px;
-    border: 10px;
+    margin: 7%;
+    border: 7%;
     height: fit-content;
     border-radius: 2px;
     background-image: linear-gradient(90deg, transparent 15%, rgba(134, 135, 129, 0.05), transparent 85%),
@@ -82,9 +85,9 @@
 .city {
     font-weight: 600;
     text-transform: uppercase;
-    font-size: 12px;
+    font-size: 6px;
     text-align: center;
-    margin: 5px;
+    margin: 2px;
     letter-spacing: 1px;
 }
 
@@ -92,15 +95,22 @@
     text-transform: uppercase;
     text-align: center;
     font-weight: 400;
-    font-size: 10px;
-    margin: 5px;
+    font-size: 4px;
+    margin: 2px;
 }
 
-.date-time {
+.date {
     text-align: center;
     font-weight: 500;
-    font-size: 7px;
-    margin: 5px;
+    font-size: 3px;
+    margin: 0;
+}
+
+.time {
+    text-align: center;
+    font-weight: bolder;
+    font-size: 6px;
+    margin: 2px;
 }
 
 .data-container {
@@ -125,36 +135,36 @@
 
 .data.internal {
     text-align: right;
-    margin-right: 5px;
+    margin-right: 2px;
     border: 1px solid;
 }
 
 .data.external {
     text-align: left;
-    margin-left: 5px;
+    margin-left: 2px;
 }
 
 .data-value {
     font-family: 'Seven Segment';
     font-weight: bolder;
-    font-size: 12px;
-    margin: 10px;
+    font-size: 8px;
+    margin: 5px;
     max-width: 60px;
-    letter-spacing: -1px;
 }
 
 .data-label {
     text-align: left;
-    margin: 10px;
-    font-size:8px;
-    font-weight: 600;
+    margin: 2px 5px;
+    font-size: 4px;
+    font-weight: 500;
+    letter-spacing: -1;
 }
 
 .details {
     grid-row: 3;
     grid-column-start: 1;
     grid-column-end: span 2;
-    margin: 7px;
+    margin: 3px;
     height: fit-content;
     overflow: auto;
 }
@@ -168,20 +178,20 @@
     margin: 0px;
     text-align: left;
     font-weight: 400;
-    font-size: 8px;
+    font-size: 4px;
 }
 
 .parameter-value {
     margin: 0px;
     text-align: right;
     font-weight: 600;
-    font-size: 8px;
+    font-size: 4px;
 }
 
 .parameter-label.top {
     text-align: left;
     margin: 0px;
-    margin-right:5px;
+    margin-right: 2px;
     font-weight: 600;
     border-bottom: 1px solid;
 }
