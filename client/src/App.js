@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Piano from './Components/Piano/Piano';
 import './App.css'
 import Footer from './Components/Footer/Footer';
@@ -10,16 +10,15 @@ import Instrument from './Components/Synth/Instrument/Instrument';
 import { Collapse } from 'react-collapse';
 import Room from './Components/Room/Room';
 import Map from './Components/Map/Map';
+import { CSSTransition } from "react-transition-group";
 // fetching the GET route from the Express server which matches the GET route from server.js
 
 function App() {
 
-  //application toggles
-
-  const [instrumentVisible, setInstrumentVisible] = useState(true);
-
-  function toggleInstrumentVisibility() {
-    setInstrumentVisible(!instrumentVisible);
+  function handleInstrumentVisibility() {
+    if (synthRef) {
+      synthRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   }
 
   const [pianoVisible, setPianoVisible] = useState(true);
@@ -43,6 +42,8 @@ function App() {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [mapVisible, setMapVisible] = useState(true);
 
+  const synthRef = useRef(null);
+
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener('resize', handleResize);
@@ -58,7 +59,7 @@ function App() {
   const handleOnPositionSwitchChange = async (switchValue) => {
     if (switchValue) {
       handleOnCoordinatesChange();
-    } else if(!currentWeather) {
+    } else if (!currentWeather) {
       try {
         handleOnSearchChange(cityData);
       } catch (error) {
@@ -152,17 +153,25 @@ function App() {
       <div className="body">
 
         <div className="room-container">
+
           {currentWeather && <Display externalData={currentWeather}
             onSwitchChange={handleOnPositionSwitchChange}
             light={internalLight.value} temperature={internalTemperature.value} humidity={internalHumidity.value} />}
-            <Room onInstrumentClicked = {toggleInstrumentVisibility} onMapClicked = {toggleMapVisibility} city = {city} weatherData = {currentWeather ? currentWeather : null}>
-            </Room>
-            {windowWidth > 650 && mapVisible && <Map onCityChange={handleOnSearchChange} onMapClosing={() => setMapVisible(false)}/>}
+
+          <Room onInstrumentClicked={handleInstrumentVisibility} onMapClicked={toggleMapVisibility} city={city} weatherData={currentWeather ? currentWeather : null}>
+          </Room>
+          
+          <CSSTransition in={mapVisible && windowWidth > 650} timeout={300} classNames="visibility-animation" unmountOnExit>
+            <div className="visibility-animation-element">
+              <Map onCityChange={handleOnSearchChange} onMapClosing={() => setMapVisible(false)} />
+            </div>
+          </CSSTransition>
+
+        </div>
+        <div ref={synthRef} className="synth-container">
+          <Instrument selectedInstrument={instrument}></Instrument>
         </div>
 
-        <div className="synth-container">
-          {instrumentVisible && <Instrument selectedInstrument={instrument}></Instrument>}
-        </div>
       </div>
 
       <div className="footer-container">
@@ -171,12 +180,12 @@ function App() {
           onClick={togglePianoVisibility}>
           <span>Piano Keyboard</span>
         </button>
-        <Collapse isOpened = {pianoVisible}>
+        <Collapse isOpened={pianoVisible}>
           <Piano keyCount={61} keyboardLayout={"C"} />
         </Collapse>
         <Footer />
       </div>
-    </div>
+    </div >
   )
 }
 

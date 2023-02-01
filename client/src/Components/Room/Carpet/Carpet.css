@@ -1,23 +1,28 @@
 #carpet {
-    width: 75vw; /* adjust as needed */
-    height: 35vh; /* maintain aspect ratio */
+    width: 60vw;
+    height: 15vh;
     position: absolute;
-    right: 5vw;
-    background-image: url(/public/images/carpet_original.png);
+    top: 37%;
+    right: 20vw;
+    background-image: url(/public/images/carpet_perspective.png);
     background-position: bottom;
     background-size: 100% 100%;
     background-repeat: no-repeat;
     background-size: fill;
-    /*background-color: aquamarine;*/
+    /* background-color: aquamarine; */
     max-width: 700px;
     z-index: -1;
 }
 
 
 @media screen and (orientation: landscape) {
-    #carpet{
-    position: absolute;
-    transform:translateX(3.5vw) translateY(-2.5vh);
+    #carpet {
+        width: 60vw;
+        height: 15vh;
+        top: 40%;
+        right: 6vw;
+        position: absolute;
+        transform: translateX(3.5vw) translateY(-2.5vh);
     }
 
 }

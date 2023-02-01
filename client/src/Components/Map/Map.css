@@ -1,12 +1,12 @@
 .leaflet-container {
+    grid-column: 3;
+    grid-row-start: 1;
+    grid-row-end: span 2;
 	border:20px solid transparent;
-    grid-column: 2;
     width: auto;
     border-image: url(../../../public/images/mapBorder.png) 30 30 round;
     border-radius: 0.5%;
     height: 60%;
-    position: relative;
-    right: 15%;
     -webkit-tap-highlight-color: transparent;
     font-size: 0.75rem;
     line-height: 1.5;

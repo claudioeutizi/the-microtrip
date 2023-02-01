@@ -1,25 +1,21 @@
 #wallmap {
+    width: -moz-fit-content;
     width: fit-content;
-    /* adjust as needed */
+    height: -moz-fit-content;
     height: fit-content;
-    /* maintain aspect ratio */
     position: absolute;
     right: 27vw;
     display: flex;
-    /* set the parent div to display as a flex container */
     align-items: center;
-    /* center the child elements within the div */
     justify-content: center;
-    /* center the child elements along the horizontal axis */
-    top: 300px;
+    top: 60%;
     z-index: -1;
 }
 
 #wallmap img {
+    filter: blur(0.5px);
     width: 44vw;
-    /* adjust as needed */
     height: auto;
-    /* maintain aspect ratio */
     max-width: 350px;
 }
 
@@ -31,6 +27,7 @@
 @media screen and (orientation: landscape) {
     #wallmap {
         position: absolute;
+        right: 23vw;
         transform: translateY(-20vw) translateX(8vw);
     }
 }

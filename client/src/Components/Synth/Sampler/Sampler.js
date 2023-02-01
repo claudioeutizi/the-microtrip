@@ -45,6 +45,10 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
         return envelope;
     }
 
+    useEffect(() => {
+        setInstrument(selectedInst);
+    }, [selectedInst])
+
 
     function createSampler(selectedInst) {
         const sampler = new Tone.Sampler({
@@ -73,7 +77,6 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
         });
         return sampler;
     }
-
 
     //correggere interazione con la release, non viene considerata e viene liberato uno slot per una nota che sta ancora suonando
     function assignPolyphony(note, polyArray, method) {
@@ -110,9 +113,9 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
 
     //SAMPLER GENERATION
     useEffect(() => {
-
+        console.log("instrument: ", instrument)
         for (let i = 0; i < polyphony; i++) {
-            samplerArray[i] = createSampler(selectedInst);
+            samplerArray[i] = createSampler(instrument);
         }
 
         console.log("envelope generation and connection")
@@ -133,7 +136,7 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
             }
         }
 
-    }, [selectedInst]);
+    }, [instrument]);
 
 
     useEffect(() => {
@@ -172,6 +175,15 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
             });
         }
     }, [noiseGain])
+
+
+    useEffect(() => {
+        if (noise) {
+            noise.set({
+                type: noiseType
+            });
+        }
+    }, [noiseType])
 
 
     useEffect(() => {
@@ -228,7 +240,7 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
 
 
     const handleInstrumentSelection = (event) => {
-        setInstrument(event.value)
+        setInstrument(event.target.value);
     }
 
     return (
@@ -236,7 +248,7 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
             <div id="sampler-container">
                 <p className="type">Sampler</p>
                 <div className="screen-container sampler">
-                    <select label="Instrument" onChange={handleInstrumentSelection}>
+                    <select label="Instrument" value = {instrument} onChange={handleInstrumentSelection}>
                         {instruments.map((instrument) => {
                             return <option key={instrument.id} value={instrument.id}>{instrument.name}</option>
                         })}
@@ -266,7 +278,6 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
                 setFadeOut={setFadeOut}
                 setFadeIn={setFadeIn}
                 setNoiseType={setNoiseType}>
-                
             </Noise>
         </div>
     )

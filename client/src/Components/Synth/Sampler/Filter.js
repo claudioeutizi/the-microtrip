@@ -28,7 +28,7 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
     const [lpfLfoOnOff, setLpfLfoOnOff] = useState(false);
     const [lpfLfoRate, setLpfLfoRate] = useState(0);
     const [lpfLfoDepth, setLpfLfoDepth] = useState(0);
-
+    const [lpfLfoType, setLpfLfoType] = useState("sine");
 
     /* LFO HPF */
 
@@ -36,6 +36,7 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
     const [hpfLfoOnOff, setHpfLfoOnOff] = useState(false);
     const [hpfLfoRate, setHpfLfoRate] = useState(0);
     const [hpfLfoDepth, setHpfLfoDepth] = useState(0);
+    const [hpfLfoType, setHpfLfoType] = useState("sine");
 
 
 
@@ -199,6 +200,31 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
         }
     }, [hpfLfoDepth, hpfCutoff])
 
+    //LFO HPF TYPE
+    useEffect(() => {
+
+        if (lpfLfo) {
+            console.log("type", lpfLfoType)
+
+            lpfLfo.set({
+                type: lpfLfoType
+            })
+        }
+    }, [lpfLfoType])
+
+
+    //LFO HPF TYPE
+    useEffect(() => {
+
+        if (hpfLfo) {
+            console.log("type", hpfLfoType)
+
+            hpfLfo.set({
+                type: hpfLfoType
+            })
+        }
+    }, [hpfLfoType])
+
 
 
     const waveforms = [
@@ -220,6 +246,14 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
         },
 
     ]
+
+    const handleLpfTypeChange = (event) => {
+        setLpfLfoType(event.target.value);
+    }
+
+    const handleHpfTypeChange = (event) => {
+        setHpfLfoType(event.target.value);
+    }
 
     return (
         <div id="filter-container">
@@ -327,19 +361,19 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
                     gridRow: 7,
                     gridColumn: 2,
                 }} id="lfo-hpf-on-off"
-                    setState={setHpfLfoOnOff}>
+                setState={setHpfLfoOnOff}>
             </OnOffSwitch>
 
             <div className="screen-container lfo">
-                <select id="lpf-lfo-selector" label="Waveform">
+                <select id="lpf-lfo-selector" value={lpfLfoType} onChange={handleLpfTypeChange} label="Waveform">
                     {waveforms.map((waveform) => {
-                        return <option value={waveform.value}>{waveform.label}</option>
+                        return <option value={waveform.label}>{waveform.label}</option>
                     })}
                 </select>
 
-                <select id="hpf-lfo-selector" label="Waveform">
+                <select id="hpf-lfo-selector" value={hpfLfoType} onChange={handleHpfTypeChange} label="Waveform">
                     {waveforms.map((waveform) => {
-                        return <option value={waveform.value}>{waveform.label}</option>
+                        return <option value={waveform.label}>{waveform.label}</option>
                     })}
                 </select>
             </div>

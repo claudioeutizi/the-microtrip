@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Knob from './Controls/Knob'
 import * as Tone from 'tone'
 
 
 const Noise = (props) => {
+
+    const [noiseType, setType] = useState("white");
 
     const types = [
         {
@@ -20,13 +22,18 @@ const Noise = (props) => {
         },
     ]
 
+    const handleNoiseTypeChange = (event) => {
+        setType(event.target.value);
+        props.setNoiseType(event.target.value);
+    }
+
     return (
         <div id="noise-container">
             <p className="type">Noise</p>
             <div className="screen-container noise">
-                <select label="Type">
+                <select label="Type" value={noiseType} onChange = {handleNoiseTypeChange}>
                     {types.map((type) => {
-                        return <option key={type.value} value={type.value}>{type.label}</option>
+                        return <option key={type.value} value={type.label}>{type.label}</option>
                     })}
                 </select>
             </div>

@@ -21,7 +21,7 @@ import * as Tone from 'tone'
 //i have a dream:knob del cutoff che si muove con lfo
 
 
-export default function Instrument({ selectedInstrument }) {
+export default function Instrument({ visible, selectedInstrument }) {
 
 
     const [sampler, setSampler] = useState(null);
@@ -63,9 +63,7 @@ export default function Instrument({ selectedInstrument }) {
                 <span className="logo">Synth</span>
             </div>
             <Sampler setSampler={setSampler} selectedInst={selectedInstrument} polyphony={7} />
-            <Filter setFilterL={setFilterL} rolloff={-24} setFilterH={setFilterH}
-                LFO_H_ON={0} rateH={0} typeH={"sine"} depthH={0}
-                 typeL={"sine"}  />
+            <Filter setFilterL={setFilterL} rolloff={-24} setFilterH={setFilterH}/>
             <Distortion setDist={setDist}/>
             <Vibrato setVibrato={setVibrato}/>
             <Delay setDelay={setDelay}/>

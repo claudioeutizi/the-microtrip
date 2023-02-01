@@ -125,7 +125,7 @@ const cities = [
     {
         name: 'Beijing',
         img: "/images/cities/beijing.png",
-        //Guzheng
+        //Yangqin
         id: 'Q956',
         position: {
             lat: 39.916668,
