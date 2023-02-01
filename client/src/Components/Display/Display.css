@@ -38,6 +38,11 @@
     margin-left: 10px;
 }
 
+.device:hover {
+    filter: drop-shadow(16px 16px 20px red) invert(75%);
+    filter: brightness(0.9);
+}
+
 .zoom {
     transform: scale(2.5) translate(-50%, 50%);
 }

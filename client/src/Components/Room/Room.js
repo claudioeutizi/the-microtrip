@@ -42,8 +42,7 @@ const Room = ({ onMapClicked, onInstrumentClicked, weatherData, city }) => {
         setDayMoment("day");
         console.log("day")
       }
-
-      else if (time.isBetween(sunset.clone().add(30, "minutes"), sunrise.clone().subtract(30, 'minutes'), "minutes", "[]")) {
+      else if (time.isBetween(sunset.clone().add(30, "minutes"), sunrise.clone().add(24, 'hours').subtract(30, "minutes"), "minutes", "[]")) {
         setDayMoment("night");
         console.log("night");
       }
