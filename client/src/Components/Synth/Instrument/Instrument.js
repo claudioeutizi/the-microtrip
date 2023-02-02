@@ -31,7 +31,7 @@ export default function Instrument({ visible, selectedInstrument }) {
     const [vibrato, setVibrato] = useState(null);
     const [delay, setDelay] = useState(null);
     const [reverb, setReverb] = useState(null);
-    const [master, setMaster] = useState(null)
+    const [master, setMaster] = useState(null);
 
 
 
@@ -63,7 +63,9 @@ export default function Instrument({ visible, selectedInstrument }) {
                 <span className="logo">Synth</span>
             </div>
             <Sampler setSampler={setSampler} selectedInst={selectedInstrument} polyphony={7} />
-            <Filter setFilterL={setFilterL} rolloff={-24} setFilterH={setFilterH}/>
+            <Filter setFilterL={setFilterL} rolloff={-24} setFilterH={setFilterH}
+                LFO_H_ON={0} rateH={0} typeH={"sine"} depthH={0}
+                 typeL={"sine"}  />
             <Distortion setDist={setDist}/>
             <Vibrato setVibrato={setVibrato}/>
             <Delay setDelay={setDelay}/>
