@@ -8,18 +8,18 @@
   }
   
   .sun { 
-    position: absolute;
-      top:30%;
-      left:40%;
-      right:0;
-      bottom:90%;
-      margin: auto;  
-      width:10%;
-      height:10%;
-      border-radius:50%;	
-      background:white;
-      opacity:0.9;			
-      box-shadow: 0px 0px 40px 15px white;  
+    position: relative;
+    top: 17%;
+    left: 37%;
+    right: 0;
+    bottom: 90%;
+    margin: auto;
+    width: 10%;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    background: white;
+    opacity: 0.9;
+    box-shadow: 0px 0px 40px 15px white;
   }
   
   .ray_box {

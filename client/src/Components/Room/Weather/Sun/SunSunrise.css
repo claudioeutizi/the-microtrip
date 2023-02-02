@@ -24,15 +24,16 @@
   }
     
   .sunrise-sun {
+    position: absolute;
     width: 40px;
-    height: 40px;
+    aspect-ratio: 1/1;
     bottom: 50%;
     border-radius: 50%;
     left: 55%;
     z-index: 40;
     background: linear-gradient(rgb(236, 236, 230), rgb(254, 205, 205));
-    box-shadow: 0 0 40px 6px rgb(244, 233, 173), 0 0 150px 10px rgb(234, 195, 195);
-    animation: rise 24s ease forwards;
+    box-shadow: 0 0 40px 6px rgb(244 233 173), 0 0 150px 10px rgb(234 195 195);
+    animation: rise 60s backwards;
   }
   
   @keyframes rise {

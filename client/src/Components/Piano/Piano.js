@@ -397,12 +397,12 @@ function Piano(props) {
   return (
     <div ref={containerRef} className="piano-container">
       <WebAudioKnob className="wheel"
-        src={require("webaudio-controls-react-typescript/dist/images/images/76_bender_palette.png")}
+        src={"/images/knobs/76_bender_palette.png"}
         sprites={100}
         onChange={(value) => { console.log(value) }} id="pitch-wheel" />
       <WebAudioKnob
         className="wheel"
-        src={require("webaudio-controls-react-typescript/dist/images/images/76_bender_palette.png")}
+        src={"/images/knobs/76_bender_palette.png"}
         id="modulation-wheel" sprites={100}
         onChange={(value) => { console.log(value) }}
       />

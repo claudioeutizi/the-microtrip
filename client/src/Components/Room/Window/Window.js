@@ -13,6 +13,8 @@ import Clouds from '../Weather/Clouds/Clouds'
 
 import './Window.css';
 import Fog from '../Weather/Fog/Fog';
+import Mist from '../Weather/Fog/Mist';
+import Haze from '../Weather/Fog/Haze';
 
 const Window = ({ city, weather, dayMoment }) => {
 
@@ -21,7 +23,7 @@ const Window = ({ city, weather, dayMoment }) => {
             <img src="/images/window.png" alt="" />
             <div className="outdoor" id="outdoor">
 
-                {/* Clouds */}
+                {/* Clouds */ }
 
                 {weather >= 801
                     && weather <= 804
@@ -75,13 +77,45 @@ const Window = ({ city, weather, dayMoment }) => {
 
                 {/* Fog */}
 
-                {weather >= 700
-                    && weather <= 741
+                {weather === 741
                     && dayMoment === "day" ? <div> <Sun></Sun> <Fog></Fog> </div> : null}
 
-                {weather >= 700
-                    && weather <= 741
+                {weather === 701
+                    && dayMoment === "day" ? <div> <Sun></Sun> <Mist></Mist> </div> : null}
+
+                {weather === 721
+                    && dayMoment === "day" ? <div> <Sun></Sun> <Haze></Haze> </div> : null}
+                    
+                {weather === 741
                     && dayMoment === "night" ? <div> <StarryNight></StarryNight> <Fog></Fog> </div> : null}
+
+                {weather === 701
+                    && dayMoment === "night" ? <div> <StarryNight></StarryNight> <Mist></Mist> </div> : null}
+
+                {weather === 721
+                    && dayMoment === "night" ? <div> <StarryNight></StarryNight> <Haze></Haze> </div> : null}
+
+                {weather === 741
+                    && dayMoment === "sunset" ? <div> <SunSunset></SunSunset> <Fog></Fog> </div> : null}
+
+                {weather === 701
+                    && dayMoment === "sunset" ? <div> <SunSunset></SunSunset> <Mist></Mist> </div> : null}
+
+                {weather === 721
+                    && dayMoment === "sunset" ? <div> <SunSunset></SunSunset> <Haze></Haze> </div> : null}
+
+                {weather === 741
+                    && dayMoment === "sunrise" ? <div> <SunSunset></SunSunset> <Fog></Fog> </div> : null}
+
+                {weather === 701
+                    && dayMoment === "sunrise" ? <div> <SunSunset></SunSunset> <Mist></Mist> </div> : null}
+
+                {weather === 721
+                    && dayMoment === "sunrise" ? <div> <SunSunset></SunSunset> <Haze></Haze> </div> : null}
+
+                {/* {weather >= 700
+                    && weather <= 741
+                    && dayMoment === "sunrise" ? <div> <SunSunrise></SunSunrise> <Fog></Fog> </div> : null}
 
                 {weather >= 700
                     && weather <= 741
@@ -89,15 +123,13 @@ const Window = ({ city, weather, dayMoment }) => {
 
                 {weather >= 700
                     && weather <= 741
-                    && dayMoment === "sunrise" ? <div> <SunSunrise></SunSunrise> <Fog></Fog> </div> : null}
+                    && dayMoment === "sunrise" ? <div> <SunSunrise></SunSunrise> <Fog></Fog> </div> : null}  */}
 
                 <img style={{
                     position: "absolute",
                     bottom: "0%",
-                    left: "2%",
-                }} src={city} alt="" />
-                {weather}
-                {" "+dayMoment}
+                    left: "0%",
+                }} src={city} alt=""/>
             </div>
         </div>
     );
