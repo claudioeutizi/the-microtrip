@@ -62,10 +62,8 @@ export default function Instrument({ selectedInstrument }) {
             <div id="logo-container">
                 <span className="logo">Synth</span>
             </div>
-            <Sampler setSampler={setSampler} selectedInst={selectedInstrument} polyphony={7} />
-            <Filter setFilterL={setFilterL} rolloff={-24} setFilterH={setFilterH}
-                LFO_H_ON={0} rateH={0} typeH={"sine"} depthH={0}
-                 typeL={"sine"}  />
+            <Sampler setSampler={setSampler} selectedInst={selectedInstrument} polyphony={10} />
+            <Filter setFilterL={setFilterL} rolloff={-24} setFilterH={setFilterH} typeH={"sine"} typeL={"sine"}  />
             <Distortion setDist={setDist}/>
             <Vibrato setVibrato={setVibrato}/>
             <Delay setDelay={setDelay}/>
