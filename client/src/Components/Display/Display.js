@@ -17,7 +17,7 @@ const Display = ({ onSwitchChange, externalData, light, temperature, humidity })
         setPositionSwitch(value);
     }
 
-    const handleOnButtonChange = () => {
+    const handleOnButtonChange = (event) => {
         setPositionSwitch(false);
         onSwitchChange(false);
     }
@@ -91,7 +91,7 @@ const Display = ({ onSwitchChange, externalData, light, temperature, humidity })
                 </div>
             </div>
             <div className="display-button" style={{ padding: "5px 2px" }}>
-                <Switch size="small" defaultValue={false} onChange={handleOnPositionChange}
+                <Switch size="small" checked = {positionSwitch} defaultValue={false} onChange={handleOnPositionChange}
                     icon={<LocationOnIcon sx={{ width: "80%", aspectRatio: "1/1" }} />} checkedIcon={<LocationOnIcon sx={{ width: "80%", aspectRatio: "1/1" }} />}>
                     <LocationOnIcon size="small" />
                 </Switch>
