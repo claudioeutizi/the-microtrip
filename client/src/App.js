@@ -59,7 +59,7 @@ function App() {
   const handleOnPositionSwitchChange = async (switchValue) => {
     if (switchValue) {
       handleOnCoordinatesChange();
-    } else if (!currentWeather) {
+    } else {
       try {
         handleOnSearchChange(cityData);
       } catch (error) {
@@ -76,11 +76,10 @@ function App() {
       });
       const [lat, lon] = [locationData.coords.latitude, locationData.coords.longitude];
       const weatherFetch = fetch(`${WEATHER_API_URL}/weather/?lat=${lat}&lon=${lon}&units=metric&appid=${WEATHER_API_KEY}`)
-      const dateTime = moment().format("h:mm:ss A");
       Promise.all([weatherFetch])
         .then(async (response) => {
           const weatherResponse = await response[0].json();
-          setCurrentWeather({ city: weatherResponse.name, dateTime: dateTime, ...weatherResponse });
+          setCurrentWeather({ city: weatherResponse.name, ...weatherResponse });
         })
         .catch((err) => console.log(err));
     } catch (error) {

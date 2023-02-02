@@ -10,7 +10,7 @@ const Display = ({ onSwitchChange, externalData, light, temperature, humidity })
     const [positionSwitch, setPositionSwitch] = useState(false);
     const [currentDateTime, setCurrentDateTime] = useState(
         externalData ? (externalData.timezoneString && !externalData.dateTime ?
-            moment().tz(externalData.timezoneString.replace(/__/g, '/')) : externalData.dateTime) : null);
+            moment().tz(externalData.timezoneString.replace(/__/g, '/')) : moment()) : null);
 
     const handleOnPositionChange = (event, value) => {
         onSwitchChange(value);
@@ -44,9 +44,8 @@ const Display = ({ onSwitchChange, externalData, light, temperature, humidity })
 
     return (
         <div className={
-            zoom ? "device zoom" : "device"
-          } onClick={() => setZoom(!zoom)}>
-            <div className='display'>
+            zoom ? "device zoom" : "device"}>
+            <div className = "display" onClick={() => setZoom(!zoom)}>
                 <div className='top'>
                     <p className="city">
                         {externalData.city}
@@ -93,7 +92,7 @@ const Display = ({ onSwitchChange, externalData, light, temperature, humidity })
             </div>
             <div className="display-button" style={{ padding: "5px 2px" }}>
                 <Switch size="small" defaultValue={false} onChange={handleOnPositionChange}
-                    icon={<LocationOnIcon sx = {{width: "80%", aspectRatio: "1/1"}} />} checkedIcon={<LocationOnIcon sx={{width: "80%", aspectRatio: "1/1"}} />}>
+                    icon={<LocationOnIcon sx={{ width: "80%", aspectRatio: "1/1" }} />} checkedIcon={<LocationOnIcon sx={{ width: "80%", aspectRatio: "1/1" }} />}>
                     <LocationOnIcon size="small" />
                 </Switch>
             </div>

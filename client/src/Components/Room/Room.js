@@ -16,10 +16,18 @@ const Room = ({ onMapClicked, onInstrumentClicked, weatherData, city }) => {
 
   useEffect(() => {
     if (weatherData) {
-      const time = moment().tz(weatherData.timezoneString.replace(/__/g, '/'));
+      let time, sunset, sunrise;
+      if(weatherData.timezoneString){
+        time = moment().tz(weatherData.timezoneString.replace(/__/g, '/'));
+        sunrise = moment.unix(weatherData.sys.sunrise).tz(weatherData.timezoneString.replace(/__/g, '/'));
+        sunset = moment.unix(weatherData.sys.sunset).tz(weatherData.timezoneString.replace(/__/g, '/'));
+      }
+      else {
+        time = moment();
+        sunrise = moment.unix(weatherData.sys.sunrise);
+        sunset = moment.unix(weatherData.sys.sunset);
+      }
       setWeather(weatherData.weather[0].id);
-      const sunrise = moment.unix(weatherData.sys.sunrise).tz(weatherData.timezoneString.replace(/__/g, '/'));
-      const sunset = moment.unix(weatherData.sys.sunset).tz(weatherData.timezoneString.replace(/__/g, '/'));
 
       console.log("time: ", time.format());
       console.log("sunrise:", sunrise.format());
