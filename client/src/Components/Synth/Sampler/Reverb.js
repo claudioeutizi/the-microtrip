@@ -72,10 +72,10 @@ const Reverb = ({setReverb}) => {
             setState={setREVERB_ON}
             ></OnOffSwitch>
             <Knob diameter={48} id={"reverb-decay"} parameter={"Decay"}
-                            min={0} max={20}
+                            min={0.001} max={20}
                             setValue={setReverbDecay}
                             step={0.5}
-                            defaultValue={0}
+                            defaultValue={0.001}
             ></Knob>
             <Knob diameter={48} id={"reverb-predelay"} parameter={"Predelay"}
                                         min={0} max={0.5}
