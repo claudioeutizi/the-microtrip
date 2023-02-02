@@ -135,25 +135,29 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
 
     //LFO LPF onoff
     useEffect(() => {
-        if (lpfLfoOnOff && lpfLfo && lpfLfoScale) {
+        if (lpfNode && lpfLfoOnOff && lpfLfo && lpfLfoScale) {
+            console.log("Entra lpf lfo oggetti creati");
             lpfLfo.disconnect();
             lpfLfo.chain(lpfLfoScale, lpfNode.frequency);
             lpfLfo.start();
         }
         else if (!lpfLfoOnOff) {
+            console.log("else Entra lpf lfo oggetti creati");
             lpfLfo.stop();
         }
     }, [lpfLfoOnOff])
 
     //LFO HPF onoff
     useEffect(() => {
-        if (hpfLfoOnOff && hpfLfo && hpfLfoScale) {
+        if (hpfNode && hpfLfoOnOff && hpfLfo && hpfLfoScale) {
+            console.log("Entra hpf lfo oggetti creati");
             hpfLfo.disconnect();
             hpfLfo.chain(hpfLfoScale, hpfNode.frequency);
 
             hpfLfo.start();
         }
         else if (!hpfLfoOnOff) {
+            console.log("else Entra hpf lfo oggetti creati");
             hpfLfo.stop();
         }
     }, [hpfLfoOnOff])
