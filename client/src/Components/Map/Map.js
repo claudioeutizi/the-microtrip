@@ -64,7 +64,7 @@ const Map = ({ onCityChange, onMapClosing }) => {
             {cities.map(city => {
                 const popupContent =
                     <div className='popupContent'>
-                        <p>{city.name}</p>
+                        <p className = "city-name">{city.name}</p>
                         <Button onClick={() => handleClick(city.name, city.id, city.instId, city.img)}>Move</Button>
                     </div>
                 return <Marker key={city.name} position={city.position}

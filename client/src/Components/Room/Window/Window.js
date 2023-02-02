@@ -113,17 +113,18 @@ const Window = ({ city, weather, dayMoment }) => {
                 {weather === 721
                     && dayMoment === "sunrise" ? <div> <SunSunset></SunSunset> <Haze></Haze> </div> : null}
 
-                {/* {weather >= 700
+                {weather >= 700
+                    && weather <= 741
+                    && weather !== 741 && weather !== 701 && weather !== 721 && dayMoment === "sunrise" ? 
+                    <div> <SunSunrise></SunSunrise> <Fog></Fog> </div> : null}
+
+                {weather >= 700
+                    && weather <= 741
+                    && weather !== 741 && weather !== 701 && weather !== 721 && dayMoment === "sunset" ? <div> <SunSunset></SunSunset> <Fog></Fog> </div> : null}
+
+                {weather >= 700
                     && weather <= 741
                     && dayMoment === "sunrise" ? <div> <SunSunrise></SunSunrise> <Fog></Fog> </div> : null}
-
-                {weather >= 700
-                    && weather <= 741
-                    && dayMoment === "sunset" ? <div> <SunSunset></SunSunset> <Fog></Fog> </div> : null}
-
-                {weather >= 700
-                    && weather <= 741
-                    && dayMoment === "sunrise" ? <div> <SunSunrise></SunSunrise> <Fog></Fog> </div> : null}  */}
 
                 <img style={{
                     position: "absolute",

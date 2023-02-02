@@ -15,3 +15,9 @@
     overflow: hidden;
     z-index: 0;
 }
+
+.city-name {
+    text-align: center;
+    font-family: "Source Code Pro";
+    color: #160D10;
+}

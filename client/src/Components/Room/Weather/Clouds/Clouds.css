@@ -9,6 +9,7 @@
 	background: -linear-gradient(top, #c9dbe9 0%, #fff 100%);
 	background: -moz-linear-gradient(top, #c9dbe9 0%, #fff 100%);
     z-index: -3;
+	background-image: url(../../../../../public/images/clouds.png) repeat-x;
 }
 
 .cloud {

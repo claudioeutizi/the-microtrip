@@ -4,6 +4,7 @@
     height: 100%;
     position: relative;
     overflow: hidden;
+	filter: grayscale(60%);
     background:
     linear-gradient(
         to top, #58151a 30%, #ba6d09, #71a8ee, #1552c6, #0542a8);

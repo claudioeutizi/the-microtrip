@@ -4,6 +4,7 @@
     height: 100%;
     position: absolute;
     overflow: hidden;
+	filter: grayscale(50%);
     background:
     linear-gradient(
       #387ffb 0%,

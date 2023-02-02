@@ -42,7 +42,7 @@
     animation-timing-function: linear;
     animation-iteration-count: infinite;
     border: none;
-    background: url(../../../../../public/images/fog.png) repeat-x;
+    background: url(../../../../../public/images/haze.png) repeat-x;
 }
 
 .mist {
@@ -57,5 +57,5 @@
     animation-timing-function: linear;
     animation-iteration-count: infinite;
     border: none;
-    background: url(../../../../../public/images/fog.png) repeat-x;
+    background: url(../../../../../public/images/mist.png) repeat-x;
 }

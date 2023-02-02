@@ -1,4 +1,4 @@
-import { Card, CardActions, Switch } from '@mui/material'
+import { Switch } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import "./Display.css"
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -93,7 +93,7 @@ const Display = ({ onSwitchChange, externalData, light, temperature, humidity })
             </div>
             <div className="display-button" style={{ padding: "5px 2px" }}>
                 <Switch size="small" defaultValue={false} onChange={handleOnPositionChange}
-                    icon={<LocationOnIcon />} checkedIcon={<LocationOnIcon />}>
+                    icon={<LocationOnIcon sx = {{width: "80%", aspectRatio: "1/1"}} />} checkedIcon={<LocationOnIcon sx={{width: "80%", aspectRatio: "1/1"}} />}>
                     <LocationOnIcon size="small" />
                 </Switch>
             </div>

@@ -373,8 +373,6 @@ function Piano(props) {
       const { width, height } = containerRef.current.getBoundingClientRect();
       $('#pitch-wheel')[0].height = Math.round(height * 0.7);
       $('#pitch-wheel')[0].width = Math.round(width * 0.03);
-      $('#modulation-wheel')[0].height = Math.round(height * 0.7);
-      $('#modulation-wheel')[0].width = Math.round(width * 0.03);
     }
   }
 
@@ -384,8 +382,6 @@ function Piano(props) {
       const { width, height } = containerRef.current.getBoundingClientRect();
       $('#pitch-wheel')[0].height = Math.round(height * 0.7);
       $('#pitch-wheel')[0].width = Math.round(width * 0.03);
-      $('#modulation-wheel')[0].height = Math.round(height * 0.7);
-      $('#modulation-wheel')[0].width = Math.round(width * 0.03);
 
       window.addEventListener("resize", handleResize);
       return () => {
@@ -396,16 +392,13 @@ function Piano(props) {
 
   return (
     <div ref={containerRef} className="piano-container">
-      <WebAudioKnob className="wheel"
-        src={"/images/knobs/76_bender_palette.png"}
-        sprites={100}
-        onChange={(value) => { console.log(value) }} id="pitch-wheel" />
-      <WebAudioKnob
-        className="wheel"
-        src={"/images/knobs/76_bender_palette.png"}
-        id="modulation-wheel" sprites={100}
-        onChange={(value) => { console.log(value) }}
-      />
+      <div className="wheel-container">
+        <WebAudioKnob className="wheel"
+          src={"/images/knobs/76_bender_palette.png"}
+          sprites={100}
+          onChange={(value) => { console.log(value) }} id="pitch-wheel" />
+          <p className = "wheel-text">PITCH SHIFT</p>
+      </div>
       <div className="Piano" ref={pianoRef}>
         {pianoSVG}
       </div>

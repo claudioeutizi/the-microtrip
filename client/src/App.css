@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Audiowide&family=Aldrich&&family=Epilogue:wght@500&family=Source+Code+Pro:wght@400&family=VT323&display=swap");
+
 .App {
     background: #B79891;
     position: relative;
@@ -49,7 +51,7 @@
     position: fixed;
     bottom: 0;
     z-index: 1;
-    background-color: #fff;
+    background-color: transparent;
 }
 
 .piano-toggle {
@@ -60,12 +62,27 @@
     align-items: center;
     border-radius: 2px;
     box-shadow: 0 2px 4px #888;
-    background-color: #fff;
+    background-image: linear-gradient(
+    #777777 0%,
+    #6C6C6E 3%,
+    #575757 7%,
+    #160D10);
     transition: background-color 300ms;
 }
 
-.piano-toggle.active {
-    background-color: #fafafa;
+.piano-toggle span {
+    color: #D6D8DD;
+    text-shadow: 0.5px 0.5px 0.5px #352F31,
+    -0.5px 0.5px 0.5px #161415,
+    0.5px -0.5px 0.5px #2F292B,
+    -0.5px -0.5px 0.5px #424242,
+    0 0 1px #302A2C,
+    0 0 2px #160D10;
+    font-family: "Source Code Pro", monospace;
+}
+
+.piano-toggle:hover {
+    filter: brightness(120%);
 }
 
 .ReactCollapse--collapse {
