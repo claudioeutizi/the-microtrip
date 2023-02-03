@@ -138,14 +138,18 @@
 }
 
 .data.internal {
-    text-align: right;
+    text-align: left;
+    display: grid;
     margin-right: 2px;
     border: 1px solid;
+    justify-content: center;
 }
 
 .data.external {
     text-align: left;
-    margin-left: 2px;
+    display: grid;
+    margin-right: 2px;
+    justify-content: center;
 }
 
 .data-value {

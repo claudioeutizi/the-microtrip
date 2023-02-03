@@ -1,3 +1,4 @@
+
 #ceiling {
     height: fit-content;
     width: 100%;
@@ -26,15 +27,15 @@
     /* adjust as needed */
     height: auto;
     /* maintain aspect ratio */
-    max-width: 200px;
-    max-height: 200px;
+    max-width: 120px;
+    max-height: 120px;
     z-index: 0;
 }
 
 @media screen and (orientation: landscape) {
     #lamp {
         position: absolute;
-        right: 20%;
+        right: 60%;
         transform: translateX(15vw);
     }
 
@@ -45,9 +46,14 @@
     top: 80%;
     left: 50%;
     transform: translate(-50%, -50%);
-    height: 2.5vw;
-    width: 5vw;
+    height: 1.25vw;
+    width: 2.5vw;
     border-radius: 0 0 150px 150px;
     background-color: rgb(238, 237, 222);
+    box-shadow: 0 30px 40px rgba(255, 210, 0, 0.5), inset 0 0 0 130px rgba(255, 210, 0, 0.5);
+    background: none;
+    margin: 0 auto;
+    text-align: center;
     z-index: -2;
+    filter: blur(10px);
 }

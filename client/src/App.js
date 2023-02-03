@@ -5,7 +5,6 @@ import Footer from './Components/Footer/Footer';
 import Display from './Components/Display/Display';
 import { WEATHER_API_KEY, WEATHER_API_URL } from './utility/api';
 import { useSocket } from './utility/useSocket';
-import moment from 'moment';
 import Instrument from './Components/Synth/Instrument/Instrument';
 import { Collapse } from 'react-collapse';
 import Room from './Components/Room/Room';
@@ -31,7 +30,7 @@ function App() {
   const [instrument, setInstrument] = useState(0);
   const [internalHumidity, setInternalHumidity] = useState('-');
   const [internalTemperature, setInternalTemperature] = useState('-');
-  const [internalLight, setInternalLight] = useState('-');
+  const [internalLight, setInternalLight] = useState(0);
 
   //Weather and city data from current position or chosen city
   const [currentWeather, setCurrentWeather] = useState(null);
@@ -147,6 +146,10 @@ function App() {
 
   }, [instrument, city]);
 
+  function mapRange (number, inMin, inMax, outMin, outMax) {
+    return (number - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+}
+
   return (
     <div className="App">
       <div className="body">
@@ -155,11 +158,12 @@ function App() {
 
           {currentWeather && <Display externalData={currentWeather}
             onSwitchChange={handleOnPositionSwitchChange}
-            light={internalLight.value} temperature={internalTemperature.value} humidity={internalHumidity.value} />}
+             temperature={internalTemperature.value} humidity={internalHumidity.value} />}
 
-          <Room onInstrumentClicked={handleInstrumentVisibility} onMapClicked={toggleMapVisibility} city={city} weatherData={currentWeather ? currentWeather : null}>
+          <Room onInstrumentClicked={handleInstrumentVisibility} onMapClicked={toggleMapVisibility}
+            city={city} light={mapRange(internalLight.value, 0, 1023, 0, 100)} weatherData={currentWeather ? currentWeather : null}>
           </Room>
-          
+
           <CSSTransition in={mapVisible && windowWidth > 650} timeout={300} classNames="visibility-animation" unmountOnExit>
             <div className="visibility-animation-element">
               <Map onCityChange={handleOnSearchChange} onMapClosing={() => setMapVisible(false)} />

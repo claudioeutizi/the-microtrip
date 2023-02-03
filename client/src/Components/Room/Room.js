@@ -8,16 +8,15 @@ import Carpet from './Carpet/Carpet';
 import Light from './Light/Light';
 import LightSwitch from './LightSwitch/LightSwitch';
 import moment from 'moment';
-import SunCalc from 'suncalc'
 
-const Room = ({ onMapClicked, onInstrumentClicked, weatherData, city }) => {
+const Room = ({ light, onMapClicked, onInstrumentClicked, weatherData, city }) => {
   const [dayMoment, setDayMoment] = useState();
   const [weather, setWeather] = useState();
 
   useEffect(() => {
     if (weatherData) {
       let time, sunset, sunrise;
-      if(weatherData.timezoneString){
+      if (weatherData.timezoneString) {
         time = moment().tz(weatherData.timezoneString.replace(/__/g, '/'));
         sunrise = moment.unix(weatherData.sys.sunrise).tz(weatherData.timezoneString.replace(/__/g, '/'));
         sunset = moment.unix(weatherData.sys.sunset).tz(weatherData.timezoneString.replace(/__/g, '/'));
@@ -33,8 +32,8 @@ const Room = ({ onMapClicked, onInstrumentClicked, weatherData, city }) => {
       console.log("sunrise:", sunrise.format());
       console.log("sunset: ", sunset.format());
 
-      console.log("sunset test: ",time.isBetween(sunset.clone().subtract(30, "minutes"), sunset.clone().add(30, 'minutes')));
-      console.log("sunrise test: ",time.isBetween(sunrise.clone().subtract(30, "minutes"), sunrise.clone().add(30, 'minutes')));
+      console.log("sunset test: ", time.isBetween(sunset.clone().subtract(30, "minutes"), sunset.clone().add(30, 'minutes')));
+      console.log("sunrise test: ", time.isBetween(sunrise.clone().subtract(30, "minutes"), sunrise.clone().add(30, 'minutes')));
       console.log("day test: ", time.isBetween(sunrise.clone(), sunset.clone()));
       console.log("night test: ", time.isBetween(sunset.clone().add(30, 'minutes'), sunrise.clone().subtract(30, 'minutes')));
 
@@ -52,7 +51,7 @@ const Room = ({ onMapClicked, onInstrumentClicked, weatherData, city }) => {
       }
       else if (
         time.isBetween(sunset.clone().add(30, "minutes"), sunrise.clone().add(24, 'hours').subtract(30, "minutes"), "minutes", "[]")
-        || 
+        ||
         time.isBetween(sunset.clone().subtract(24, "hours").add(30, "minutes"), sunrise.clone().subtract(30, "minutes"), "minutes", "[]")) {
         setDayMoment("night");
         console.log("night");
@@ -63,22 +62,27 @@ const Room = ({ onMapClicked, onInstrumentClicked, weatherData, city }) => {
   }, [weatherData])
 
   return (
-    <div className="room-content">
-      <div className="floor">
-        <Desk setInstrumentOpened = {onInstrumentClicked} />
-        <Carpet />
+    <div className="room">
+      <div className = "room-background" style = {{filter: `brightness(${light}%)`}}></div>
+      <div className="room-content">
+        <div className="floor" style={{ filter: `brightness(${light}%)` }}>
+          <Desk setInstrumentOpened={onInstrumentClicked} />
+          <Carpet />
+        </div>
+        <div className="wall">
+          <WallMap light={light} setMapOpened={onMapClicked} />
+          <Window light={light} weather={weather} dayMoment={dayMoment} city={city} />
+        </div>
+        <div className="illumination">
+        <Lamp light = {light}/>
+      </div> 
       </div>
-      <div className="wall">
-        <WallMap setMapOpened={onMapClicked}/>
-        <Window weather={weather} dayMoment={dayMoment} city={city} />
-      </div>
-      {/* <div className="illumination">
-        <Lamp />
-        <Light />
-        <LightSwitch />
-      </div> */}
     </div>
   )
+}
+
+Room.defaultProps = {
+  light: 100,
 }
 
 export default Room;

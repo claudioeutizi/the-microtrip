@@ -16,11 +16,10 @@ import Fog from '../Weather/Fog/Fog';
 import Mist from '../Weather/Fog/Mist';
 import Haze from '../Weather/Fog/Haze';
 
-const Window = ({ city, weather, dayMoment }) => {
-
+const Window = ({light, city, weather, dayMoment }) => {
     return (
         <div className="window" id="window">
-            <img src="/images/window.png" alt="" />
+            <img style = {{filter: `brightness(${light}%)`}} src="/images/window.png" alt="" />
             <div className="outdoor" id="outdoor">
 
                 {/* Clouds */ }
