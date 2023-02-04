@@ -13,17 +13,18 @@ import * as Tone from 'tone'
 //BUG FIX
 //gain node che controlla tutti i sampler
 //se mouse entra in nota suonata la interrompe
-// curve attack
+//polifonia rumore
 // pitch wheel
-// tastiera a scomparsa
 //meter
 //limiter o anti clip
+//provare a togliere il disconnect dello scale exp ma aggiornare i parametri
 //i have a dream:knob del cutoff che si muove con lfo
+
 
 
 export default function Instrument({ visible, selectedInstrument }) {
 
-
+    const [pitchShifter, setPitchShifter] = useState(null)
     const [sampler, setSampler] = useState(null);
     const [filterL, setFilterL] = useState(null);
     const [filterH, setFilterH] = useState(null);
@@ -37,7 +38,7 @@ export default function Instrument({ visible, selectedInstrument }) {
 
     useEffect(() => {
         console.log("chain creation")
-        let routingArray = [sampler, filterL, filterH, dist, vibrato, delay, reverb, master]
+        let routingArray = [sampler, pitchShifter, filterL, filterH, dist, vibrato, delay, reverb, master]
 
         console.log(routingArray)
 
@@ -55,14 +56,14 @@ export default function Instrument({ visible, selectedInstrument }) {
             }
         }
 
-    }, [sampler, filterL, filterH, dist, vibrato, delay, reverb, master])
+    }, [sampler, pitchShifter, filterL, filterH, dist, vibrato, delay, reverb, master])
 
     return (
         <div className='instrument'>
             <div id="logo-container">
                 <span className="logo">Synth</span>
             </div>
-            <Sampler setSampler={setSampler} selectedInst={selectedInstrument} polyphony={7} />
+            <Sampler setSampler={setSampler} setPitchShifter={setPitchShifter} selectedInst={selectedInstrument} polyphony={7} />
             <Filter setFilterL={setFilterL} rolloff={-24} setFilterH={setFilterH}
                 LFO_H_ON={0} rateH={0} typeH={"sine"} depthH={0}
                  typeL={"sine"}  />
