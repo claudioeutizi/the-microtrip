@@ -29,7 +29,7 @@
     /* maintain aspect ratio */
     max-width: 120px;
     max-height: 120px;
-    z-index: 0;
+    z-index: -2;
 }
 
 @media screen and (orientation: landscape) {
@@ -46,12 +46,11 @@
     top: 80%;
     left: 50%;
     transform: translate(-50%, -50%);
-    height: 1.25vw;
-    width: 2.5vw;
+    height: 25px;
+    width: 25px;
     border-radius: 0 0 150px 150px;
     background-color: rgb(238, 237, 222);
-    background: none;
     margin: 0 auto;
     text-align: center;
-    z-index: -2;
+    z-index: -3;
 }
