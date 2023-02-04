@@ -35,7 +35,7 @@ const Adsr = (props) => {
 
             <Knob setValue={props.setRelease}
                 min={0}
-                max={5}
+                max={3}
                 step={0.1}
                 defaultValue={0}
                 diameter={64} id="envelope-release"
