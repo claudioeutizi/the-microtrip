@@ -6,7 +6,7 @@ const Lamp = ({light}) => {
                 <img src="/images/chandelier.png" style = {{filter: `brightness(${light}%)`}} alt="" />
                 <div className="bulb" id="bulb" 
                 style = {{filter: `brightness(${light*2}%)`,
-                boxShadow: `0 ${light}px ${light}px rgba(255, 210, 0, 0.5), inset ${light}px 0 ${light}px rgba(255, 210, 0, 0.5)`}}> </div>
+                boxShadow: `0 ${light}px ${light}px rgba(255, 210, 0, 0.5), inset 30px 0 30px rgba(255, 210, 0, 0.5)`}}> </div>
             </div>
         </div>
     );

@@ -392,13 +392,10 @@ function Piano(props) {
 
   return (
     <div ref={containerRef} className="piano-container">
-      <div className="wheel-container">
         <WebAudioKnob className="wheel"
           src={"/images/knobs/76_bender_palette.png"}
           sprites={100}
-          onChange={(value) => { console.log(value) }} id="pitch-wheel" />
-          <p className = "wheel-text">PITCH SHIFT</p>
-      </div>
+          onChange={(value) => { console.log(value) }} id="pitch-wheel"/>
       <div className="Piano" ref={pianoRef}>
         {pianoSVG}
       </div>

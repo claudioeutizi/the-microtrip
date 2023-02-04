@@ -146,10 +146,6 @@ function App() {
 
   }, [instrument, city]);
 
-  function mapRange (number, inMin, inMax, outMin, outMax) {
-    return (number - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
-}
-
   return (
     <div className="App">
       <div className="body">
@@ -161,7 +157,7 @@ function App() {
              temperature={internalTemperature.value} humidity={internalHumidity.value} />}
 
           <Room onInstrumentClicked={handleInstrumentVisibility} onMapClicked={toggleMapVisibility}
-            city={city} light={mapRange(internalLight.value, 0, 1023, 0, 100)} weatherData={currentWeather ? currentWeather : null}>
+            city={city} light={internalLight && internalLight.value.toFixed(2)} weatherData={currentWeather ? currentWeather : null}>
           </Room>
 
           <CSSTransition in={mapVisible && windowWidth > 650} timeout={300} classNames="visibility-animation" unmountOnExit>

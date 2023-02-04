@@ -47,7 +47,7 @@
 #pitch-wheel {
     justify-self: center;
     align-self: center;
-    grid-column: 2;
+    grid-column: 1;
 }
 
 #modulation-wheel {
