@@ -149,7 +149,6 @@ function App() {
   return (
     <div className="App">
       <div className="body">
-
         <div className="room-container">
 
           {currentWeather && <Display externalData={currentWeather}
