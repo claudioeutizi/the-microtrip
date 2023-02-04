@@ -19,7 +19,7 @@
     max-width: 350px;
 }
 
-#wallmap:hover {
+#wallmap img:hover {
     filter: drop-shadow(16px 16px 20px red) invert(75%);
     filter: brightness(0.6);
 }

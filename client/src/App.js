@@ -39,7 +39,7 @@ function App() {
 
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const [mapVisible, setMapVisible] = useState(true);
+  const [mapVisible, setMapVisible] = useState(false);
 
   const synthRef = useRef(null);
 
