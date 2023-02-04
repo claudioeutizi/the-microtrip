@@ -14,7 +14,7 @@
 
 #wallmap img {
     filter: blur(0.5px);
-    width: 44vw;
+    width: 30vw;
     height: auto;
     max-width: 350px;
 }

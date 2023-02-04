@@ -30,7 +30,7 @@ function App() {
   const [instrument, setInstrument] = useState(0);
   const [internalHumidity, setInternalHumidity] = useState('-');
   const [internalTemperature, setInternalTemperature] = useState('-');
-  const [internalLight, setInternalLight] = useState(0);
+  const [internalLight, setInternalLight] = useState(100);
 
   //Weather and city data from current position or chosen city
   const [currentWeather, setCurrentWeather] = useState(null);
@@ -157,7 +157,7 @@ function App() {
              temperature={internalTemperature.value} humidity={internalHumidity.value} />}
 
           <Room onInstrumentClicked={handleInstrumentVisibility} onMapClicked={toggleMapVisibility}
-            city={city} light={internalLight && internalLight.value.toFixed(2)} weatherData={currentWeather ? currentWeather : null}>
+            city={city} light={internalLight.value} weatherData={currentWeather ? currentWeather : null}>
           </Room>
 
           <CSSTransition in={mapVisible && windowWidth > 650} timeout={300} classNames="visibility-animation" unmountOnExit>
