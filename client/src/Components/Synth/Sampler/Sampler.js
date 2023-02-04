@@ -12,9 +12,9 @@ const samplerArray = [];
 let freeVoices = [];
 const busyVoices = {};
 const samplerNode = new Tone.Gain();
-let noise;
+let noise, pitchShifter;
 
-const Sampler = ({ setSampler, selectedInst, polyphony }) => {
+const Sampler = ({ setSampler, setPitchShifter, selectedInst, polyphony }) => {
 
     const polyArray = Array(polyphony).fill(0);
     // let stopIndex;
@@ -28,6 +28,7 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
     const [envelopeDecay, setEnvelopeDecay] = useState(0);
     const [envelopeSustain, setEnvelopeSustain] = useState(1);
     const [envelopeRelease, setEnvelopeRelease] = useState(0);
+    const [pitch, setPitch] = useState(0);
 
     const [noiseGain, setNoiseGain] = useState(0.001);
     const [fadeIn, setFadeIn] = useState(0);
@@ -94,10 +95,11 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
         }
         else {
             let stopIndex = polyArray.indexOf(note)
-            setTimeout(() => {
-                console.log("ciao")
-                polyArray[stopIndex] = 0
-            }, 2000)
+            polyArray[stopIndex] = 0
+            // setTimeout(() => {
+            //     console.log("ciao")
+                
+            // }, 2000)
 
             return stopIndex;
         }
@@ -105,7 +107,6 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
     }
 
     // NOISE
-
     useState(() => {
         noise = new Tone.Noise({
             volume: noiseGain,
@@ -115,6 +116,16 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
         });
     }, [])
 
+    //PITCH SHIFTER
+    useState(() => {
+        pitchShifter = new Tone.PitchShift({
+            pitch:pitch,
+            windowSize:0.09
+        });
+       
+    }, [])
+
+
 
     //------------------------------------------//
 
@@ -122,23 +133,25 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
     //SAMPLER GENERATION
     useEffect(() => {
 
+
+
+        // freeVoices=[];
         // for (let i = 0; i < polyphony; i++) {
-        //     samplerArray[i] = createSampler(selectedInst);
+        //     samplerArray[i] = createSampler(instrument);
+        //     envelopeArray[i] = createEnvelope(envelopeAttack, envelopeDecay, envelopeSustain, envelopeRelease)
+        //     samplerArray[i].chain(envelopeArray[i], pitchShifter, samplerNode)
+        //     freeVoices.push({ sampler: samplerArray[i], envelope: envelopeArray[i] })
         // }
-        freeVoices=[];
         for (let i = 0; i < polyphony; i++) {
-            samplerArray[i] = createSampler(instrument);
-            envelopeArray[i] = createEnvelope(envelopeAttack, envelopeDecay, envelopeSustain, envelopeRelease)
-            samplerArray[i].chain(envelopeArray[i], samplerNode)
-            freeVoices.push({ sampler: samplerArray[i], envelope: envelopeArray[i] })
+            samplerArray[i] = createSampler(selectedInst);
         }
 
 
-        // console.log("envelope generation and connection")
-        // for (let i = 0; i < polyphony; i++) {
-        //     envelopeArray[i] = createEnvelope(envelopeAttack, envelopeDecay, envelopeSustain, envelopeRelease)
-        //     samplerArray[i].chain(envelopeArray[i], samplerNode)
-        // }
+        console.log("envelope generation and connection")
+        for (let i = 0; i < polyphony; i++) {
+            envelopeArray[i] = createEnvelope(envelopeAttack, envelopeDecay, envelopeSustain, envelopeRelease)
+            samplerArray[i].chain(envelopeArray[i], samplerNode)
+        }
         if (noise) {
             noise.disconnect();
             console.log("noise connected")
@@ -150,14 +163,10 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
             for (let i = 0; i < polyphony; i++) {
                 samplerArray[i] = null;
             }
-            freeVoices = null
-            // freeVoices.forEach(voice => {
-            //     voice.sampler = null
-            //     voice.envelopes = null     
-            // });
-            for (let key in busyVoices){
-                delete busyVoices[key]
-            }
+            // freeVoices = null
+            // for (let key in busyVoices){
+            //     delete busyVoices[key]
+            // }
         }
 
     }, [instrument]);
@@ -166,6 +175,7 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
     useEffect(() => {
         if (samplerNode) {
             setSampler(samplerNode);
+            setPitchShifter(pitchShifter);
         }
 
         return () => {
@@ -210,22 +220,36 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
         }
     }, [fadeIn, fadeOut])
 
+    useEffect(() => {
+        if (pitchShifter) {
+            console.log("pitch change", pitch)
+            pitchShifter.set({
+                pitch: pitch
+            });
+        }
+    }, [pitch])
+
     //-----------------------HANDLERS-----------------------------//
     const handleNoteUp = useCallback((event) => {
         if (samplerArray) {
             console.log("note up: " + event.detail.note);
-            // polyNumberStop = assignPolyphony(event.detail.note, polyArray, 0);
-            // console.log("sampler to stop", polyNumberStop);
-            // envelopeArray[polyNumberStop].triggerRelease(Tone.now());
-            // samplerArray[polyNumberStop].triggerRelease(event.detail.note, Tone.now());
-            busyVoices[event.detail.note].envelope.triggerRelease(Tone.now());
+            polyNumberStop = assignPolyphony(event.detail.note, polyArray, 0);
+            console.log("sampler to stop", polyNumberStop);
+            envelopeArray[polyNumberStop].triggerRelease(Tone.now());
+            console.log("timeout", envelopeRelease)
             setTimeout(()=>{
-                busyVoices[event.detail.note].sampler.triggerRelease(event.detail.note, Tone.now());
-                freeVoices.push(busyVoices[event.detail.note])
-                console.log("free voices post ", freeVoices, busyVoices, event.detail.note)
-                // delete busyVoices[event.detail.note]
+                
+                samplerArray[polyNumberStop].triggerRelease(event.detail.note, Tone.now());
+            }, envelopeRelease*1000)
+            
+            // busyVoices[event.detail.note].envelope.triggerRelease(Tone.now());
+            // setTimeout(()=>{
+            //     busyVoices[event.detail.note].sampler.triggerRelease(event.detail.note, Tone.now());
+            //     freeVoices.push(busyVoices[event.detail.note])
+            //     console.log("free voices post ", freeVoices, busyVoices, event.detail.note)
+            //     // delete busyVoices[event.detail.note]
 
-            }, busyVoices[event.detail.note].envelope.release*1000)
+            // }, busyVoices[event.detail.note].envelope.release*1000)
             
             noise.stop(Tone.now() - 0.8)
         }
@@ -236,21 +260,25 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
         if (samplerArray) {
             console.log("note down: " + event.detail.note);
             if (Tone.now() > 0.8) {
-                //polyNumberPlay = assignPolyphony(event.detail.note, polyArray, 1);
-                // console.log("sampler to play", polyNumberPlay);
-                let tempVoice = freeVoices.shift()
-                //samplerArray[polyNumberPlay].triggerAttack(event.detail.note, Tone.now() - 0.8, event.detail.velocity);
-                // envelopeArray[polyNumberPlay].triggerAttack(Tone.now() - 0.1)
-                tempVoice.sampler.triggerAttack(event.detail.note, Tone.now() - 0.5, event.detail.velocity);
-                tempVoice.envelope.triggerAttack(Tone.now()-0.2)
-                busyVoices[event.detail.note] = tempVoice;
-                console.log(busyVoices)
+                polyNumberPlay = assignPolyphony(event.detail.note, polyArray, 1);
+                console.log("sampler to play", polyNumberPlay);
+                samplerArray[polyNumberPlay].triggerAttack(event.detail.note, Tone.now() - 0.8, event.detail.velocity);
+                envelopeArray[polyNumberPlay].triggerAttack(Tone.now() - 0.1)
+                // let tempVoice = freeVoices.shift()
+                // tempVoice.sampler.triggerAttack(event.detail.note, Tone.now() - 0.5, event.detail.velocity);
+                // tempVoice.envelope.triggerAttack(Tone.now()-0.2)
+                // busyVoices[event.detail.note] = tempVoice;
+                // console.log(busyVoices)
                 noise.start(Tone.now() - 0.8)
 
             }
         }
     }, [samplerArray]);
 
+    const handlePitchChange = (event) => {
+        setPitch(event.detail.pitch)
+        }
+    
 
     /* ==================================== ENVELOPE ================================================= */
 
@@ -258,6 +286,7 @@ const Sampler = ({ setSampler, selectedInst, polyphony }) => {
     useEffect(() => {
         document.addEventListener("notedown", handleNoteDown);
         document.addEventListener("noteup", handleNoteUp);
+        document.addEventListener("onpitchchange", handlePitchChange)
 
         return () => {
             document.removeEventListener('notedown', handleNoteDown);

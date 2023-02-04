@@ -390,12 +390,26 @@ function Piano(props) {
     }
   }, [containerRef]);
 
+  const handlePitchChange = (event)=>{
+
+    document.dispatchEvent(new CustomEvent("onpitchchange",
+    {
+      detail: {
+        pitch:event.target.value
+      }
+    }))
+  }
+
   return (
     <div ref={containerRef} className="piano-container">
         <WebAudioKnob className="wheel"
           src={"/images/knobs/76_bender_palette.png"}
           sprites={100}
-          onChange={(value) => { console.log(value) }} id="pitch-wheel"/>
+          min={-4}
+          max={4}
+          defaultvalue={0}
+          step={0.1}
+          onKnobEvent={handlePitchChange} id="pitch-wheel"/>
       <div className="Piano" ref={pianoRef}>
         {pianoSVG}
       </div>
