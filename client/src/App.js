@@ -20,7 +20,7 @@ function App() {
     }
   }
 
-  const [pianoVisible, setPianoVisible] = useState(true);
+  const [pianoVisible, setPianoVisible] = useState(false);
   const togglePianoVisibility = () => {
     setPianoVisible(!pianoVisible);
   }

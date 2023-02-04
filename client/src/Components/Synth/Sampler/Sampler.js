@@ -90,8 +90,6 @@ const Sampler = ({ setSampler, setPitchShifter, selectedInst, polyphony }) => {
                     polyArray[i] = note;
                     return i;
                 }
-
-
         }
         else {
             let stopIndex = polyArray.indexOf(note)
@@ -143,7 +141,7 @@ const Sampler = ({ setSampler, setPitchShifter, selectedInst, polyphony }) => {
         //     freeVoices.push({ sampler: samplerArray[i], envelope: envelopeArray[i] })
         // }
         for (let i = 0; i < polyphony; i++) {
-            samplerArray[i] = createSampler(selectedInst);
+            samplerArray[i] = createSampler(instrument);
         }
 
 
@@ -219,6 +217,14 @@ const Sampler = ({ setSampler, setPitchShifter, selectedInst, polyphony }) => {
             });
         }
     }, [fadeIn, fadeOut])
+
+    useEffect(() => {
+        if (noise) {
+            noise.set({
+                type: noiseType,
+            });
+        }
+    }, [noiseType])
 
     useEffect(() => {
         if (pitchShifter) {
