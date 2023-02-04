@@ -66,12 +66,12 @@ const Window = ({light, city, weather, dayMoment }) => {
 
                 {/* Rain */}
 
-                {weather >= 500
-                    && weather <= 531
+                {((weather >= 500
+                    && weather <= 531) || (weather >= 200 && weather <= 232) || (weather >= 300 && weather <= 321)) 
                     && (dayMoment === "day" || dayMoment === "sunset" || dayMoment === "sunrise") ? <RainyDay></RainyDay> : null}
 
-                {weather >= 500
-                    && weather <= 531
+                {((weather >= 500
+                    && weather <= 531) || (weather >= 200 && weather <= 232) || (weather >= 300 && weather <= 321))
                     && dayMoment === "night" ? <RainyNight></RainyNight> : null}
 
                 {/* Fog */}
@@ -119,7 +119,8 @@ const Window = ({light, city, weather, dayMoment }) => {
 
                 {weather >= 700
                     && weather <= 741
-                    && weather !== 741 && weather !== 701 && weather !== 721 && dayMoment === "sunset" ? <div> <SunSunset></SunSunset> <Fog></Fog> </div> : null}
+                    && weather !== 741 && weather !== 701 && weather !== 721 && dayMoment === "sunset" ? 
+                    <div> <SunSunset></SunSunset> <Fog></Fog> </div> : null}
 
                 {weather >= 700
                     && weather <= 741
