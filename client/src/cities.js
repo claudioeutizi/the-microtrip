@@ -13,6 +13,7 @@ const cities = [
         name: 'Kinshasa',
         //kalimba
         id: 'Q3838',
+        instId: 6,
         position: {
             lat: -4.322447,
             lon: 15.307045,
@@ -31,6 +32,7 @@ const cities = [
         name: 'Paris',
         //harp
         id: 'Q90',
+        instId: 5,
         position: {
             lat: 48.864716,
             lon: 2.349014,
@@ -85,6 +87,7 @@ const cities = [
     {
         name: 'Cairo',
         //Oud
+        instId: 7,
         id: 'Q85',
         position: {
             lat: 30.0444196,
@@ -112,7 +115,8 @@ const cities = [
     },
     {
         name: 'Beijing',
-        //Guzheng
+        //yangqin
+        instId: 8,
         id: 'Q956',
         position: {
             lat: 39.916668,
@@ -133,6 +137,7 @@ const cities = [
     {
         name: 'New York',
         //brass
+        instId: 9,
         id: 'Q60',
         position: {
             lat: 40.730610,

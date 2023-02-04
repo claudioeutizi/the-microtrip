@@ -394,6 +394,8 @@ function Piano(props) {
     }
   }, [containerRef]);
 
+  
+
   return (
     <div ref={containerRef} className="piano-container">
       <WebAudioKnob className="wheel"
