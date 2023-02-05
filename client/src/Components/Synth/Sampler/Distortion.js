@@ -11,17 +11,20 @@ const Distortion = ({setDist}) => {
     const [distAmount, setDistAmount] = useState(0);
     const [DIST_ON, setDIST_ON] = useState(false);
 
+    const createDistortion = useCallback((distAmount, distWet) => {
+        return new Tone.Distortion({
+            distortion: distAmount,
+            wet: distWet
+        })
+    },[]);
+
     useEffect(() => {
-        if(DIST_ON){
-            console.log("Distortion ON")
-            setDistNode(new Tone.Distortion({
-                distortion: distAmount,
-                wet: distWet
-            }))
+        if(DIST_ON && !distNode){
+            setDistNode(createDistortion(distAmount, distWet));
             setDist(distNode)
         }
         else{
-            if(distNode){
+            if(distNode && !DIST_ON){
             distNode.disconnect();
             setDist(null)
             }
@@ -45,6 +48,26 @@ const Distortion = ({setDist}) => {
             setDist(distNode);
         }
     }, [distWet])
+
+    // useEffect(() => {
+    //     const handleOnInternalTemperature = (event) => {
+    //         if(DIST_ON && distNode){
+    //             console.log("dist exists: modify humidity");
+    //             setDistAmount()
+    //         } else {
+    //             console.log("dist does not exists: creating it and setting with hunidity");
+    //             setDistNode(createDistortion());
+    //             setDist(distNode);
+    //             setDistAmount();
+    //             setDIST_ON(1);
+    //         }
+    //     }
+    //     document.addEventListener("oninternaltemperature", handleOnInternalTemperature);
+    //     return () => {
+    //         document.removeEventListener("oninternaltemperature", handleOnInternalTemperature);
+    //     }
+    // });
+
    
 
 
@@ -61,7 +84,9 @@ const Distortion = ({setDist}) => {
                 gridRow: 2,
                 gridColumn: 1
             }} id="distortion-on-off"
-            setState={setDIST_ON}>
+            setState={setDIST_ON}
+            value={DIST_ON}>
+                
             </OnOffSwitch>
 
             <Knob style={{
@@ -72,6 +97,7 @@ const Distortion = ({setDist}) => {
             setValue={setDistAmount}
             step={0.05}
             defaultValue={0}
+            value = {distAmount}
                 id="distortion-amount" diameter={48} parameter={"Amount"}></Knob>
 
             <Knob style={{
@@ -82,6 +108,7 @@ const Distortion = ({setDist}) => {
             setValue={setDistWet}
             step={0.05}
             defaultValue={1}
+            value = {distWet}
                 id="distortion-wet" diameter={48} parameter={"Wet"}></Knob>
         </div>
     )

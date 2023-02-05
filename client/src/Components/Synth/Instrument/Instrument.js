@@ -25,6 +25,7 @@ import * as Tone from 'tone'
 export default function Instrument({ selectedInstrument }) {
 
     const [pitchShifter, setPitchShifter] = useState(null)
+    const [fineTune, setFineTune] = useState(null)
     const [sampler, setSampler] = useState(null);
     const [filterL, setFilterL] = useState(null);
     const [filterH, setFilterH] = useState(null);
@@ -63,10 +64,8 @@ export default function Instrument({ selectedInstrument }) {
             <div id="logo-container">
                 <span className="logo">Synth</span>
             </div>
-            <Sampler setSampler={setSampler} setPitchShifter={setPitchShifter} selectedInst={selectedInstrument} polyphony={7} />
-            <Filter setFilterL={setFilterL} rolloff={-24} setFilterH={setFilterH}
-                LFO_H_ON={0} rateH={0} typeH={"sine"} depthH={0}
-                 typeL={"sine"}  />
+            <Sampler setSampler={setSampler} setPitchShifter={setPitchShifter} setFineTune={setFineTune} selectedInst={selectedInstrument} polyphony={10} />
+            <Filter setFilterL={setFilterL} rolloff={-24} setFilterH={setFilterH}/>
             <Distortion setDist={setDist}/>
             <Vibrato setVibrato={setVibrato}/>
             <Delay setDelay={setDelay}/>
