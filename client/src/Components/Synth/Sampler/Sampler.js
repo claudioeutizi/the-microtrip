@@ -9,17 +9,15 @@ import { dbToGain, gainToDb } from 'tone';
 
 const envelopeArray = [];
 const samplerArray = [];
-let freeVoices = [];
-const busyVoices = {};
+const noiseArray = [];
 const samplerNode = new Tone.Gain();
 let noise, pitchShifter, pitchShifterKnob;
 
 const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyphony }) => {
 
     const polyArray = Array(polyphony).fill(0);
-    // let stopIndex;
     let polyNumberPlay;
-    let polyNumberStop=[];
+    let polyNumberStop = [];
 
     const [instrument, setInstrument] = useState(selectedInst);
     const [samplerGain, setSamplerGain] = useState(1);
@@ -83,6 +81,15 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
         return sampler;
     }
 
+    function createNoise(noiseGain, fadeIn, fadeOut, noiseType) {
+        noise = new Tone.Noise({
+            volume: noiseGain,
+            fadeIn: fadeIn,
+            fadeOut: fadeOut,
+            type: noiseType
+        });
+        return noise
+    }
 
     //correggere interazione con la release, non viene considerata e viene liberato uno slot per una nota che sta ancora suonando
     function assignPolyphony(note, polyArray, method) {
@@ -96,38 +103,32 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
         }
         else {
             let stopIndex = polyArray.indexOf(note)
-            
-            // setTimeout(() => {
-            //     console.log("ciao")
-                
-            // }, 2000)
-
             return stopIndex;
         }
 
     }
 
     // NOISE
-    useState(() => {
-        noise = new Tone.Noise({
-            volume: noiseGain,
-            fadeIn: fadeIn,
-            fadeOut: fadeOut,
-            type: noiseType
-        });
-    }, [])
+    // useState(() => {
+    //     noise = new Tone.Noise({
+    //         volume: noiseGain,
+    //         fadeIn: fadeIn,
+    //         fadeOut: fadeOut,
+    //         type: noiseType
+    //     });
+    // }, [])
 
     //PITCH SHIFTER
     useState(() => {
         pitchShifter = new Tone.PitchShift({
-            pitch:pitch,
-            windowSize:0.09
+            pitch: pitch,
+            windowSize: 0.09
         });
         pitchShifterKnob = new Tone.PitchShift({
-            pitch:pitchKnob,
-            windowSize:0.2
+            pitch: pitchKnob,
+            windowSize: 0.2
         });
-       
+
     }, [])
 
 
@@ -138,17 +139,9 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
     //SAMPLER GENERATION
     useEffect(() => {
 
-
-
-        // freeVoices=[];
-        // for (let i = 0; i < polyphony; i++) {
-        //     samplerArray[i] = createSampler(instrument);
-        //     envelopeArray[i] = createEnvelope(envelopeAttack, envelopeDecay, envelopeSustain, envelopeRelease)
-        //     samplerArray[i].chain(envelopeArray[i], pitchShifter, samplerNode)
-        //     freeVoices.push({ sampler: samplerArray[i], envelope: envelopeArray[i] })
-        // }
         for (let i = 0; i < polyphony; i++) {
             samplerArray[i] = createSampler(instrument);
+            noiseArray[i] = createNoise(noiseGain, fadeIn, fadeOut, noiseType);
         }
 
 
@@ -156,11 +149,8 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
         for (let i = 0; i < polyphony; i++) {
             envelopeArray[i] = createEnvelope(envelopeAttack, envelopeDecay, envelopeSustain, envelopeRelease)
             samplerArray[i].chain(envelopeArray[i], samplerNode)
-        }
-        if (noise) {
-            noise.disconnect();
-            console.log("noise connected")
-            noise.chain(envelopeArray[0], samplerNode)
+            noiseArray[i].disconnect();
+            noiseArray[i].chain(envelopeArray[i], samplerNode)
         }
 
 
@@ -168,10 +158,6 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
             for (let i = 0; i < polyphony; i++) {
                 samplerArray[i] = null;
             }
-            // freeVoices = null
-            // for (let key in busyVoices){
-            //     delete busyVoices[key]
-            // }
         }
 
     }, [instrument]);
@@ -197,7 +183,6 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
 
     useEffect(() => {
         if (envelopeArray[polyphony - 1]) {
-            console.log("envelope update", envelopeAttack, envelopeDecay, envelopeSustain, envelopeRelease)
             for (let i = 0; i < polyphony; i++) {
                 envelopeArray[i].attack = envelopeAttack;
                 envelopeArray[i].decay = envelopeDecay;
@@ -209,28 +194,35 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
 
 
     useEffect(() => {
-        if (noise) {
-            noise.set({
-                volume: gainToDb(noiseGain)
-            });
+        if (noiseArray) {
+            for (let i = 0; i < polyphony; i++) {
+                noiseArray[i].set({
+                    volume: gainToDb(noiseGain)
+                });
+            }
         }
+
     }, [noiseGain])
 
 
     useEffect(() => {
-        if (noise) {
-            noise.set({
-                fadeIn: fadeIn,
-                fadeOut: fadeOut
-            });
+        if (noiseArray) {
+            for (let i = 0; i < polyphony; i++) {
+                noiseArray[i].set({
+                    fadeIn: fadeIn,
+                    fadeOut:fadeOut
+                });
+            }
         }
     }, [fadeIn, fadeOut])
 
     useEffect(() => {
-        if (noise) {
-            noise.set({
-                type: noiseType,
-            });
+        if (noiseArray) {
+            for (let i = 0; i < polyphony; i++) {
+                noiseArray[i].set({
+                    type:noiseType
+                });
+            }
         }
     }, [noiseType])
 
@@ -257,26 +249,18 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
             console.log("note up: " + event.detail.note);
             polyNumberStop.push(assignPolyphony(event.detail.note, polyArray, 0));
             console.log("polynumber array", polyNumberStop)
-            let last=polyNumberStop[polyNumberStop.length-1]
-            envelopeArray[last].triggerRelease(Tone.now());
-            setTimeout(()=>{
-                let first=polyNumberStop[0]
+            let last = polyNumberStop[polyNumberStop.length - 1]
+            envelopeArray[last].triggerRelease(Tone.now() - 0.2);
+            setTimeout(() => {
+                let first = polyNumberStop[0]
                 samplerArray[first].triggerRelease(event.detail.note, Tone.now());
+                noiseArray[first].stop(Tone.now())
                 console.log("clearing array:", polyNumberStop[0], "which contains the note", polyArray[polyNumberStop[0]]);
                 polyArray[first] = 0
                 polyNumberStop.shift();
-            }, envelopeArray[0].release*1000)
-            
-            // busyVoices[event.detail.note].envelope.triggerRelease(Tone.now());
-            // setTimeout(()=>{
-            //     busyVoices[event.detail.note].sampler.triggerRelease(event.detail.note, Tone.now());
-            //     freeVoices.push(busyVoices[event.detail.note])
-            //     console.log("free voices post ", freeVoices, busyVoices, event.detail.note)
-            //     // delete busyVoices[event.detail.note]
+            }, envelopeArray[0].release * 1000)
 
-            // }, busyVoices[event.detail.note].envelope.release*1000)
-            
-            noise.stop(Tone.now() - 0.8)
+
         }
     }, [samplerArray]);
 
@@ -288,14 +272,11 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
                 polyNumberPlay = assignPolyphony(event.detail.note, polyArray, 1);
                 console.log("sampler to play", polyNumberPlay);
                 samplerArray[polyNumberPlay].triggerAttack(event.detail.note, Tone.now() - 0.8, event.detail.velocity);
-                envelopeArray[polyNumberPlay].triggerAttack(Tone.now() - 0.1)
+                noiseArray[polyNumberPlay].start(Tone.now() - 0.8)
+                envelopeArray[polyNumberPlay].triggerAttack(Tone.now() - 0.2)
                 console.log(polyArray);
-                // let tempVoice = freeVoices.shift()
-                // tempVoice.sampler.triggerAttack(event.detail.note, Tone.now() - 0.5, event.detail.velocity);
-                // tempVoice.envelope.triggerAttack(Tone.now()-0.2)
-                // busyVoices[event.detail.note] = tempVoice;
-                // console.log(busyVoices)
-                noise.start(Tone.now() - 0.8)
+
+
 
             }
         }
@@ -303,8 +284,8 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
 
     const handlePitchChange = (event) => {
         setPitch(event.detail.pitch)
-        }
-    
+    }
+
 
     /* ==================================== ENVELOPE ================================================= */
 
@@ -330,7 +311,7 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
             <div id="sampler-container">
                 <p className="type">Sampler</p>
                 <div className="screen-container sampler">
-                    <select label="Instrument" value = {instrument} onChange={handleInstrumentSelection}>
+                    <select label="Instrument" value={instrument} onChange={handleInstrumentSelection}>
                         {instruments.map((instrument) => {
                             return <option key={instrument.id} value={instrument.id}>{instrument.name}</option>
                         })}
@@ -347,13 +328,13 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
                         conv="(20*Math.log10(x)).toFixed(2)"
                         defaultValue={1} parameter={"Gain"}>
                     </Knob>
-                    <Knob diameter={64} id={"sampler-finetune"} 
-                    defaultValue={0} 
-                    min={-12}
-                    max={12}
-                    step={1}
-                    setValue={setPitchKnob}
-                    parameter={"Fine Tune"}></Knob>
+                    <Knob diameter={64} id={"sampler-finetune"}
+                        defaultValue={0}
+                        min={-12}
+                        max={12}
+                        step={1}
+                        setValue={setPitchKnob}
+                        parameter={"Fine Tune"}></Knob>
                 </div>
             </div>
             <Adsr setAttack={setEnvelopeAttack}
