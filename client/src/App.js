@@ -79,6 +79,12 @@ function App() {
         .then(async (response) => {
           const weatherResponse = await response[0].json();
           setCurrentWeather({ city: weatherResponse.name, ...weatherResponse });
+          document.dispatchEvent(new CustomEvent("onexternaldata",
+          {
+            detail: {
+              data: weatherResponse,
+            }
+          }))
         })
         .catch((err) => console.log(err));
     } catch (error) {
@@ -95,6 +101,12 @@ function App() {
       .then(async (response) => {
         const weatherResponse = await response[0].json();
         setCurrentWeather({ city: cityData.label, ...weatherResponse, timezoneString: cityData.timezone });
+        document.dispatchEvent(new CustomEvent("onexternaldata",
+        {
+          detail: {
+            data: weatherResponse,
+          }
+        }))
       })
       .catch((err) => console.log(err));
   }
@@ -104,14 +116,32 @@ function App() {
   useEffect(() => {
 
     const handleTemperatureMessage = (data) => {
+      document.dispatchEvent(new CustomEvent("oninternaltemperature",
+      {
+        detail: {
+          temperature: data.value,
+        }
+      }))
       setInternalTemperature(data);
     }
 
     const handleHumidityMessage = (data) => {
+      document.dispatchEvent(new CustomEvent("oninternalhumidity",
+      {
+        detail: {
+          humidity: data.value,
+        }
+      }))
       setInternalHumidity(data);
     }
 
     const handleLightMessage = (data) => {
+      document.dispatchEvent(new CustomEvent("oninternallight",
+      {
+        detail: {
+          light: data.value,
+        }
+      }))
       setInternalLight(data);
     }
 
@@ -167,7 +197,8 @@ function App() {
 
         </div>
         <div ref={synthRef} className="synth-container">
-          <Instrument selectedInstrument={instrument}></Instrument>
+          <Instrument 
+            selectedInstrument={instrument}></Instrument>
         </div>
 
       </div>

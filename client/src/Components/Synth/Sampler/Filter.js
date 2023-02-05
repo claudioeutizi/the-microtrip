@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useState, useEffect } from "react"
 import OnOffSwitch from './Controls/OnOffSwitch'
 import Knob from './Controls/Knob'
@@ -38,44 +38,47 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
     const [hpfLfoDepth, setHpfLfoDepth] = useState(0);
     const [hpfLfoType, setHpfLfoType] = useState("sine");
 
+    const createLpf = useCallback((rolloff, type, Q, frequency) => {
+        return new Tone.Filter({
+            rolloff: rolloff,
+            type: type,
+            Q: Q,
+            frequency: frequency,
+        })
+    },[])
 
+    const createHpf = useCallback((rolloff, type, Q, frequency) => {
+        return new Tone.Filter({
+            rolloff: rolloff,
+            type: type,
+            Q: Q,
+            frequency: frequency,
+        })
+    },[])
 
     /* HPF Generation */
 
     useEffect(() => {
-        if (hpfOnOff) {
+        if (hpfOnOff && !hpfNode) {
             console.log("HP generation")
-            setHpfNode(new Tone.Filter({
-                rolloff: rolloff,
-                type: "highpass",
-                Q: hpfResonance,
-                frequency: hpfCutoff,
-            }
-            ));
+            setHpfNode(createHpf(rolloff, "highpass", hpfResonance, hpfCutoff));
             setFilterH(hpfNode);
         }
-        else {
-
-            setFilterH(null)
+        else if(!hpfOnOff && hpfNode) {
+            setFilterH(null);
         }
     }, [hpfOnOff])
 
     /* LPF Generation */
 
     useEffect(() => {
-        if (lpfOnOff) {
+        if (lpfOnOff && !lpfNode) {
             console.log("LP generation")
-            setLpfNode(new Tone.Filter({
-                rolloff: rolloff,
-                type: "lowpass",
-                Q: lpfResonance,
-                frequency: lpfCutoff,
-            }
-            ));
+            setLpfNode(createLpf(rolloff, "lowpass", lpfResonance, lpfCutoff));
             setFilterL(lpfNode);
         }
-        else {
-            setFilterL(null)
+        else if(!lpfOnOff && lpfNode) {
+            setFilterL(null);
         }
     }, [lpfOnOff])
 
@@ -132,6 +135,32 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
             setFilterH(hpfNode);
         }
     }, [hpfResonance])
+
+    //INTERNAL LIGHT: LPF
+
+    // useEffect(() => {
+    //     const handleOnInternalLight = (event) => {
+    //         if(lpfOnOff && lpfNode){
+    //             console.log("lpf exists: modify light");
+    //             setLpfCutoff(event.detail.light);
+    //             setLpfResonance(event.detail.light);
+    //         } else {
+    //             console.log("delay does not exists: creating it and setting with hunidity");
+    //             setLpfNode(createLpf(rolloff, "lowpass", event.detail.light, event.detail.light));
+    //             setFilterL(lpfNode);
+    //             setLpfCutoff(event.detail.light)
+    //             setLpfResonance(event.detail.light);
+    //             setLpfOnOff(1);
+    //         }
+    //     }
+    //     document.addEventListener("oninternallight", handleOnInternalLight);
+    //     return () => {
+    //         document.removeEventListener("oninternallight", handleOnInternalLight);
+    //     }
+    // });
+
+
+    /* ==================================================== LFO ================================================================= */
 
     //LFO LPF onoff
     useEffect(() => {
