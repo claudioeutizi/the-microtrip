@@ -134,8 +134,6 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
             noiseArray[i] = createNoise(noiseGain, fadeIn, fadeOut, noiseType);
         }
 
-
-        console.log("envelope generation and connection")
         for (let i = 0; i < polyphony; i++) {
             envelopeArray[i] = createEnvelope(envelopeAttack, envelopeDecay, envelopeSustain, envelopeRelease)
             samplerArray[i].chain(envelopeArray[i], samplerNode)
@@ -193,7 +191,7 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
             }
         }
 
-    }, [noiseGain])
+    }, [noiseGain, instrument])
 
 
     useEffect(() => {
@@ -264,7 +262,7 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
                 console.log("sampler to play", polyNumberPlay);
                 samplerArray[polyNumberPlay].triggerAttack(event.detail.note, Tone.now() - 0.8, event.detail.velocity);
                 noiseArray[polyNumberPlay].start(Tone.now() - 0.8)
-                envelopeArray[polyNumberPlay].triggerAttack(Tone.now() - 0.2)
+                envelopeArray[polyNumberPlay].triggerAttack(Tone.now() - 0.1)
                 console.log(polyArray);
 
 
