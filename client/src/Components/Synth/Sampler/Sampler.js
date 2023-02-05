@@ -30,7 +30,7 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
     const [pitch, setPitch] = useState(0);
     const [pitchKnob, setPitchKnob] = useState(0);
 
-    const [noiseGain, setNoiseGain] = useState(0.001);
+    const [noiseGain, setNoiseGain] = useState(Tone.dbToGain(-60));
     const [fadeIn, setFadeIn] = useState(0);
     const [fadeOut, setFadeOut] = useState(0);
     const [noiseType, setNoiseType] = useState("white");
@@ -91,7 +91,7 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
         return noise
     }
 
-    //correggere interazione con la release, non viene considerata e viene liberato uno slot per una nota che sta ancora suonando
+   
     function assignPolyphony(note, polyArray, method) {
         if (method) {
 
@@ -107,16 +107,6 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
         }
 
     }
-
-    // NOISE
-    // useState(() => {
-    //     noise = new Tone.Noise({
-    //         volume: noiseGain,
-    //         fadeIn: fadeIn,
-    //         fadeOut: fadeOut,
-    //         type: noiseType
-    //     });
-    // }, [])
 
     //PITCH SHIFTER
     useState(() => {
@@ -157,6 +147,7 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
         return () => {
             for (let i = 0; i < polyphony; i++) {
                 samplerArray[i] = null;
+                noiseArray[i]=null;
             }
         }
 
