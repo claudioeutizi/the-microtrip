@@ -16,10 +16,11 @@ import Fog from '../Weather/Fog/Fog';
 import Mist from '../Weather/Fog/Mist';
 import Haze from '../Weather/Fog/Haze';
 
-const Window = ({light, city, weather, dayMoment }) => {
+const Window = ({light, city, weather, dayMoment, windowOpen }) => {
     return (
         <div className="window" id="window">
-            <img style = {{filter: `brightness(${light}%)`}} src="/images/window.png" alt="" />
+            {windowOpen ? (<img style = {{filter: `brightness(${light}%)`}} src="/images/window.png" alt="" />)
+            : <img style = {{filter: `brightness(${light}%)`}} src="/images/closedWindow.png" alt="" />}
             <div className="outdoor" id="outdoor">
 
                 {/* Clouds */ }
@@ -126,11 +127,11 @@ const Window = ({light, city, weather, dayMoment }) => {
                     && weather <= 741
                     && dayMoment === "sunrise" ? <div> <SunSunrise></SunSunrise> <Fog></Fog> </div> : null}
 
-                <img style={{
+                {windowOpen && <img style={{
                     position: "absolute",
                     bottom: "0%",
                     left: "0%",
-                }} src={city} alt=""/>
+                }} src={city} alt=""/>}
             </div>
         </div>
     );

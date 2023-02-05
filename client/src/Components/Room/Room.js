@@ -12,6 +12,24 @@ import moment from 'moment';
 const Room = ({ light, onMapClicked, onInstrumentClicked, weatherData, city }) => {
   const [dayMoment, setDayMoment] = useState();
   const [weather, setWeather] = useState();
+  const [windowOpen, setWindowOpen] = useState(0);
+
+  useEffect(() => {
+    const handleMapButtonClick = () => {
+      setWindowOpen(1);
+    }
+
+    const handleOnPositionSwitch = (event) => {
+      setWindowOpen(!event.detail.data);
+    }
+
+    window.addEventListener("mapbuttonclick", handleMapButtonClick);
+    window.addEventListener("onpositionswitch", handleOnPositionSwitch);
+    return () => {
+      window.removeEventListener("onpositionswitch", handleOnPositionSwitch);
+      window.removeEventListener("mapbuttonclick", handleMapButtonClick);
+    }
+  })
 
   useEffect(() => {
     if (weatherData) {
@@ -67,11 +85,11 @@ const Room = ({ light, onMapClicked, onInstrumentClicked, weatherData, city }) =
       <div className="room-content">
         <div className="floor" style={{ filter: `brightness(${light}%)` }}>
           <Desk setInstrumentOpened={onInstrumentClicked} />
-          <Carpet />
+          <Carpet/>
         </div>
         <div className="wall">
           <WallMap light={light} setMapOpened={onMapClicked} />
-          <Window light={light} weather={weather} dayMoment={dayMoment} city={city} />
+          <Window windowOpen = {windowOpen} light={light} weather={weather} dayMoment={dayMoment} city={city} />
         </div>
         <div className="illumination">
         <Lamp light = {light}/>

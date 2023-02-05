@@ -1,27 +1,31 @@
 import Knob from './Controls/Knob'
 import OnOffSwitch from './Controls/OnOffSwitch'
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import * as Tone from 'tone';
 
 const Delay = ({ setDelay }) => {
 
     const [delayNode, setDelayNode] = useState(null);
-    const [DELAY_ON, setDELAY_ON] = useState(false);
-    const [feedback, setFeedabck] = useState(0);
+    const [DELAY_ON, setDELAY_ON] = useState(0);
+    const [delayFeedback, setDelayFeedback] = useState(0);
     const [delayTime, setDelayTime] = useState(0);
     const [delayWet, setDelayWet] = useState(1);
 
+    const createDelay = useCallback((delayTime, feedback, wet) => {
+        return new Tone.PingPongDelay({
+            time: delayTime,
+            feedback: feedback,
+            wet: wet,
+        })
+    },[]);
+
     useEffect(() => {
-        if (DELAY_ON) {
+        if (DELAY_ON && !delayNode) {
             console.log("Delay ON")
-            setDelayNode(new Tone.PingPongDelay({
-                delayTime: delayTime,
-                feedback: feedback,
-                wet: delayWet
-            }))
+            setDelayNode(createDelay(delayTime, delayFeedback, delayWet));
             setDelay(delayNode);
         }
-        else {
+        else if(delayNode && !DELAY_ON) {
             setDelay(null)
         }
 
@@ -40,11 +44,11 @@ const Delay = ({ setDelay }) => {
     useEffect(() => {
         if (delayNode && DELAY_ON) {
             delayNode.set({
-                feedback: feedback
+                feedback: delayFeedback
             });
             setDelay(delayNode);
         }
-    }, [feedback])
+    }, [delayFeedback])
     
     useEffect(() => {
         if (delayNode && DELAY_ON) {
@@ -56,6 +60,27 @@ const Delay = ({ setDelay }) => {
     }, [delayWet])
 
 
+    useEffect(() => {
+        const handleOnExternalHumidity = (event) => {
+            const weatherData = event.detail.data;
+            if(DELAY_ON && delayNode){
+                console.log("delay exists: modify humidity");
+                setDelayWet(weatherData.main.humidity / 100);
+                setDelayFeedback(weatherData.main.humidity / 100);
+            } else {
+                console.log("delay does not exists: creating it and setting with hunidity");
+                setDelayNode(createDelay(delayTime, weatherData.main.humidity / 100, weatherData.main.humidity / 100));
+                setDelay(delayNode);
+                setDelayFeedback(weatherData.main.humidity / 100)
+                setDelayWet(weatherData.main.humidity / 100);
+                setDELAY_ON(1);
+            }
+        }
+        document.addEventListener("onexternaldata", handleOnExternalHumidity);
+        return () => {
+            document.removeEventListener("onexternaldata", handleOnExternalHumidity);
+        }
+    });
 
 
     return (
@@ -70,7 +95,8 @@ const Delay = ({ setDelay }) => {
             <OnOffSwitch style={{
                 gridRow: 2,
                 gridColumn: 1
-            }} id="delay-on-off"
+            }}  id="delay-on-off"
+                value = {DELAY_ON}
                 setState={setDELAY_ON}></OnOffSwitch>
 
             <Knob style={{ gridRow: 2, gridColumn: 2 }} diameter={48}
@@ -82,7 +108,8 @@ const Delay = ({ setDelay }) => {
             ></Knob>
             <Knob style={{ gridRow: 2, gridColumn: 3 }} diameter={48} id="delay-feedback" parameter="Feedback"
                 min={0} max={0.99}
-                setValue={setFeedabck}
+                setValue={setDelayFeedback}
+                value = {delayFeedback}
                 step={0.05}
                 defaultValue={0}
             ></Knob>
@@ -91,6 +118,7 @@ const Delay = ({ setDelay }) => {
                 setValue={setDelayWet}
                 step={0.05}
                 defaultValue={1}
+                value = {delayWet}
             ></Knob>
         </div>
     )

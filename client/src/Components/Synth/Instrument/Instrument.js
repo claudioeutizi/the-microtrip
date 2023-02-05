@@ -22,7 +22,7 @@ import * as Tone from 'tone'
 
 
 
-export default function Instrument({ visible, selectedInstrument }) {
+export default function Instrument({ selectedInstrument }) {
 
     const [pitchShifter, setPitchShifter] = useState(null)
     const [sampler, setSampler] = useState(null);

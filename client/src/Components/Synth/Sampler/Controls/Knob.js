@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { WebAudioKnob, WebAudioParam } from 'webaudio-controls-react-typescript'
 import "../../Instrument/Instrument.css"
 
@@ -6,12 +6,14 @@ const Knob = (props) => {
 
   const [knobValue, setKnobValue] = useState(props.defaultValue);
 
+  useEffect(() => {
+    setKnobValue(props.value);
+  }, [props.value])
 
   const handleKnobValueChange = (event) => {
     setKnobValue(parseFloat(event.target.value));
-    props.setValue(parseFloat(event.target.value))
+    props.setValue(parseFloat(event.target.value));
   }
-
 
   return (
     <div className="knob">
@@ -33,7 +35,7 @@ const Knob = (props) => {
 
         </WebAudioKnob>
         <div style={{ display: "grid", gridTemplateRows: "50% 50%", alignItems: "center", justifyContent: "center" }}>
-          <WebAudioParam colors={"#D6D8DD"} width={30} height={10} link={props.id} src=""></WebAudioParam>
+          <WebAudioParam value = {knobValue} onChange = {(event) => setKnobValue(event.target.value)} colors={"#D6D8DD"} width={30} height={10} link={props.id} src=""></WebAudioParam>
           <span className="unit">{props.unit}</span>
 
         </div>

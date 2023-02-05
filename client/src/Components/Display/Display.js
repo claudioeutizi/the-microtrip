@@ -13,6 +13,11 @@ const Display = ({ onSwitchChange, externalData, light, temperature, humidity })
             moment().tz(externalData.timezoneString.replace(/__/g, '/')) : moment()) : null);
 
     const handleOnPositionChange = (event, value) => {
+        window.dispatchEvent(new CustomEvent("onpositionswitch",{
+            detail: {
+              data: value,
+            }
+          }));
         onSwitchChange(value);
         setPositionSwitch(value);
     }
