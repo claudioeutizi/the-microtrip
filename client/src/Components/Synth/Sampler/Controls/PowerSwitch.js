@@ -1,13 +1,15 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { WebAudioSwitch } from 'webaudio-controls-react-typescript'
 import "../../Instrument/Instrument.css"
 
 const PowerSwitch = (props) => {
 
-    const [onOff, setOnOff] = useState(false);
+    const [onOff, setOnOff] = useState(1);
+
+
     const handleOnChange = (value) => {
         setOnOff(value);
-        props.setState(value)
+        props.setState(value);
       }
 
     return (
@@ -15,7 +17,8 @@ const PowerSwitch = (props) => {
             <p className="type-module" style={{ marginBottom: "7%" }}>On/Off</p>
 
             <WebAudioSwitch className="medium-knob"
-                defvalue={0}
+                defvalue={1}
+                value = {onOff}
                 id={props.id}
                 style={{ "top": "5px" }}
                 src={"/images/knobs/Power_switch_mod.png"}

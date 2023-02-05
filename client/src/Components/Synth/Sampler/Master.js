@@ -7,9 +7,9 @@ import { dbToGain, gainToDb } from 'tone';
 
 const Master = ({setMaster}) => {
 
-    const [POWER_ON, setPOWER_ON] = useState(false);
+    const [POWER_ON, setPOWER_ON] = useState(1);
     const [masterNode, setMasterNode] = useState(null);
-    const [masterGain, setMasterGain] = useState(0);
+    const [masterGain, setMasterGain] = useState(Tone.dbToGain(0));
 
 
     useState(() => {
@@ -42,15 +42,17 @@ const Master = ({setMaster}) => {
             <PowerSwitch id={"master-on-off"}
             setState={setPOWER_ON}>
             </PowerSwitch>
+
             <p className="type" style={{ "gridRow": 2 }}>Master</p>
             <Knob style={{ gridRow: 3 }} diameter={64} id="master-volume" parameter="Volume"
             min={dbToGain(-30)} max={dbToGain(3)} 
             setValue={setMasterGain}
+            value = {masterGain}
             log={1}
             step={0.001}
             unit="dB"
             conv="(20*Math.log10(x)).toFixed(2)"
-            defaultValue={1}
+            defaultValue={Tone.dbToGain(0)}
             ></Knob>
         </div>
     )
