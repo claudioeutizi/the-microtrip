@@ -5,8 +5,6 @@ import Window from './Window/Window';
 import Lamp from './Lamp/Lamp';
 import WallMap from './WallMap/WallMap';
 import Carpet from './Carpet/Carpet';
-import Light from './Light/Light';
-import LightSwitch from './LightSwitch/LightSwitch';
 import moment from 'moment';
 
 const Room = ({ light, onMapClicked, onInstrumentClicked, weatherData, city }) => {

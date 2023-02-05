@@ -30,7 +30,7 @@ const Sampler = ({ setSampler, setPitchShifter, selectedInst, polyphony }) => {
     const [envelopeRelease, setEnvelopeRelease] = useState(0);
     const [pitch, setPitch] = useState(0);
 
-    const [noiseGain, setNoiseGain] = useState(0.001);
+    const [noiseGain, setNoiseGain] = useState(dbToGain(-60));
     const [fadeIn, setFadeIn] = useState(0);
     const [fadeOut, setFadeOut] = useState(0);
     const [noiseType, setNoiseType] = useState("white");

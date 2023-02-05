@@ -66,7 +66,7 @@ const Delay = ({ setDelay }) => {
             if(DELAY_ON && delayNode){
                 console.log("delay exists: modify humidity");
                 setDelayWet(weatherData.main.humidity / 100);
-                setDelayFeedback(weatherData.main.humidity / 100);
+                setDelayFeedback(weatherData.main.humidity / 100); //va settato logaritmico
             } else {
                 console.log("delay does not exists: creating it and setting with hunidity");
                 setDelayNode(createDelay(delayTime, weatherData.main.humidity / 100, weatherData.main.humidity / 100));

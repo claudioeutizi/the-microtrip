@@ -142,8 +142,8 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
     //     const handleOnInternalLight = (event) => {
     //         if(lpfOnOff && lpfNode){
     //             console.log("lpf exists: modify light");
-    //             setLpfCutoff(event.detail.light);
-    //             setLpfResonance(event.detail.light);
+    //             setLpfCutoff(event.detail.light); //light cresce -> cutoff cresce
+    //             setLpfResonance(event.detail.light); //light cresce -> resonance decresce 
     //         } else {
     //             console.log("delay does not exists: creating it and setting with hunidity");
     //             setLpfNode(createLpf(rolloff, "lowpass", event.detail.light, event.detail.light));
