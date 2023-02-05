@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { WebAudioKnob, WebAudioParam } from 'webaudio-controls-react-typescript'
+import { WebAudioKnob } from 'webaudio-controls-react-typescript'
 import "../../Instrument/Instrument.css"
+import * as Tone from 'tone'
 
 const Knob = (props) => {
 
@@ -11,14 +12,15 @@ const Knob = (props) => {
   }, [props.value])
 
   const handleKnobValueChange = (event) => {
-    setKnobValue(parseFloat(event.target.value));
-    props.setValue(parseFloat(event.target.value));
+    setKnobValue(parseFloat(event.target.value).toFixed(2));
+    props.setValue(parseFloat(event.target.value).toFixed(2));
   }
 
   return (
     <div className="knob">
       <p className="type-module">{props.parameter}</p>
       <div>
+        
         <WebAudioKnob
           defvalue={props.defaultValue}
           value={knobValue}
@@ -35,9 +37,9 @@ const Knob = (props) => {
 
         </WebAudioKnob>
         <div style={{ display: "grid", gridTemplateRows: "50% 50%", alignItems: "center", justifyContent: "center" }}>
-          <WebAudioParam value = {knobValue} onChange = {(event) => setKnobValue(event.target.value)} colors={"#D6D8DD"} width={30} height={10} link={props.id} src=""></WebAudioParam>
+          <span className="knob-value">
+            { knobValue ? (props.unit === "dB" ? Tone.gainToDb(knobValue).toFixed(2) : knobValue): props.defaultValue }</span>
           <span className="unit">{props.unit}</span>
-
         </div>
       </div>
     </div>
@@ -54,6 +56,7 @@ Knob.defaultProps = {
   diameter: 64,
   parameter: "",
   log: 0,
+  rconv: "",
 }
 
 export default Knob

@@ -20,7 +20,7 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
     let polyNumberStop = [];
 
     const [instrument, setInstrument] = useState(selectedInst);
-    const [samplerGain, setSamplerGain] = useState(1);
+    const [samplerGain, setSamplerGain] = useState(Tone.dbToGain(0));
 
     const [envelopeAttack, setEnvelopeAttack] = useState(0);
     const [envelopeDecay, setEnvelopeDecay] = useState(0);
@@ -91,7 +91,7 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
         return noise
     }
 
-   
+
     function assignPolyphony(note, polyArray, method) {
         if (method) {
 
@@ -145,7 +145,7 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
         return () => {
             for (let i = 0; i < polyphony; i++) {
                 samplerArray[i] = null;
-                noiseArray[i]=null;
+                noiseArray[i] = null;
             }
         }
 
@@ -167,7 +167,7 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
 
     //---------------------PARAMETERS UPDATE-------------------------//
     useEffect(() => {
-        samplerArray.map(sampler => sampler.volume.value = (20 * Math.log10(samplerGain)));
+        samplerArray.map(sampler => sampler.volume.value = Tone.gainToDb(samplerGain));
     }, [samplerGain])
 
     useEffect(() => {
@@ -199,7 +199,7 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
             for (let i = 0; i < polyphony; i++) {
                 noiseArray[i].set({
                     fadeIn: fadeIn,
-                    fadeOut:fadeOut
+                    fadeOut: fadeOut
                 });
             }
         }
@@ -209,7 +209,7 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
         if (noiseArray) {
             for (let i = 0; i < polyphony; i++) {
                 noiseArray[i].set({
-                    type:noiseType
+                    type: noiseType
                 });
             }
         }
@@ -239,7 +239,7 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
             polyNumberStop.push(assignPolyphony(event.detail.note, polyArray, 0));
             console.log("polynumber array", polyNumberStop)
             let last = polyNumberStop[polyNumberStop.length - 1]
-            envelopeArray[last].triggerRelease(Tone.now() - 0.2);
+            envelopeArray[last].triggerRelease(Tone.now());
             setTimeout(() => {
                 let first = polyNumberStop[0]
                 samplerArray[first].triggerRelease(event.detail.note, Tone.now());
@@ -308,16 +308,22 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
                 </div>
 
                 <div id="sampler-knobs-row">
-                    <Knob min={dbToGain(-30)} max={dbToGain(3)} setValue={setSamplerGain}
+                    <Knob
+                        min={dbToGain(-30)}
+                        max={dbToGain(3)}
+                        setValue={setSamplerGain}
                         id={"sampler-gain"}
+                        value={samplerGain}
                         diameter={64}
                         log={1}
                         step={0.001}
                         unit="dB"
                         conv="(20*Math.log10(x)).toFixed(2)"
-                        defaultValue={1} parameter={"Gain"}>
+                        defaultValue={Tone.dbToGain(0)}
+                        parameter={"Gain"}>
                     </Knob>
                     <Knob diameter={64} id={"sampler-finetune"}
+                        value={pitchKnob}
                         defaultValue={0}
                         min={-12}
                         max={12}
@@ -326,7 +332,8 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
                         parameter={"Fine Tune"}></Knob>
                 </div>
             </div>
-            <Adsr setAttack={setEnvelopeAttack}
+            <Adsr
+                setAttack={setEnvelopeAttack}
                 setDecay={setEnvelopeDecay}
                 setSustain={setEnvelopeSustain}
                 setRelease={setEnvelopeRelease}>

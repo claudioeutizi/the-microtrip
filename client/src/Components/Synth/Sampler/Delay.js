@@ -9,7 +9,7 @@ const Delay = ({ setDelay }) => {
     const [DELAY_ON, setDELAY_ON] = useState(0);
     const [delayFeedback, setDelayFeedback] = useState(0);
     const [delayTime, setDelayTime] = useState(0);
-    const [delayWet, setDelayWet] = useState(1);
+    const [delayWet, setDelayWet] = useState(0);
 
     const createDelay = useCallback((delayTime, feedback, wet) => {
         return new Tone.PingPongDelay({
@@ -117,7 +117,7 @@ const Delay = ({ setDelay }) => {
                 min={0} max={1}
                 setValue={setDelayWet}
                 step={0.05}
-                defaultValue={1}
+                defaultValue={0}
                 value = {delayWet}
             ></Knob>
         </div>

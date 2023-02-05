@@ -8,7 +8,7 @@ const Reverb = ({ setReverb }) => {
 
     const [reverbNode, setReverbNode] = useState(null);
     const [REVERB_ON, setREVERB_ON] = useState(0);
-    const [reverbWet, setReverbWet] = useState(1);
+    const [reverbWet, setReverbWet] = useState(0.5);
     const [reverbDecay, setReverbDecay] = useState(0);
     const [reverbPreDelay, setReverbPreDelay] = useState(0);
 

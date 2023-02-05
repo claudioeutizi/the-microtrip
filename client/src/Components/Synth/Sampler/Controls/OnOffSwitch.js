@@ -13,7 +13,6 @@ const OnOffSwitch = (props) => {
 
     useEffect(() => {
         setOnOff(props.value);
-        console.log(props.value)
       }, [props.value])
 
     return (
