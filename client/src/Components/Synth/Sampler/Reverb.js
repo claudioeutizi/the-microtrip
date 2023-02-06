@@ -46,11 +46,9 @@ const Reverb = ({ setReverb }) => {
     useEffect(() => {
         const handleOnInternalHumidity = (event) => {
             if(REVERB_ON && reverbNode){
-                console.log("reverb exists: modify humidity");
                 setReverbWet((event.detail.humidity / 100).toFixed(2));
                 setReverbDecay((event.detail.humidity / 100 * 20).toFixed(2));
             } else {
-                console.log("reverb does not exists: creating it and setting with hunidity");
                 setReverbNode(createReverb(reverbDecay, reverbPreDelay, reverbWet));
                 setReverb(reverbNode);
                 setReverbDecay((event.detail.humidity / 100 * 20).toFixed(2));

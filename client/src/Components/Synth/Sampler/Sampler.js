@@ -188,6 +188,7 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
     useEffect(() => {
         if (noiseArray) {
             for (let i = 0; i < polyphony; i++) {
+                console.log("noise gain", noiseGain)
                 noiseArray[i].set({
                     volume: gainToDb(noiseGain)
                 });
@@ -234,6 +235,33 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
             });
         }
     }, [pitchKnob])
+
+
+    const mapValuesExp = (value, prevMin, postMin, prevMax, postMax) => {
+        return Math.pow(10, Math.log10(postMin) + (value - prevMin) * (Math.log10(postMax) - Math.log10(postMin)) / (prevMax - prevMin));
+    }
+
+    useEffect(() => {
+        const handleOnRainWind = (event) => {
+            
+            if(noiseArray){
+                const weatherData = event.detail.data;
+                console.log("mapping wind:", weatherData.wind.speed, "with gain", mapValuesExp(weatherData.wind.speed, 0, 0.001, 40, 1 ))
+                setNoiseGain(mapValuesExp(weatherData.wind.speed, 0, 0.001, 20, 1))
+
+                if(weatherData.rain)
+                {
+                    console.log("pioveee", weatherData.rain["1h"])
+                }
+            }
+
+            }
+
+        document.addEventListener("onexternaldata", handleOnRainWind);
+        return () => {
+            document.removeEventListener("onexternaldata", handleOnRainWind);
+        }
+    });
 
     //-----------------------HANDLERS-----------------------------//
     const handleNoteUp = useCallback((event) => {
