@@ -111,7 +111,7 @@ const cities = [
     },
     {
         name: 'Dakar',
-        img: "/images/cities/cape_town.png",
+        img: "/images/cities/dakar.png",
         //Kora
         instId: 14,
         id: 'Q3718',

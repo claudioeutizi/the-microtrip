@@ -184,6 +184,9 @@ function Piano(props) {
         case 128: //it can send a 128 message instead of a 144 with 0 velocity
           midiNoteOff(noteNumber);
           break;
+        case 224:
+          midiPitchWheel(noteNumber);
+          break;
         default: break;
       }
     }
@@ -200,6 +203,16 @@ function Piano(props) {
       const note = notes[noteNumber % 12];
       console.log("midi note up")
       setNoteUp(note, octave);
+    }
+
+    const midiPitchWheel = (pitch) => {
+      console.log("midi pitch bend");
+      document.dispatchEvent(new CustomEvent("midipitchbend",
+      {
+        detail: {
+          pitch: pitch,
+        }
+      }))
     }
 
     return () => {
