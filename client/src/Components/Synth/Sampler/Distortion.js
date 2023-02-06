@@ -22,7 +22,7 @@ const Distortion = ({ setDist }) => {
     }, []);
 
     useEffect(() => {
-        if (DIST_ON && !distNode) {
+        if (DIST_ON) {
             setDistNode(createDistortion(distAmount, distWet));
             setDist(distNode)
         }

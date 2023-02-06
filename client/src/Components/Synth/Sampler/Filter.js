@@ -59,7 +59,7 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
     /* HPF Generation */
 
     useEffect(() => {
-        if (hpfOnOff && !hpfNode) {
+        if (hpfOnOff) {
             console.log("HP generation")
             setHpfNode(createHpf(rolloff, "highpass", hpfResonance, hpfCutoff));
             setFilterH(hpfNode);
@@ -72,7 +72,7 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
     /* LPF Generation */
 
     useEffect(() => {
-        if (lpfOnOff && !lpfNode) {
+        if (lpfOnOff) {
             console.log("LP generation")
             setLpfNode(createLpf(rolloff, "lowpass", lpfResonance, lpfCutoff));
             setFilterL(lpfNode);

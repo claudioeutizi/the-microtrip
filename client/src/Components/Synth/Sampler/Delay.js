@@ -20,7 +20,7 @@ const Delay = ({ setDelay }) => {
     },[]);
 
     useEffect(() => {
-        if (DELAY_ON && !delayNode) {
+        if (DELAY_ON) {
             console.log("Delay ON")
             setDelayNode(createDelay(delayTime, delayFeedback, delayWet));
             setDelay(delayNode);

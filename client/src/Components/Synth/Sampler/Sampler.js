@@ -115,11 +115,11 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
     useState(() => {
         pitchShifter = new Tone.PitchShift({
             pitch: pitch,
-            windowSize: 0.09
+            windowSize: 0.05
         });
         pitchShifterKnob = new Tone.PitchShift({
             pitch: pitchKnob,
-            windowSize: 0.2
+            windowSize: 0.1
         });
 
     }, [])

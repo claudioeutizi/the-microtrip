@@ -9,7 +9,7 @@ const Reverb = ({ setReverb }) => {
     const [reverbNode, setReverbNode] = useState(null);
     const [REVERB_ON, setREVERB_ON] = useState(0);
     const [reverbWet, setReverbWet] = useState(0.5);
-    const [reverbDecay, setReverbDecay] = useState(0);
+    const [reverbDecay, setReverbDecay] = useState(0.01);
     const [reverbPreDelay, setReverbPreDelay] = useState(0);
 
     const createReverb = useCallback((decay, preDelay, wet) => {
@@ -21,7 +21,7 @@ const Reverb = ({ setReverb }) => {
     },[]);
 
     useEffect(() => {
-        if (REVERB_ON && !reverbNode) {
+        if (REVERB_ON) {
             setReverbNode(createReverb(reverbDecay, reverbPreDelay, reverbWet));
             setReverb(reverbNode);
             }
@@ -97,9 +97,9 @@ const Reverb = ({ setReverb }) => {
                 value={REVERB_ON}
             ></OnOffSwitch>
             <Knob diameter={48} id={"reverb-decay"} parameter={"Decay"}
-                min={0.001} max={20}
+                min={0.01} max={20}
                 setValue={setReverbDecay}
-                step={0.5}
+                step={0.01}
                 defaultValue={0.001}
                 value = {reverbDecay}
             ></Knob>

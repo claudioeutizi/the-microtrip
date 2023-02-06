@@ -22,7 +22,8 @@ const Vibrato = ({ setVibrato }) => {
 
 
     useEffect(() => {
-        if (VIBRATO_ON && !vibratoNode) {
+        if (VIBRATO_ON) {
+            console.log("vibrato on")
             setVibratoNode(createVibrato(vibratoRate, vibratoDepth, vibratoWet));
             setVibrato(vibratoNode)
         }
@@ -36,6 +37,7 @@ const Vibrato = ({ setVibrato }) => {
 
     useEffect(() => {
         if (vibratoNode && VIBRATO_ON) {
+            console.log("vibrato rate")
             vibratoNode.set({
                 frequency: vibratoRate
             });
