@@ -22,7 +22,7 @@ const Distortion = ({ setDist }) => {
     }, []);
 
     useEffect(() => {
-        if (DIST_ON && !distNode) {
+        if (DIST_ON) {
             setDistNode(createDistortion(distAmount, distWet));
             setDist(distNode)
         }
@@ -79,7 +79,6 @@ const Distortion = ({ setDist }) => {
             let H = Math.log10(0.5 * (0.6 * humidity * Math.pow(10, 0.03 * temperature) - 10));
             
             if (DIST_ON && distNode) {
-                console.log("dist exists: modify humidity");
                 setDistAmount(mapValues(temperature, -10, 0, 40, 1).toFixed(2));
                 if (H >= -40 && H <= 18) {
                     setDistWet(mapValues(H, -40, 1, 18, 0).toFixed(2));
@@ -93,7 +92,6 @@ const Distortion = ({ setDist }) => {
                 else setDistWet(1);
             }
             else {
-                console.log("dist does not exists: creating it and setting with hunidity");
                 setDistNode(createDistortion(distAmount, distWet));
                 setDist(distNode);
                 setDistAmount(mapValues(temperature, -10, 0, 40, 1).toFixed(2));

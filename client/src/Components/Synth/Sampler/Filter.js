@@ -59,7 +59,7 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
     /* HPF Generation */
 
     useEffect(() => {
-        if (hpfOnOff && !hpfNode) {
+        if (hpfOnOff) {
             console.log("HP generation")
             setHpfNode(createHpf(rolloff, "highpass", hpfResonance, hpfCutoff));
             setFilterH(hpfNode);
@@ -72,7 +72,7 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
     /* LPF Generation */
 
     useEffect(() => {
-        if (lpfOnOff && !lpfNode) {
+        if (lpfOnOff) {
             console.log("LP generation")
             setLpfNode(createLpf(rolloff, "lowpass", lpfResonance, lpfCutoff));
             setFilterL(lpfNode);
@@ -205,8 +205,6 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
     useEffect(() => {
 
         if (lpfLfo) {
-            console.log("rate", lpfLfoRate)
-
             lpfLfo.set({
                 frequency: lpfLfoRate
             })
@@ -217,8 +215,6 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
     useEffect(() => {
 
         if (hpfLfo) {
-            console.log("rate", hpfLfoRate)
-
             hpfLfo.set({
                 frequency: hpfLfoRate
             })
@@ -247,8 +243,6 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
     useEffect(() => {
 
         if (lpfLfo) {
-            console.log("type", lpfLfoType)
-
             lpfLfo.set({
                 type: lpfLfoType
             })
@@ -260,8 +254,6 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
     useEffect(() => {
 
         if (hpfLfo) {
-            console.log("type", hpfLfoType)
-
             hpfLfo.set({
                 type: hpfLfoType
             })
@@ -418,13 +410,13 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
             <div className="screen-container lfo">
                 <select id="lpf-lfo-selector" value={lpfLfoType} onChange={handleLpfTypeChange} label="Waveform">
                     {waveforms.map((waveform) => {
-                        return <option value={waveform.label}>{waveform.label}</option>
+                        return <option key = {waveform.label} value={waveform.label}>{waveform.label}</option>
                     })}
                 </select>
 
                 <select id="hpf-lfo-selector" value={hpfLfoType} onChange={handleHpfTypeChange} label="Waveform">
                     {waveforms.map((waveform) => {
-                        return <option value={waveform.label}>{waveform.label}</option>
+                        return <option key = {waveform.label} value={waveform.label}>{waveform.label}</option>
                     })}
                 </select>
             </div>

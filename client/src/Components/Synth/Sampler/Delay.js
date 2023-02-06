@@ -20,7 +20,7 @@ const Delay = ({ setDelay }) => {
     },[]);
 
     useEffect(() => {
-        if (DELAY_ON && !delayNode) {
+        if (DELAY_ON) {
             console.log("Delay ON")
             setDelayNode(createDelay(delayTime, delayFeedback, delayWet));
             setDelay(delayNode);
@@ -64,11 +64,9 @@ const Delay = ({ setDelay }) => {
         const handleOnExternalHumidity = (event) => {
             const weatherData = event.detail.data;
             if(DELAY_ON && delayNode){
-                console.log("delay exists: modify humidity");
                 setDelayWet((weatherData.main.humidity / 100).toFixed(2));
-                setDelayFeedback((weatherData.main.humidity / 100).toFixed(2)); //va settato logaritmico
+                setDelayFeedback((weatherData.main.humidity / 100).toFixed(2)); 
             } else {
-                console.log("delay does not exists: creating it and setting with hunidity");
                 setDelayNode(createDelay(delayTime, delayFeedback, delayWet));
                 setDelay(delayNode);
                 setDelayFeedback((weatherData.main.humidity / 100).toFixed(2))

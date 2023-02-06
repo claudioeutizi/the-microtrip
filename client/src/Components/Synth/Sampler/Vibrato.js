@@ -22,7 +22,7 @@ const Vibrato = ({ setVibrato }) => {
 
 
     useEffect(() => {
-        if (VIBRATO_ON && !vibratoNode) {
+        if (VIBRATO_ON) {
             setVibratoNode(createVibrato(vibratoRate, vibratoDepth, vibratoWet));
             setVibrato(vibratoNode)
         }
@@ -36,6 +36,7 @@ const Vibrato = ({ setVibrato }) => {
 
     useEffect(() => {
         if (vibratoNode && VIBRATO_ON) {
+            console.log("vibrato rate")
             vibratoNode.set({
                 frequency: vibratoRate
             });
@@ -70,12 +71,10 @@ const Vibrato = ({ setVibrato }) => {
         const handleOnExternalTemperature = (event) => {
             const weatherData = event.detail.data;
             if(VIBRATO_ON && vibratoNode){
-                console.log("vibrato exists: modify humidity");
                 setVibratoWet(mapValues(Math.abs(weatherData.main.feels_like - weatherData.main.temp), 0, 0.3, 20, 1).toFixed(2));
                 setVibratoDepth(mapValues(weatherData.main.feels_like, -10, 0, 40, 1).toFixed(2));
                 setVibratoRate(Math.min(Math.abs(weatherData.main.feels_like - weatherData.main.temp), 20).toFixed(2));
             } else {
-                console.log("vibrato does not exists: creating it and setting with hunidity");
                 setVibratoNode(createVibrato(vibratoRate, vibratoDepth, vibratoWet));
                 setVibrato(vibratoNode);
                 setVibratoDepth(mapValues(weatherData.main.feels_like, -10, 0, 40, 1).toFixed(2))

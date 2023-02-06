@@ -115,11 +115,11 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
     useState(() => {
         pitchShifter = new Tone.PitchShift({
             pitch: pitch,
-            windowSize: 0.09
+            windowSize: 0.05
         });
         pitchShifterKnob = new Tone.PitchShift({
             pitch: pitchKnob,
-            windowSize: 0.2
+            windowSize: 0.1
         });
 
     }, [])
@@ -188,6 +188,7 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
     useEffect(() => {
         if (noiseArray) {
             for (let i = 0; i < polyphony; i++) {
+                console.log("noise gain", noiseGain)
                 noiseArray[i].set({
                     volume: gainToDb(noiseGain)
                 });
@@ -234,6 +235,36 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
             });
         }
     }, [pitchKnob])
+
+
+    const mapValuesExp = (value, prevMin, postMin, prevMax, postMax) => {
+        return Math.pow(10, Math.log10(postMin) + (value - prevMin) * (Math.log10(postMax) - Math.log10(postMin)) / (prevMax - prevMin));
+    }
+
+    useEffect(() => {
+        const handleOnRainWind = (event) => {
+            
+            if(noiseArray){
+                const weatherData = event.detail.data;
+                console.log("mapping wind:", weatherData.wind.speed, "with gain", mapValuesExp(weatherData.wind.speed, 0, 0.01, 10, 1 ))
+                setNoiseType("brown");
+                setNoiseGain(mapValuesExp(weatherData.wind.speed, 0, 0.05, 10, 1));
+
+                if(weatherData.rain)
+                {
+                    console.log("mapping rain", weatherData.rain["1h"], "with gain", mapValuesExp(weatherData.wind.speed, 0, 0.001, 15, 1 ))
+                    setNoiseType("white");
+                    setNoiseGain(mapValuesExp(weatherData.rain["1h"], 0, 0.001, 15, 1));
+                }
+            }
+
+            }
+
+        document.addEventListener("onexternaldata", handleOnRainWind);
+        return () => {
+            document.removeEventListener("onexternaldata", handleOnRainWind);
+        }
+    });
 
     //-----------------------HANDLERS-----------------------------//
     const handleNoteUp = useCallback((event) => {
@@ -341,6 +372,8 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
                 setRelease={setEnvelopeRelease}>
             </Adsr>
             <Noise
+                gain = {noiseGain}
+                type = {noiseType}
                 setNoiseGain={setNoiseGain}
                 setFadeOut={setFadeOut}
                 setFadeIn={setFadeIn}

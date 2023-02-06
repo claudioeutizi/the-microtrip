@@ -44,33 +44,33 @@ const Room = ({ light, onMapClicked, onInstrumentClicked, weatherData, city }) =
       }
       setWeather(weatherData.weather[0].id);
 
-      console.log("time: ", time.format());
-      console.log("sunrise:", sunrise.format());
-      console.log("sunset: ", sunset.format());
+      // console.log("time: ", time.format());
+      // console.log("sunrise:", sunrise.format());
+      // console.log("sunset: ", sunset.format());
 
-      console.log("sunset test: ", time.isBetween(sunset.clone().subtract(30, "minutes"), sunset.clone().add(30, 'minutes')));
-      console.log("sunrise test: ", time.isBetween(sunrise.clone().subtract(30, "minutes"), sunrise.clone().add(30, 'minutes')));
-      console.log("day test: ", time.isBetween(sunrise.clone(), sunset.clone()));
-      console.log("night test: ", time.isBetween(sunset.clone().add(30, 'minutes'), sunrise.clone().subtract(30, 'minutes')));
+      // console.log("sunset test: ", time.isBetween(sunset.clone().subtract(30, "minutes"), sunset.clone().add(30, 'minutes')));
+      // console.log("sunrise test: ", time.isBetween(sunrise.clone().subtract(30, "minutes"), sunrise.clone().add(30, 'minutes')));
+      // console.log("day test: ", time.isBetween(sunrise.clone(), sunset.clone()));
+      // console.log("night test: ", time.isBetween(sunset.clone().add(30, 'minutes'), sunrise.clone().subtract(30, 'minutes')));
 
       if (time.isBetween(sunset.clone().subtract(30, "minutes"), sunset.clone().add(30, 'minutes'), "minutes", "[]")) {
         setDayMoment("sunset");
-        console.log("sunset");
+        // console.log("sunset");
       }
       else if (time.isBetween(sunrise.clone().subtract(30, "minutes"), sunrise.clone().subtract(30, 'minutes'), "minutes", "[]")) {
         setDayMoment("sunrise");
-        console.log("sunrise")
+        // console.log("sunrise")
       }
       else if (time.isBetween(sunrise.clone().add(30, "minutes"), sunset.clone().subtract(30, 'minutes'), "minutes", "[]")) {
         setDayMoment("day");
-        console.log("day")
+        // console.log("day")
       }
       else if (
         time.isBetween(sunset.clone().add(30, "minutes"), sunrise.clone().add(24, 'hours').subtract(30, "minutes"), "minutes", "[]")
         ||
         time.isBetween(sunset.clone().subtract(24, "hours").add(30, "minutes"), sunrise.clone().subtract(30, "minutes"), "minutes", "[]")) {
         setDayMoment("night");
-        console.log("night");
+        // console.log("night");
       }
 
       else console.log("undefined!");

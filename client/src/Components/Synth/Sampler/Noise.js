@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Knob from './Controls/Knob'
 import * as Tone from 'tone'
 
@@ -6,6 +6,10 @@ import * as Tone from 'tone'
 const Noise = (props) => {
 
     const [noiseType, setType] = useState("white");
+
+    useEffect(() => {
+        props.type ? setType(props.type) : setType("white");
+    },[props.type])
 
     const types = [
         {
@@ -40,6 +44,7 @@ const Noise = (props) => {
             <div id="noise-knobs-row">
                 <Knob id="noise-gain" diameter={48} parameter={"Gain"}
                     min={Tone.dbToGain(-60)} max={Tone.dbToGain(0)}
+                    value = {props.gain}
                     log={1}
                     step={0.001}
                     setValue={props.setNoiseGain}
@@ -55,7 +60,7 @@ const Noise = (props) => {
                 ></Knob>
                 <Knob id="noise-fadeout" diameter={48} parameter={"Fadeout"}
                     min={0} max={2}
-                    setValue={props.setFadeIn}
+                    setValue={props.setFadeOut}
                     step={0.05}
                     defaultValue={0}
                 ></Knob>
