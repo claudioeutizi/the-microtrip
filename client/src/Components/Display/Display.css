@@ -1,5 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Audiowide&family=Aldrich&&family=Epilogue:wght@500&family=Source+Code+Pro:wght@400&family=VT323&display=swap");
-
+@font-face {
+    font-family: "SevenSegment";   /*Can be any text*/
+    src: local("SevenSegment"),
+      url("../../Fonts/Seven\ Segment.ttf") format("truetype");
+  }
 
 .device-container {
     width: fit-content;
@@ -186,7 +190,7 @@
 }
 
 .data-value {
-    font-family: 'Seven Segment';
+    font-family: 'SevenSegment';
     font-weight: bolder;
     font-size: 8px;
     margin: 5px;
