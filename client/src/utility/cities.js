@@ -189,7 +189,8 @@ const cities = [
     {
         name: 'Los Angeles',
         img: "/images/cities/los_angeles.png",
-        //?
+        //Dist guitar
+        instId: 16,
         id: 'Q65',
         position: {
             lat: 34.052235,

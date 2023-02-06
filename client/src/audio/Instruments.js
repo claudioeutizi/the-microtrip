@@ -39,10 +39,10 @@ const instruments = [
       Ds3: require('' + noSample),
       Fs3: require('' + noSample),
       A3: require('' + noSample),
-      C4: require('' + noSample),
-      Ds4: require('' + noSample),
-      Fs4: require('' + noSample),
-      A4: require('' + noSample),
+      C4: require('./Samples/Sitar/SitarC4.wav'),
+      Ds4: require('./Samples/Sitar/SitarDs4.wav'),
+      Fs4: require('./Samples/Sitar/SitarFs4.wav'),
+      A4: require('./Samples/Sitar/SitarA4.wav'),
       C5: require('./Samples/Sitar/SitarC5.wav'),
       Ds5: require('./Samples/Sitar/SitarDs5.wav'),
       Fs5: require('./Samples/Sitar/SitarFs5.wav'),
@@ -51,7 +51,7 @@ const instruments = [
       Ds6: require('./Samples/Sitar/SitarDs6.wav'),
       Fs6: require('./Samples/Sitar/SitarFs6.wav'),
       A6: require('./Samples/Sitar/SitarA6.wav'),
-      C7: require('' + noSample),
+      C7: require('./Samples/Sitar/SitarC7.wav'),
       Ds7: require('' + noSample),
       Fs7: require('' + noSample),
       A7: require( '' + noSample),
@@ -435,7 +435,6 @@ const instruments = [
       C8: require( '' + noSample),
     }
   },
-  
 
   {
     id: 15,
@@ -463,6 +462,35 @@ const instruments = [
       Fs7: require( './Samples/Balalaika/BalalaikaFs7.wav'),
       A7: require( '' + noSample),
       C8: require( '' + noSample),
+    }
+  },
+
+  {
+    id: 16,
+    name: 'Dist',
+    samples: {
+      A2: require( '' + noSample),
+      C3: require( '' + noSample),
+      Ds3: require( '' + noSample),
+      Fs3: require( '' + noSample),
+      A3: require( '' + noSample),
+      C4: require( './Samples/Dist/DistC4.wav'),
+      Ds4: require('./Samples/Dist/DistDs4.wav'),
+      Fs4: require('./Samples/Dist/DistFs4.wav'),
+      A4: require( './Samples/Dist/DistA4.wav'),
+      C5: require( './Samples/Dist/DistC5.wav'),
+      Ds5: require('./Samples/Dist/DistDs5.wav'),
+      Fs5: require('./Samples/Dist/DistFs5.wav'),
+      A5: require( './Samples/Dist/DistA5.wav'),
+      C6: require( './Samples/Dist/DistC6.wav'),
+      Ds6: require('./Samples/Dist/DistDs6.wav'),
+      Fs6: require('./Samples/Dist/DistFs6.wav'),
+      A6: require( './Samples/Dist/DistA6.wav'),
+      C7: require( './Samples/Dist/DistC7.wav'),
+      Ds7: require('./Samples/Dist/DistDs7.wav'),
+      Fs7: require('./Samples/Dist/DistFs7.wav'),
+      A7: require('./Samples/Dist/DistA7.wav'),
+      C8: require('./Samples/Dist/DistC8.wav')
     }
   },
 
