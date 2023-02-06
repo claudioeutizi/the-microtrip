@@ -246,12 +246,15 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
             
             if(noiseArray){
                 const weatherData = event.detail.data;
-                console.log("mapping wind:", weatherData.wind.speed, "with gain", mapValuesExp(weatherData.wind.speed, 0, 0.001, 40, 1 ))
-                setNoiseGain(mapValuesExp(weatherData.wind.speed, 0, 0.001, 20, 1))
+                console.log("mapping wind:", weatherData.wind.speed, "with gain", mapValuesExp(weatherData.wind.speed, 0, 0.01, 10, 1 ))
+                setNoiseType("brown");
+                setNoiseGain(mapValuesExp(weatherData.wind.speed, 0, 0.01, 10, 1));
 
                 if(weatherData.rain)
                 {
-                    console.log("pioveee", weatherData.rain["1h"])
+                    console.log("mapping rain", weatherData.rain["1h"], "with gain", mapValuesExp(weatherData.wind.speed, 0, 0.001, 15, 1 ))
+                    setNoiseType("white");
+                    setNoiseGain(mapValuesExp(weatherData.rain["1h"], 0, 0.001, 15, 1));
                 }
             }
 
@@ -369,6 +372,8 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
                 setRelease={setEnvelopeRelease}>
             </Adsr>
             <Noise
+                gain = {noiseGain}
+                type = {noiseType}
                 setNoiseGain={setNoiseGain}
                 setFadeOut={setFadeOut}
                 setFadeIn={setFadeIn}
