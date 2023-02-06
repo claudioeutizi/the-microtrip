@@ -8,7 +8,7 @@ const Delay = ({ setDelay }) => {
     const [delayNode, setDelayNode] = useState(null);
     const [DELAY_ON, setDELAY_ON] = useState(0);
     const [delayFeedback, setDelayFeedback] = useState(0);
-    const [delayTime, setDelayTime] = useState(0);
+    const [delayTime, setDelayTime] = useState(0.05);
     const [delayWet, setDelayWet] = useState(0);
 
     const createDelay = useCallback((delayTime, feedback, wet) => {
@@ -64,13 +64,13 @@ const Delay = ({ setDelay }) => {
         const handleOnExternalHumidity = (event) => {
             const weatherData = event.detail.data;
             if(DELAY_ON && delayNode){
-                setDelayWet((weatherData.main.humidity / 100).toFixed(2));
-                setDelayFeedback((weatherData.main.humidity / 100).toFixed(2)); 
+                setDelayWet((weatherData.main.humidity / 100 - 0.2).toFixed(2));
+                setDelayFeedback(((Math.log10(weatherData.main.humidity) / 2)-0.1).toFixed(2)); 
             } else {
                 setDelayNode(createDelay(delayTime, delayFeedback, delayWet));
                 setDelay(delayNode);
-                setDelayFeedback((weatherData.main.humidity / 100).toFixed(2))
-                setDelayWet((weatherData.main.humidity / 100).toFixed(2));
+                setDelayFeedback(((Math.log10(weatherData.main.humidity) / 2)-0.1).toFixed(2))
+                setDelayWet((weatherData.main.humidity / 100 - 0.2).toFixed(2));
                 setDELAY_ON(1);
             }
         }
@@ -99,10 +99,10 @@ const Delay = ({ setDelay }) => {
 
             <Knob style={{ gridRow: 2, gridColumn: 2 }} diameter={48}
                 id="delay-time" parameter="Time"
-                min={0} max={3}
+                min={0.05} max={1.5}
                 setValue={setDelayTime}
                 step={0.05}
-                defaultValue={0}
+                defaultValue={0.05}
             ></Knob>
             <Knob style={{ gridRow: 2, gridColumn: 3 }} diameter={48} id="delay-feedback" parameter="Feedback"
                 min={0} max={0.99}

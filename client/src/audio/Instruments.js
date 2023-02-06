@@ -406,7 +406,65 @@ const instruments = [
       C8: require( '' + noSample),
     }
   },
+
+  {
+    id: 14,
+    name: 'Kora',
+    samples: {
+      A2: require( '' + noSample),
+      C3: require( './Samples/Kora/KoraC3.wav'),
+      Ds3: require('./Samples/Kora/KoraDs3.wav'),
+      Fs3: require('./Samples/Kora/KoraFs3.wav'),
+      A3: require( './Samples/Kora/KoraA3.wav'),
+      C4: require( './Samples/Kora/KoraC4.wav'),
+      Ds4: require('./Samples/Kora/KoraDs4.wav'),
+      Fs4: require('./Samples/Kora/KoraFs4.wav'),
+      A4: require( './Samples/Kora/KoraA4.wav'),
+      C5: require( './Samples/Kora/KoraC5.wav'),
+      Ds5: require('./Samples/Kora/KoraDs5.wav'),
+      Fs5: require('./Samples/Kora/KoraFs5.wav'),
+      A5: require( './Samples/Kora/KoraA5.wav'),
+      C6: require( './Samples/Kora/KoraC6.wav'),
+      Ds6: require('./Samples/Kora/KoraDs6.wav'),
+      Fs6: require('./Samples/Kora/KoraFs6.wav'),
+      A6: require( './Samples/Kora/KoraA6.wav'),
+      C7: require( './Samples/Kora/KoraC7.wav'),
+      Ds7: require( '' + noSample),
+      Fs7: require( '' + noSample),
+      A7: require( '' + noSample),
+      C8: require( '' + noSample),
+    }
+  },
   
+
+  {
+    id: 15,
+    name: 'Balalaika',
+    samples: {
+      A2: require( '' + noSample),
+      C3: require( '' + noSample),
+      Ds3: require( '' + noSample),
+      Fs3: require( '' + noSample),
+      A3: require( '' + noSample),
+      C4: require( './Samples/Balalaika/BalalaikaC4.wav'),
+      Ds4: require('./Samples/Balalaika/BalalaikaDs4.wav'),
+      Fs4: require('./Samples/Balalaika/BalalaikaFs4.wav'),
+      A4: require( './Samples/Balalaika/BalalaikaA4.wav'),
+      C5: require( './Samples/Balalaika/BalalaikaC5.wav'),
+      Ds5: require('./Samples/Balalaika/BalalaikaDs5.wav'),
+      Fs5: require('./Samples/Balalaika/BalalaikaFs5.wav'),
+      A5: require( './Samples/Balalaika/BalalaikaA5.wav'),
+      C6: require( './Samples/Balalaika/BalalaikaC6.wav'),
+      Ds6: require('./Samples/Balalaika/BalalaikaDs6.wav'),
+      Fs6: require('./Samples/Balalaika/BalalaikaFs6.wav'),
+      A6: require( './Samples/Balalaika/BalalaikaA6.wav'),
+      C7: require( './Samples/Balalaika/BalalaikaC7.wav'),
+      Ds7: require( './Samples/Balalaika/BalalaikaDs7.wav'),
+      Fs7: require( './Samples/Balalaika/BalalaikaFs7.wav'),
+      A7: require( '' + noSample),
+      C8: require( '' + noSample),
+    }
+  },
 
 ]
 
