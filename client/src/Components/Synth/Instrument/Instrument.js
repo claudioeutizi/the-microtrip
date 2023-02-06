@@ -39,7 +39,7 @@ export default function Instrument({ selectedInstrument }) {
 
     useEffect(() => {
         console.log("chain creation")
-        let routingArray = [sampler, fineTune, pitchShifter, filterL, filterH, dist, vibrato, delay, reverb, master]
+        let routingArray = [sampler, pitchShifter, filterL, filterH, dist, vibrato, delay, reverb, master]
 
         console.log(routingArray)
 
