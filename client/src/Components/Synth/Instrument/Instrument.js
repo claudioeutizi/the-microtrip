@@ -62,7 +62,7 @@ export default function Instrument({ selectedInstrument }) {
     return (
         <div className='instrument'>
             <div id="logo-container">
-                <span className="logo">Synth</span>
+                <span className="logo">MICRO:TRIP</span>
             </div>
             <Sampler setSampler={setSampler} setPitchShifter={setPitchShifter} setFineTune={setFineTune} selectedInst={selectedInstrument} polyphony={10} />
             <Filter setFilterL={setFilterL} rolloff={-24} setFilterH={setFilterH}/>

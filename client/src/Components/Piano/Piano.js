@@ -9,6 +9,7 @@ function Piano(props) {
 
   const notes = useMemo(() => ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"], []);
   const keys = useMemo(() => "zsxdcvgbhnjmq2w3er5t6y7ui9o0p", []);
+  const [wheelValue, setWheelValue] = useState(64);
   const pianoRef = useRef();
   const containerRef = useRef();
   const click = useRef(false);
@@ -185,7 +186,7 @@ function Piano(props) {
           midiNoteOff(noteNumber);
           break;
         case 224:
-          midiPitchWheel(noteNumber);
+          midiPitchWheel(velocity);
           break;
         default: break;
       }
@@ -205,14 +206,18 @@ function Piano(props) {
       setNoteUp(note, octave);
     }
 
+    const mapValues = (value, prevMin, postMin, prevMax, postMax) => {
+      return postMin + (value - prevMin) * (postMax - postMin) / (prevMax - prevMin);
+  }
+
     const midiPitchWheel = (pitch) => {
-      console.log("midi pitch bend");
       document.dispatchEvent(new CustomEvent("midipitchbend",
       {
         detail: {
           pitch: pitch,
         }
       }))
+      setWheelValue(mapValues(pitch, 0, -4, 127, 4));
     }
 
     return () => {
@@ -417,6 +422,7 @@ function Piano(props) {
     <div ref={containerRef} className="piano-container">
         <WebAudioKnob className="wheel"
           src={"/images/knobs/76_bender_palette.png"}
+          value = {wheelValue}
           sprites={100}
           min={-4}
           max={4}

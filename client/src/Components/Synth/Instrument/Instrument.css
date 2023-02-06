@@ -272,6 +272,7 @@ option {
 
 #logo-container {
     display: grid;
+    width: fit-content;
     align-content: space-between;
     justify-content: center;
 }

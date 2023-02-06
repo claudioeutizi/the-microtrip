@@ -246,9 +246,9 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
             
             if(noiseArray){
                 const weatherData = event.detail.data;
-                console.log("mapping wind:", weatherData.wind.speed, "with gain", mapValuesExp(weatherData.wind.speed, 0, 0.03, 10, 1 ))
+                console.log("mapping wind:", weatherData.wind.speed, "with gain", mapValuesExp(weatherData.wind.speed, 0, 0.01, 10, 1 ))
                 setNoiseType("brown");
-                setNoiseGain(mapValuesExp(weatherData.wind.speed, 0, 0.03, 10, 1));
+                setNoiseGain(mapValuesExp(weatherData.wind.speed, 0, 0.05, 10, 1));
 
                 if(weatherData.rain)
                 {
@@ -312,14 +312,25 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
     /* ==================================== ENVELOPE ================================================= */
 
     //LISTENERS
+
+    const mapValues = (value, prevMin, postMin, prevMax, postMax) => {
+        return postMin + (value - prevMin) * (postMax - postMin) / (prevMax - prevMin);
+    }
+
     useEffect(() => {
+        const handleMidiPitchBend = (event) => {
+            setPitch(mapValues(event.detail.pitch, 0, -4, 127, 4));
+        }
+
         document.addEventListener("notedown", handleNoteDown);
         document.addEventListener("noteup", handleNoteUp);
-        document.addEventListener("onpitchchange", handlePitchChange)
+        document.addEventListener("onpitchchange", handlePitchChange);
+        document.addEventListener("midipitchbend", handleMidiPitchBend);
 
         return () => {
             document.removeEventListener('notedown', handleNoteDown);
             document.removeEventListener('noteup', handleNoteUp);
+            document.removeEventListener("onpitchchange", handlePitchChange);
         }
     }, [handleNoteDown, handleNoteUp]);
 
