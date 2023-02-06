@@ -110,14 +110,14 @@ const cities = [
         }
     },
     {
-        name: 'Cape Town',
+        name: 'Dakar',
         img: "/images/cities/cape_town.png",
         //Kora
         instId: 14,
-        id: 'Q5465',
+        id: 'Q3718',
         position: {
-            lat: -33.918861,
-            lon: 18.423300,
+            lat: 14.716677,
+            lon: -17.467686,
         }
     },
     {
