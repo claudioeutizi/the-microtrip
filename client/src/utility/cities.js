@@ -112,7 +112,8 @@ const cities = [
     {
         name: 'Cape Town',
         img: "/images/cities/cape_town.png",
-        //vuvuzela
+        //Kora
+        instId: 14,
         id: 'Q5465',
         position: {
             lat: -33.918861,
