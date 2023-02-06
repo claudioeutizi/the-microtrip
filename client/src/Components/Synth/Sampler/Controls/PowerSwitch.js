@@ -4,7 +4,7 @@ import "../../Instrument/Instrument.css"
 
 const PowerSwitch = (props) => {
 
-    const [onOff, setOnOff] = useState(1);
+    const [onOff, setOnOff] = useState(true);
 
 
     const handleOnChange = (value) => {

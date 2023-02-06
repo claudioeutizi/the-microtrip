@@ -61,22 +61,26 @@ const Vibrato = ({ setVibrato }) => {
         }
     }, [vibratoWet])
 
+    const mapValues = (value, prevMin, postMin, prevMax, postMax) => {
+        return postMin + (value - prevMin) * (postMax - postMin) / (prevMax - prevMin);
+    }
+
 
     useEffect(() => {
         const handleOnExternalTemperature = (event) => {
             const weatherData = event.detail.data;
             if(VIBRATO_ON && vibratoNode){
                 console.log("vibrato exists: modify humidity");
-                setVibratoWet(1);
-                setVibratoDepth(1);
-                setVibratoRate(5);
+                setVibratoWet(mapValues(Math.abs(weatherData.main.feels_like - weatherData.main.temp), 0, 0.3, 20, 1).toFixed(2));
+                setVibratoDepth(mapValues(weatherData.main.feels_like, -10, 0, 40, 1).toFixed(2));
+                setVibratoRate(Math.min(Math.abs(weatherData.main.feels_like - weatherData.main.temp), 20).toFixed(2));
             } else {
                 console.log("vibrato does not exists: creating it and setting with hunidity");
                 setVibratoNode(createVibrato(vibratoRate, vibratoDepth, vibratoWet));
                 setVibrato(vibratoNode);
-                setVibratoDepth(1)
-                setVibratoWet(1);
-                setVibratoRate(5);
+                setVibratoDepth(mapValues(weatherData.main.feels_like, -10, 0, 40, 1).toFixed(2))
+                setVibratoWet(mapValues(Math.abs(weatherData.main.feels_like - weatherData.main.temp), 0, 0.3, 20, 1).toFixed(2));
+                setVibratoRate(Math.min(Math.abs(weatherData.main.feels_like - weatherData.main.temp), 20).toFixed(2));
                 setVIBRATO_ON(1);
             }
         }
@@ -85,9 +89,6 @@ const Vibrato = ({ setVibrato }) => {
             document.removeEventListener("onexternaldata", handleOnExternalTemperature);
         }
     });
-
-
-
 
     return (
         <div id="vibrato-container">

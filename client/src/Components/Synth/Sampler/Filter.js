@@ -45,7 +45,7 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
             Q: Q,
             frequency: frequency,
         })
-    },[])
+    }, [])
 
     const createHpf = useCallback((rolloff, type, Q, frequency) => {
         return new Tone.Filter({
@@ -54,7 +54,7 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
             Q: Q,
             frequency: frequency,
         })
-    },[])
+    }, [])
 
     /* HPF Generation */
 
@@ -64,7 +64,7 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
             setHpfNode(createHpf(rolloff, "highpass", hpfResonance, hpfCutoff));
             setFilterH(hpfNode);
         }
-        else if(!hpfOnOff && hpfNode) {
+        else if (!hpfOnOff && hpfNode) {
             setFilterH(null);
         }
     }, [hpfOnOff])
@@ -77,7 +77,7 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
             setLpfNode(createLpf(rolloff, "lowpass", lpfResonance, lpfCutoff));
             setFilterL(lpfNode);
         }
-        else if(!lpfOnOff && lpfNode) {
+        else if (!lpfOnOff && lpfNode) {
             setFilterL(null);
         }
     }, [lpfOnOff])
@@ -136,28 +136,37 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
         }
     }, [hpfResonance])
 
+
     //INTERNAL LIGHT: LPF
 
-    // useEffect(() => {
-    //     const handleOnInternalLight = (event) => {
-    //         if(lpfOnOff && lpfNode){
-    //             console.log("lpf exists: modify light");
-    //             setLpfCutoff(event.detail.light); //light cresce -> cutoff cresce
-    //             setLpfResonance(event.detail.light); //light cresce -> resonance decresce 
-    //         } else {
-    //             console.log("delay does not exists: creating it and setting with hunidity");
-    //             setLpfNode(createLpf(rolloff, "lowpass", event.detail.light, event.detail.light));
-    //             setFilterL(lpfNode);
-    //             setLpfCutoff(event.detail.light)
-    //             setLpfResonance(event.detail.light);
-    //             setLpfOnOff(1);
-    //         }
-    //     }
-    //     document.addEventListener("oninternallight", handleOnInternalLight);
-    //     return () => {
-    //         document.removeEventListener("oninternallight", handleOnInternalLight);
-    //     }
-    // });
+    const mapValues = (value, prevMin, postMin, prevMax, postMax) => {
+        return postMin + (value - prevMin) * (postMax - postMin) / (prevMax - prevMin);
+    }
+
+    const mapValuesExp = (value, prevMin, postMin, prevMax, postMax) => {
+        return Math.pow(10, Math.log10(postMin) + (value - prevMin) * (Math.log10(postMax) - Math.log10(postMin)) / (prevMax - prevMin));
+    }
+
+    useEffect(() => {
+        const handleOnInternalLight = (event) => {
+            if (lpfOnOff && lpfNode) {
+                console.log("lpf exists: modify light");
+                setLpfCutoff(Math.ceil(mapValuesExp(event.detail.light, 30, 20, 100, 20000))); //light cresce -> cutoff cresce
+                setLpfResonance(mapValues(event.detail.light, 30, 0, 100, 10).toFixed(2)); //light cresce -> resonance decresce 
+            } else {
+                console.log("delay does not exists: creating it and setting with hunidity");
+                setLpfNode(createLpf(rolloff, "lowpass", event.detail.light, event.detail.light));
+                setFilterL(lpfNode);
+                setLpfCutoff(Math.ceil(mapValuesExp(event.detail.light, 30, 20, 100, 20000)))
+                setLpfResonance(mapValues(event.detail.light, 30, 0, 100, 10).toFixed(2));
+                setLpfOnOff(1);
+            }
+        }
+        document.addEventListener("oninternallight", handleOnInternalLight);
+        return () => {
+            document.removeEventListener("oninternallight", handleOnInternalLight);
+        }
+    });
 
 
     /* ==================================================== LFO ================================================================= */
@@ -317,7 +326,7 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
                     gridRow: 3,
                     gridColumn: 1,
                 }}
-                value = {lpfOnOff}
+                value={lpfOnOff}
                 setState={setLpfOnOff}>
 
             </OnOffSwitch>
@@ -327,7 +336,7 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
                     gridRow: 3,
                     gridColumn: 2,
                 }} id="hpf-on-off"
-                value = {hpfOnOff}
+                value={hpfOnOff}
                 setState={setHpfOnOff}>
             </OnOffSwitch>
 
@@ -338,7 +347,7 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
                 }}
                 min={20} max={20000}
                 setValue={setLpfCutoff}
-                value = {lpfCutoff}
+                value={lpfCutoff}
                 log={1}
                 step={10}
                 defaultValue={20000}
@@ -351,7 +360,7 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
                 }}
                 min={20} max={20000}
                 setValue={setHpfCutoff}
-                value = {hpfCutoff}
+                value={hpfCutoff}
                 log={1}
                 step={10}
                 defaultValue={20}
@@ -363,7 +372,7 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
             }}
                 min={0} max={10}
                 setValue={setLpfResonance}
-                value = {lpfResonance}
+                value={lpfResonance}
                 step={0.1}
                 defaultValue={0}
                 diameter={48} parameter="Resonance"></Knob>
@@ -375,7 +384,7 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
             }}
                 min={0} max={10}
                 setValue={setHpfResonance}
-                value = {hpfResonance}
+                value={hpfResonance}
                 step={0.1}
                 defaultValue={0}
                 diameter={48} parameter="resonance"></Knob>
@@ -393,7 +402,7 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
                     gridRow: 7,
                     gridColumn: 2,
                 }} id="lfo-lpf-on-off"
-                value = {lpfLfoOnOff}
+                value={lpfLfoOnOff}
                 setState={setLpfLfoOnOff}>
             </OnOffSwitch>
 
@@ -402,7 +411,7 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
                     gridRow: 7,
                     gridColumn: 2,
                 }} id="lfo-hpf-on-off"
-                value = {hpfLfoOnOff}
+                value={hpfLfoOnOff}
                 setState={setHpfLfoOnOff}>
             </OnOffSwitch>
 
@@ -428,7 +437,7 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
                 diameter={48} id={"lfo-lpf-rate"} unit="Hz" parameter={"Rate"}
                 min={0} max={15}
                 setValue={setLpfLfoRate}
-                value = {lpfLfoRate}
+                value={lpfLfoRate}
                 step={0.5}
                 defaultValue={0}>
             </Knob>
@@ -441,7 +450,7 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
                 diameter={48} id={"lfo-hpf-rate"} unit="Hz" parameter={"Rate"}
                 min={0} max={15}
                 setValue={setHpfLfoRate}
-                value = {hpfLfoRate}
+                value={hpfLfoRate}
                 step={0.5}
                 defaultValue={0}></Knob>
 
@@ -452,7 +461,7 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
                 }}
                 min={0} max={1}
                 setValue={setLpfLfoDepth}
-                value = {lpfLfoDepth}
+                value={lpfLfoDepth}
                 step={0.05}
                 defaultValue={0}
                 diameter={48} id={"lfo-lpf-depth"} parameter={"Depth"}></Knob>
@@ -464,7 +473,7 @@ const Filter = ({ setFilterH, setFilterL, rolloff }) => {
                 }}
                 diameter={48} id={"lfo-hpf-depth"} parameter={"Depth"}
                 min={0} max={1}
-                value = {hpfLfoDepth}
+                value={hpfLfoDepth}
                 setValue={setHpfLfoDepth}
                 step={0.05}
                 defaultValue={0}></Knob>

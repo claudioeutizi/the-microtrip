@@ -65,14 +65,14 @@ const Delay = ({ setDelay }) => {
             const weatherData = event.detail.data;
             if(DELAY_ON && delayNode){
                 console.log("delay exists: modify humidity");
-                setDelayWet(weatherData.main.humidity / 100);
-                setDelayFeedback(weatherData.main.humidity / 100); //va settato logaritmico
+                setDelayWet((weatherData.main.humidity / 100).toFixed(2));
+                setDelayFeedback((weatherData.main.humidity / 100).toFixed(2)); //va settato logaritmico
             } else {
                 console.log("delay does not exists: creating it and setting with hunidity");
-                setDelayNode(createDelay(delayTime, weatherData.main.humidity / 100, weatherData.main.humidity / 100));
+                setDelayNode(createDelay(delayTime, delayFeedback, delayWet));
                 setDelay(delayNode);
-                setDelayFeedback(weatherData.main.humidity / 100)
-                setDelayWet(weatherData.main.humidity / 100);
+                setDelayFeedback((weatherData.main.humidity / 100).toFixed(2))
+                setDelayWet((weatherData.main.humidity / 100).toFixed(2));
                 setDELAY_ON(1);
             }
         }
