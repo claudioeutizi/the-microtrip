@@ -248,7 +248,7 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
                 const weatherData = event.detail.data;
                 console.log("mapping wind:", weatherData.wind.speed, "with gain", mapValuesExp(weatherData.wind.speed, 0, 0.01, 10, 1 ))
                 setNoiseType("brown");
-                setNoiseGain(mapValuesExp(weatherData.wind.speed, 0, 0.01, 10, 1));
+                setNoiseGain(mapValuesExp(weatherData.wind.speed, 0, 0.05, 10, 1));
 
                 if(weatherData.rain)
                 {

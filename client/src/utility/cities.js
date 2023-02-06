@@ -122,7 +122,8 @@ const cities = [
     {
         name: 'Buenos Aires',
         img: "/images/cities/buenos_aires.png",
-        //bandoneon
+        //accordion
+        instId: 13,
         id: 'Q1486',
         position: {
             lat: -34.603722,
@@ -143,6 +144,7 @@ const cities = [
         name: 'Athens',
         img: "/images/cities/athens.png",
         //buzuki
+        instId: 11,
         id: 'Q1524',
         position: {
             lat: 37.970833,
@@ -153,6 +155,7 @@ const cities = [
         name: 'Edimburgh',
         img: "/images/cities/edimburgh.png",
         //bagpipe
+        instId: 12,
         id: 'Q23436',
         position: {
             lat: 55.950558,
@@ -163,6 +166,7 @@ const cities = [
         name: 'Tokyo',
         img: "/images/cities/tokyo.png",
         //koto
+        instId: 10,
         id: 'Q1490',
         position: {
             lat: 35.672855,
