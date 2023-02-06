@@ -9,7 +9,7 @@
 
 #window img {
     filter: blur(0.5px);
-    width: 70%;
+    width: 65%;
     height: auto;
 }
 
@@ -25,11 +25,10 @@
 
 #outdoor {
     position: absolute;
-    top: 11.5%;
-    width: 42%;
-    left: 29%;
-    height: 74%;
-    /*background-color: aqua;*/
+    top: 3.5%;
+    width: 59%;
+    left: 22%;
+    height: 91%;
     z-index: -1;
 }
 
