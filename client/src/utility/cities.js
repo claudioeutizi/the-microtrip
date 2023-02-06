@@ -135,6 +135,7 @@ const cities = [
         name: 'Moscow',
         img: "/images/cities/moscow.png",
         //balalaika
+        instId: 15,
         id: 'Q649',
         position: {
             lat: 55.644466,
