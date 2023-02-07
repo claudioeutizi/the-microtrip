@@ -10,7 +10,7 @@ function Piano(props) {
   const notes = useMemo(() => ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"], []);
   const keys = useMemo(() => "zsxdcvgbhnjmq2w3er5t6y7ui9o0p", []);
   const pianoRef = useRef();
-  const [wheelValue, setWheelValue] = useState(64);
+  const [wheelValue, setWheelValue] = useState(0);
   const containerRef = useRef();
   const click = useRef(false);
   const [midiAccess, setMidiAccess] = useState(null);
@@ -409,7 +409,6 @@ function Piano(props) {
   }, [containerRef]);
 
   const handlePitchChange = (event) => {
-
     document.dispatchEvent(new CustomEvent("onpitchchange",
       {
         detail: {
