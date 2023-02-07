@@ -467,7 +467,7 @@ const instruments = [
 
   {
     id: 16,
-    name: 'Dist',
+    name: 'Dist Guitar',
     samples: {
       A2: require( '' + noSample),
       C3: require( '' + noSample),
@@ -496,7 +496,7 @@ const instruments = [
 
   {
     id: 17,
-    name: 'Dist',
+    name: 'Didgeridoo',
     samples: {
       A2: require( './Samples/Didgeridoo/DidgeridooA2.wav'),
       C3: require( './Samples/Didgeridoo/DidgeridooC3.wav'),

@@ -108,7 +108,6 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
             for (let i = 0; i < polyphony; i++) {
                 if (polyArray[i] === note) {
                     if (!polyNumberStop.includes(i)) {
-                        // console.log("returning", i, "because is not inclueded in", polyNumberStop)
                         return i
                     }
                 }
@@ -121,15 +120,14 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
     useState(() => {
         pitchShifter = new Tone.PitchShift({
             pitch: pitch,
-            windowSize: 0.05
+            windowSize: 0.03
         });
         pitchShifterKnob = new Tone.PitchShift({
             pitch: pitchKnob,
-            windowSize: 0.1
+            windowSize: 0.07
         });
 
     }, [])
-
 
 
     //------------------------------------------//
@@ -156,11 +154,13 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
             for (let i = 0; i < polyphony; i++) {
                 samplerArray[i] = null;
                 noiseArray[i] = null;
-                //Reset voices
-                polyArray.fill(0);
-                polyNumberStop.fill(0);
-
+                
             }
+            
+            //Reset voices
+            polyArray.fill(0);
+            polyNumberStop.fill(0);
+            console.log("clear array",  polyArray)
         }
 
     }, [instrument]);
@@ -284,7 +284,6 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
                 let first = polyNumberStop[0]
                 samplerArray[first].triggerRelease(event.detail.note, Tone.now());
                 noiseArray[first].stop(Tone.now())
-                // console.log("clearing array:", polyNumberStop[0], "which contains the note", polyArray[polyNumberStop[0]]);
                 polyArray[first] = 0
                 polyNumberStop.shift();
             }, envelopeArray[0].release * 1000)
@@ -315,14 +314,25 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
     /* ==================================== ENVELOPE ================================================= */
 
     //LISTENERS
+
+    const mapValues = (value, prevMin, postMin, prevMax, postMax) => {
+        return postMin + (value - prevMin) * (postMax - postMin) / (prevMax - prevMin);
+    }
+
     useEffect(() => {
+        const handleMidiPitchBend = (event) => {
+            setPitch(mapValues(event.detail.pitch, 0, -4, 127, 4));
+        }
         document.addEventListener("notedown", handleNoteDown);
         document.addEventListener("noteup", handleNoteUp);
         document.addEventListener("onpitchchange", handlePitchChange)
+        document.addEventListener("midipitchbend", handleMidiPitchBend);
 
         return () => {
             document.removeEventListener('notedown', handleNoteDown);
             document.removeEventListener('noteup', handleNoteUp);
+            document.removeEventListener('onpitchchange', handleNoteUp);
+            document.removeEventListener("midipitchbend", handleMidiPitchBend);
         }
     }, [handleNoteDown, handleNoteUp]);
 
