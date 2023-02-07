@@ -9,7 +9,6 @@ function Piano(props) {
 
   const notes = useMemo(() => ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"], []);
   const keys = useMemo(() => "zsxdcvgbhnjmq2w3er5t6y7ui9o0p", []);
-  const [wheelValue, setWheelValue] = useState(64);
   const pianoRef = useRef();
   const [wheelValue, setWheelValue] = useState(64);
   const containerRef = useRef();
