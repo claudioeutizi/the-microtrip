@@ -494,6 +494,34 @@ const instruments = [
     }
   },
 
+  {
+    id: 17,
+    name: 'Dist',
+    samples: {
+      A2: require( './Samples/Didgeridoo/DidgeridooA2.wav'),
+      C3: require( './Samples/Didgeridoo/DidgeridooC3.wav'),
+      Ds3: require('./Samples/Didgeridoo/DidgeridooDs3.wav'),
+      Fs3: require('./Samples/Didgeridoo/DidgeridooFs3.wav'),
+      A3: require( './Samples/Didgeridoo/DidgeridooA3.wav'),
+      C4: require( './Samples/Didgeridoo/DidgeridooC4.wav'),
+      Ds4: require('./Samples/Didgeridoo/DidgeridooDs4.wav'),
+      Fs4: require('./Samples/Didgeridoo/DidgeridooFs4.wav'),
+      A4: require( './Samples/Didgeridoo/DidgeridooA4.wav'),
+      C5: require( './Samples/Didgeridoo/DidgeridooC5.wav'),
+      Ds5: require('./Samples/Didgeridoo/DidgeridooDs5.wav'),
+      Fs5: require('./Samples/Didgeridoo/DidgeridooFs5.wav'),
+      A5: require( './Samples/Didgeridoo/DidgeridooA5.wav'),
+      C6: require( '' + noSample),
+      Ds6: require( '' + noSample),
+      Fs6: require( '' + noSample),
+      A6: require( '' + noSample),
+      C7: require( '' + noSample),
+      Ds7: require( '' + noSample),
+      Fs7: require( '' + noSample),
+      A7: require( '' + noSample),
+      C8: require( '' + noSample)
+    }
+  },
 ]
 
 

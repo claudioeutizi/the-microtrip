@@ -179,6 +179,7 @@ const cities = [
         name: 'Sydney',
         img: "/images/cities/sydney.png",
         //Didgeridoo
+        instId: 17,
         id: 'Q3130',
         position: {
             lat: -33.865143,
