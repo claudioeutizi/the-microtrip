@@ -17,8 +17,10 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
 
     const polyArray = Array(polyphony).fill(0);
     let polyNumberPlay;
-    let prevIndex;
-    let toBeCleared;
+    let prevIndex = 0;
+    let prevNote;
+    let spamCount = 0;
+    let iprev = []
     let polyNumberStop = [];
 
     const [instrument, setInstrument] = useState(selectedInst);
@@ -94,9 +96,8 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
     }
 
 
-    function assignPolyphony(note, polyArray, method) {
+    function assignPolyphony(note, polyArray, method, release) {
         if (method) {
-
             for (let i = 0; i < polyphony; i++)
                 if (polyArray[i] === 0) {
                     polyArray[i] = note;
@@ -104,9 +105,13 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
                 }
         }
         else {
-            let stopIndex = polyArray.indexOf(note)
-            // prevIndex=stopIndex;
-            return stopIndex;
+            for (let i = 0; i < polyphony; i++) {
+                if (polyArray[i] === note) {
+                    if (!polyNumberStop.includes(i)) {
+                        return i
+                    }
+                }
+            }
         }
 
     }
@@ -115,15 +120,14 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
     useState(() => {
         pitchShifter = new Tone.PitchShift({
             pitch: pitch,
-            windowSize: 0.05
+            windowSize: 0.03
         });
         pitchShifterKnob = new Tone.PitchShift({
             pitch: pitchKnob,
-            windowSize: 0.1
+            windowSize: 0.07
         });
 
     }, [])
-
 
 
     //------------------------------------------//
@@ -131,6 +135,7 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
 
     //SAMPLER GENERATION
     useEffect(() => {
+
 
         for (let i = 0; i < polyphony; i++) {
             samplerArray[i] = createSampler(instrument);
@@ -149,7 +154,13 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
             for (let i = 0; i < polyphony; i++) {
                 samplerArray[i] = null;
                 noiseArray[i] = null;
+                
             }
+            
+            //Reset voices
+            polyArray.fill(0);
+            polyNumberStop.fill(0);
+            console.log("clear array",  polyArray)
         }
 
     }, [instrument]);
@@ -188,7 +199,6 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
     useEffect(() => {
         if (noiseArray) {
             for (let i = 0; i < polyphony; i++) {
-                console.log("noise gain", noiseGain)
                 noiseArray[i].set({
                     volume: gainToDb(noiseGain)
                 });
@@ -229,7 +239,6 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
 
     useEffect(() => {
         if (pitchShifterKnob) {
-            console.log("pitch change", pitchKnob)
             pitchShifterKnob.set({
                 pitch: pitchKnob
             });
@@ -243,22 +252,20 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
 
     useEffect(() => {
         const handleOnRainWind = (event) => {
-            
-            if(noiseArray){
-                const weatherData = event.detail.data;
-                console.log("mapping wind:", weatherData.wind.speed, "with gain", mapValuesExp(weatherData.wind.speed, 0, 0.01, 10, 1 ))
+            const weatherData = event.detail.data;
+            console.log("rain?", weatherData)
+            if (weatherData.rain) {
+                console.log("mapping rain", weatherData.rain["1h"], "with gain", mapValuesExp(weatherData.rain["1h"], 0, 0.001, 15, 1))
+                setNoiseType("white");
+                setNoiseGain(mapValuesExp(weatherData.rain["1h"], 0, 0.001, 15, 1));
+            }
+            else {
+                console.log("mapping wind:", weatherData.wind.speed, "with gain", mapValuesExp(weatherData.wind.speed, 0, 0.03, 10, 1))
                 setNoiseType("brown");
-                setNoiseGain(mapValuesExp(weatherData.wind.speed, 0, 0.05, 10, 1));
-
-                if(weatherData.rain)
-                {
-                    console.log("mapping rain", weatherData.rain["1h"], "with gain", mapValuesExp(weatherData.wind.speed, 0, 0.001, 15, 1 ))
-                    setNoiseType("white");
-                    setNoiseGain(mapValuesExp(weatherData.rain["1h"], 0, 0.001, 15, 1));
-                }
+                setNoiseGain(mapValuesExp(weatherData.wind.speed, 0, 0.03, 10, 1));
             }
 
-            }
+        }
 
         document.addEventListener("onexternaldata", handleOnRainWind);
         return () => {
@@ -270,19 +277,16 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
     const handleNoteUp = useCallback((event) => {
         if (samplerArray) {
             console.log("note up: " + event.detail.note);
-            polyNumberStop.push(assignPolyphony(event.detail.note, polyArray, 0));
-            console.log("polynumber array", polyNumberStop)
+            polyNumberStop.push(assignPolyphony(event.detail.note, polyArray, 0, envelopeArray[0].release));
             let last = polyNumberStop[polyNumberStop.length - 1];
             envelopeArray[last].triggerRelease(Tone.now());
-            // toBeCleared=polyNumberStop
             setTimeout(() => {
                 let first = polyNumberStop[0]
                 samplerArray[first].triggerRelease(event.detail.note, Tone.now());
                 noiseArray[first].stop(Tone.now())
-                console.log("clearing array:", polyNumberStop[0], "which contains the note", polyArray[polyNumberStop[0]]);
                 polyArray[first] = 0
                 polyNumberStop.shift();
-            }, envelopeArray[0].release * 950)
+            }, envelopeArray[0].release * 1000)
 
 
         }
@@ -294,12 +298,10 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
             console.log("note down: " + event.detail.note);
             if (Tone.now() > 0.8) {
                 polyNumberPlay = assignPolyphony(event.detail.note, polyArray, 1);
-                console.log("polyarray",polyArray);
-                console.log("sampler to play", polyNumberPlay);
+                console.log("polyarray", polyArray);
                 samplerArray[polyNumberPlay].triggerAttack(event.detail.note, Tone.now() - 0.8, event.detail.velocity);
                 noiseArray[polyNumberPlay].start(Tone.now() - 0.8)
                 envelopeArray[polyNumberPlay].triggerAttack(Tone.now() - 0.1);
-                console.log(polyArray);
             }
         }
     }, [samplerArray]);
@@ -321,16 +323,16 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
         const handleMidiPitchBend = (event) => {
             setPitch(mapValues(event.detail.pitch, 0, -4, 127, 4));
         }
-
         document.addEventListener("notedown", handleNoteDown);
         document.addEventListener("noteup", handleNoteUp);
-        document.addEventListener("onpitchchange", handlePitchChange);
+        document.addEventListener("onpitchchange", handlePitchChange)
         document.addEventListener("midipitchbend", handleMidiPitchBend);
 
         return () => {
             document.removeEventListener('notedown', handleNoteDown);
             document.removeEventListener('noteup', handleNoteUp);
-            document.removeEventListener("onpitchchange", handlePitchChange);
+            document.removeEventListener('onpitchchange', handleNoteUp);
+            document.removeEventListener("midipitchbend", handleMidiPitchBend);
         }
     }, [handleNoteDown, handleNoteUp]);
 
@@ -383,8 +385,8 @@ const Sampler = ({ setSampler, setPitchShifter, setFineTune, selectedInst, polyp
                 setRelease={setEnvelopeRelease}>
             </Adsr>
             <Noise
-                gain = {noiseGain}
-                type = {noiseType}
+                gain={noiseGain}
+                type={noiseType}
                 setNoiseGain={setNoiseGain}
                 setFadeOut={setFadeOut}
                 setFadeIn={setFadeIn}

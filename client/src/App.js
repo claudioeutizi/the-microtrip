@@ -210,7 +210,7 @@ function App() {
           <span>Piano Keyboard</span>
         </button>
         <Collapse isOpened={pianoVisible}>
-          <Piano keyCount={61} keyboardLayout={"C"} />
+          <Piano keyCount={73} keyboardLayout={"C"} />
         </Collapse>
         <Footer />
       </div>

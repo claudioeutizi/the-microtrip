@@ -64,13 +64,13 @@ const Delay = ({ setDelay }) => {
         const handleOnExternalHumidity = (event) => {
             const weatherData = event.detail.data;
             if(DELAY_ON && delayNode){
-                setDelayWet((weatherData.main.humidity / 100 - 0.2).toFixed(2));
+                setDelayWet((Math.max(weatherData.main.humidity / 100 - 0.2,0)).toFixed(2));
                 setDelayFeedback(((Math.log10(weatherData.main.humidity) / 2)-0.1).toFixed(2)); 
             } else {
                 setDelayNode(createDelay(delayTime, delayFeedback, delayWet));
                 setDelay(delayNode);
                 setDelayFeedback(((Math.log10(weatherData.main.humidity) / 2)-0.1).toFixed(2))
-                setDelayWet((weatherData.main.humidity / 100 - 0.2).toFixed(2));
+                setDelayWet((Math.max(weatherData.main.humidity / 100 - 0.2,0)).toFixed(2));
                 setDELAY_ON(1);
             }
         }

@@ -10,18 +10,6 @@ import { useEffect, useState } from 'react';
 import * as Tone from 'tone'
 
 
-//BUG FIX
-//gain node che controlla tutti i sampler
-//se mouse entra in nota suonata la interrompe
-//polifonia rumore
-// pitch wheel
-//meter
-//limiter o anti clip
-//provare a togliere il disconnect dello scale exp ma aggiornare i parametri
-//i have a dream:knob del cutoff che si muove con lfo
-
-
-
 export default function Instrument({ selectedInstrument }) {
 
     const [pitchShifter, setPitchShifter] = useState(null)
@@ -39,7 +27,7 @@ export default function Instrument({ selectedInstrument }) {
 
     useEffect(() => {
         console.log("chain creation")
-        let routingArray = [sampler, pitchShifter, filterL, filterH, dist, vibrato, delay, reverb, master]
+        let routingArray = [sampler, fineTune, pitchShifter, filterL, filterH, dist, vibrato, delay, reverb, master]
 
         console.log(routingArray)
 

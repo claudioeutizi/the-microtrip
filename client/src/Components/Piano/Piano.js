@@ -11,6 +11,7 @@ function Piano(props) {
   const keys = useMemo(() => "zsxdcvgbhnjmq2w3er5t6y7ui9o0p", []);
   const [wheelValue, setWheelValue] = useState(64);
   const pianoRef = useRef();
+  const [wheelValue, setWheelValue] = useState(64);
   const containerRef = useRef();
   const click = useRef(false);
   const [midiAccess, setMidiAccess] = useState(null);
@@ -208,15 +209,15 @@ function Piano(props) {
 
     const mapValues = (value, prevMin, postMin, prevMax, postMax) => {
       return postMin + (value - prevMin) * (postMax - postMin) / (prevMax - prevMin);
-  }
+    }
 
     const midiPitchWheel = (pitch) => {
       document.dispatchEvent(new CustomEvent("midipitchbend",
-      {
-        detail: {
-          pitch: pitch,
-        }
-      }))
+        {
+          detail: {
+            pitch: pitch,
+          }
+        }))
       setWheelValue(mapValues(pitch, 0, -4, 127, 4));
     }
 
@@ -408,27 +409,27 @@ function Piano(props) {
     }
   }, [containerRef]);
 
-  const handlePitchChange = (event)=>{
+  const handlePitchChange = (event) => {
 
     document.dispatchEvent(new CustomEvent("onpitchchange",
-    {
-      detail: {
-        pitch:event.target.value
-      }
-    }))
+      {
+        detail: {
+          pitch: event.target.value
+        }
+      }))
   }
 
   return (
     <div ref={containerRef} className="piano-container">
-        <WebAudioKnob className="wheel"
-          src={"/images/knobs/76_bender_palette.png"}
-          value = {wheelValue}
-          sprites={100}
-          min={-4}
-          max={4}
-          defaultvalue={0}
-          step={0.1}
-          onKnobEvent={handlePitchChange} id="pitch-wheel"/>
+      <WebAudioKnob className="wheel"
+        src={"/images/knobs/76_bender_palette.png"}
+        value = {wheelValue}
+        sprites={100}
+        min={-4}
+        max={4}
+        defaultvalue={0}
+        step={0.1}
+        onKnobEvent={handlePitchChange} id="pitch-wheel" />
       <div className="Piano" ref={pianoRef}>
         {pianoSVG}
       </div>
