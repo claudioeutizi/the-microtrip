@@ -142,7 +142,7 @@ In the image are also shown a breadboard used for the connections and a **Keyeye
 
 ![microbit circuit](/assets/images/microbit.jpg)
 
-You can find a working .hex file in the repo that you can drag&drop in your connected micro:bit device folder or in your [MakeCode editor](https://makecode.microbit.org/) and install it on your micro:bit board using the editor.
+You can find a ready-to-use _microbit-actam-microtrip.hex_ file in the repo that you can drag&drop in your connected micro:bit device folder or in your [MakeCode editor](https://makecode.microbit.org/) and install it on your micro:bit board using the editor.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Usage
