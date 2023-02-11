@@ -181,6 +181,8 @@ The first section is reserved to the room GUI.
 
 ![light gif](/assets/images/light-gif.gif)
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 <h3 name="instrument">The MICRO:TRIP Instrument</h3>
 
 ![instrument](/assets/images/instrument.png)
@@ -199,6 +201,8 @@ When the musician looks down at the top of her/his desk, the MICRO:TRIP instrume
 * **Master:** The master module that controls the mute/unmute of the entire instrument and its master output volume.
 
 * **Piano Keyboard:** A resizable and interactive piano keyboard with a pitch wheel on the left.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Data-controlled Audio Parameters
 
@@ -219,6 +223,7 @@ Here is a detailed list of the parameters affected by the data:
 
 7. **Reverb -> Internal Humidity:**  The internal humidity values arriving from the micro:bit control the *wet* and *decay* parameters of the reverb.
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Built With
 
