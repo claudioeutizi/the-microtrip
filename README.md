@@ -6,29 +6,35 @@
 **ACTAM (Advanced Coding Tools &amp; Methodologies) Project for AY 2022/23.
 Music And Acoustic Engineering M.Sc Politecnico di Milano, Italy.**
 
-<!-- TABLE OF CONTENTS -->
+## Table of Contents
 <details>
-  <summary>Table of Contents</summary>
   <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
+      <li><a href="#the-project">The Project</a></li>
+      <li><a href="#getting-started">Getting Started</a>
+	      <ul>
+		<li><a href="#prerequisites">Prerequisites</a></li>
+		<li><a href="#installation">Installation</a></li>
+	      </ul>
+      </li>
+      <li><a href="#structure">Structure</a>
+	      <ul>
+		<li><a href="#external-device">External Device: The Micro:bit</a></li>
+	      </ul>
+      </li>
+      <li><a href="#usage">Usage</a>
+	      <ul>
+		<li><a href="#controls-playing">Controls: Playing</a></li>
+		<li><a href="#controls-microbit">Controls: micro:bit</a></li>
+		<li><a href="#gui">Controls: GUI</a>
+		<ul>
+			<li><a href="#room">The MICRO:TRIP Room</a></li>
+			<li><a href="#instrument">The MICRO:TRIP Instrument</a></li>
+		</ul>
+		</li>
+	      </ul>
+	</li>
+	<li><a href="#built-with">Built With</a></li>
+	<li><a href="#authors">Authors</a></li>
   </ol>
 </details>
 
@@ -36,7 +42,7 @@ Music And Acoustic Engineering M.Sc Politecnico di Milano, Italy.**
 <!-- ABOUT THE PROJECT -->
 ## The Project
 
-![[MICRO_TRIP.png]]
+![main application view](/assets/images/MICRO_TRIP.png)
 
 The **MICRO:TRIP** is a powerful web audio application with the aim of creating a virtual environment in which to explore new sounds in a very innovative way.
 The application wants to create the **_Traveling room of a meteoropathic musician_** who sits at the desk and let her/himself's mood be influenced by the ambient conditions, and so her/his music. 
@@ -64,7 +70,7 @@ Some critical steps are required to set up things order to exploit all the funct
 * **Clone the repo**
 
    ```sh
-   git clone https://github.com/claudioeutizi/repo_name.git
+   https://github.com/claudioeutizi/the-microtrip.git
    ```
 * **Server**: 
 1. Go in the Server folder and install NPM packages
@@ -73,6 +79,7 @@ Some critical steps are required to set up things order to exploit all the funct
    cd Server
    npm install --legacy-peer-deps
    ```
+   
 * **Client**: 
 1. Sign up at [RapidAPI](https://rapidapi.com/hub) and get a free API Key for [GeoDB Cities API](https://rapidapi.com/wirefreethought/api/geodb-cities)
 2. Sign up and get a free API Key at [OpenWeatherMap](https://openweathermap.org/api)
@@ -109,9 +116,11 @@ Make sure to read what the console logs. You should see a message like this:
 7. In the Client folder run this command in order to start the Client application:
    ```sh
 	npm start
-```
+   ```
+   
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-# Structure
+
+## Structure
 
 As said before, the application needs to acquire a lot of data in order to fully exploit its potential. 
 
@@ -121,23 +130,24 @@ The data about the external weather is collected using **OpenWeatherMap API** an
 
 Here a high-level architecture of the MICRO:TRIP is shown:
 
-![[architecture.png]]
+![architecture](/assets/images/architecture.png)
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-### External Device: The Micro:Bit
+<h3 name="external-device">External Device: The Micro:Bit</h3>
 
 The [Micro:bit](https://microbit.org/) microcontroller is exploited in order to capture internal **Temperature, Humidity** and **Light** level of the environment. 
 The image below shows the small circuit that permits the capture of the required data. In particular, a *DHT11* sensor acquires the temperature and humidity data, while a photoresistor in parallel with a 10kOhm resistor are responsible for the light level.
 
 In the image are also shown a breadboard used for the connections and a **Keyeyestudio Sensor Shield V2**. These two components are not mandatory for the correct functioning of the micro:bit data acquisition;  just connect the DHT11 to the analog pin P1 of the micro:bit and the light circuit to the analog pin P2.
 
-![[microbit.jpg]]
+![microbit circuit](/assets/images/microbit.jpg)
 
 You can find a working .hex file in the repo that you can drag&drop in your connected micro:bit device folder or in your [MakeCode editor](https://makecode.microbit.org/) and install it on your micro:bit board using the editor.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-# Usage
 
-### Controls
+## Usage
+
+<h3 name="controls-playing">Controls: Playing</h3>
 
 The MICRO:TRIP have been designed in order to be as accessible as possible, thus there are several ways to control and play the instrument:
 
@@ -145,28 +155,35 @@ The MICRO:TRIP have been designed in order to be as accessible as possible, thus
 * Using the keys of the computer keyboard;
 * Using a MIDI keyboard.
 
-### Micro:bit
+<h3 name="controls-microbit">Controls: Micro:bit</h3>
 
 The data from the micro:bit are passed from the board to the *Server* with serial messages and from the *Server* to the *Client* using real-time **Socket.io** messages. 
 
 The acquisition of data is not automatic, but once the board is connected and the Server is running, the values of **temperature** and **humidity** can be acquired by pressing the **button A** on the micro:bit board. 
 
 For what concernes the **light** values, pressing the **Button B**, the micro:bit starts sending serial messages containing the light values, one message every 50ms. Pressing again B, the transmission stops.
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## GUI 
 
-### The MICRO:TRIP Room
+<h3 name="room">The MICRO:TRIP Room</h3>
 
 The first section is reserved to the room GUI. 
-![[map-gif.gif]]
+
+![map gif](/assets/images/map-gif.gif)
+
 * **Wall map:** Clicking on it, a leaflet map opens and you can choose the city you want to go. After that, the window opens and room is teleported in that city, showing a cartoonized skyline and a dynamic sky that depends on the weather conditions and the current time of the city.
 
 * **Display:** A LCD-like display appears when the city has been chosen and shows the data about the external weather conditions and the internal data of the room. The *position button* placed on the bottom-left of the display puts the room back in the current position of the musician, closing the window and showing only the sky.
 
-### The MICRO:TRIP Instrument
+* **Light:** The light brightness level of the room can be controlled and dynamically changed by the light level acquired by the micro:bit.
 
-![[instrument.png]]
+![light gif](/assets/images/light-gif.gif)
+
+<h3 name="instrument">The MICRO:TRIP Instrument</h3>
+
+![instrument](/assets/images/instrument.png)
 When the musician looks down at the top of her/his desk, the MICRO:TRIP instrument is what she/he sees. An analog-like instrument with interactive and responsive knobs, displays and switches. 
 
 * **Sampler:** The display shows the instrument connected to the city selected on the map. It is also possible to choose the instrument clicking on the display and choosing the instrument in the select menu. the *gain* modifies the input volume of the instrument and the *fine tune* handles the pitch of the sound.
@@ -203,15 +220,22 @@ Here is a detailed list of the parameters affected by the data:
 7. **Reverb -> Internal Humidity:**  The internal humidity values arriving from the micro:bit control the *wet* and *decay* parameters of the reverb.
 
 
-### Built With
+## Built With
 
 * [![React][React.js]][React-url]
 * [![Material UI][Material-UI]][Mui-url]
 * [![Express][Express.js]][Express-url]
 * [![JQuery][JQuery.com]][JQuery-url]
 * [![Node.js][Node.js]][Node-url]
+* [![Socket.io][Socket.io]][Socket-url]
+* [![Tone.js][Tone.js]][Tone-url]
+* [![Webaudio-controls][Webaudio-controls]][Webaudiocontrols-url]
+* [![Leaflet][Leaflet]][Leaflet-url]
+* [![OpenWeatherMap API][Openweathermap-api]][Openweather-url]
+* [![GeoDB Cities API][Geodb-cities-api]][geodb-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ## Authors
 * [Mattia Massimi](https://github.com/mattiamassimi)
 * [Claudio Eutizi](https://github.com/claudioeutizi)
@@ -221,26 +245,25 @@ Here is a detailed list of the parameters affected by the data:
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/github_username/repo_name.svg?style=for-the-badge
-[contributors-url]: https://github.com/github_username/repo_name/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/github_username/repo_name.svg?style=for-the-badge
-[forks-url]: https://github.com/github_username/repo_name/network/members
-[stars-shield]: https://img.shields.io/github/stars/github_username/repo_name.svg?style=for-the-badge
-[stars-url]: https://github.com/github_username/repo_name/stargazers
-[issues-shield]: https://img.shields.io/github/issues/github_username/repo_name.svg?style=for-the-badge
-[issues-url]: https://github.com/github_username/repo_name/issues
-[license-shield]: https://img.shields.io/github/license/github_username/repo_name.svg?style=for-the-badge
-[license-url]: https://github.com/github_username/repo_name/blob/master/LICENSE.txt
-[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[React.js]: https://img.shields.io/badge/React-B79891?style=for-the-badge&logo=react&logoColor=61DAFB
 [React-url]: https://reactjs.org/
-[Node.js]: https://img.shields.io/badge/Node.js-20232A?style=for-the-badge&logo=nodedotjs&logoColor=339933
+[Node.js]: https://img.shields.io/badge/Node.js-B79891?style=for-the-badge&logo=nodedotjs&logoColor=339933
 [Node-url]: https://nodejs.org/en/
-[Tone.js]: https://img.shields.io/badge/Tone.js-4A4A55?style=for-the-badge&logo=svelte&logoColor=FF3E00
-[Tone-url]: https://tonejs.github.io/
-[JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
+[JQuery.com]: https://img.shields.io/badge/jQuery-B79891?style=for-the-badge&logo=jquery&logoColor=white
 [JQuery-url]: https://jquery.com 
-[Material-UI]: https://img.shields.io/badge/MUI-0769AD?style=for-the-badge&logo=mui&logoColor=007FFF
+[Material-UI]: https://img.shields.io/badge/MUI-B79891?style=for-the-badge&logo=mui&logoColor=007FFF
 [Mui-url]: https://mui.com/
-[Express.js]: https://img.shields.io/badge/Express-0769AD?style=for-the-badge&logo=express&logoColor=000000
+[Express.js]: https://img.shields.io/badge/Express-B79891?style=for-the-badge&logo=express&logoColor=000000
 [Express-url]: https://expressjs.com/
+[Socket.io]: https://img.shields.io/badge/Socket.io-B79891?style=for-the-badge&logo=socketdotio&logoColor=000000
+[Socket-url]: https://socket.io/
+[Tone.js]: https://img.shields.io/badge/Tone.js-B79891?style=for-the-badge
+[Tone-url]: https://tonejs.github.io/
+[Leaflet]: https://img.shields.io/badge/Leaflet-B79891?style=for-the-badge&logo=leaflet&logoColor=000000
+[Leaflet-url]: https://leafletjs.com/
+[Webaudio-controls]: https://img.shields.io/badge/Webaudio%20controls-B79891?style=for-the-badge
+[Webaudiocontrols-url]: http://g200kg.github.io/webaudio-controls/docs/
+[Openweathermap-api]: https://img.shields.io/badge/OpenWeatherMap%20API-B79891?style=for-the-badge
+[OpenWeather-url]: https://openweathermap.org/
+[Geodb-cities-api]: https://img.shields.io/badge/GeoDB%20Cities%20API-B79891?style=for-the-badge
+[geodb-url]: https://rapidapi.com/wirefreethought/api/geodb-cities
